@@ -1,19 +1,14 @@
-Full documentation at [minimal.guide](https://minimal.guide/)
+Fork of the [Minimal Theme Settings](https://github.com/kepano/obsidian-minimal-settings) plugin. Full Minimal documentation at [minimal.guide](https://minimal.guide/)
 
 ## Overview
 
-This plugin accompanies [Minimal Theme](https://github.com/kepano/obsidian-minimal), allowing you to customize the theme from the Obsidian Settings panel. This plugin is not required to use Minimal Theme, but highly recommended.
-
-Support the development of my plugins and themes **@kepano** on [Twitter](https://www.twitter.com/kepano) or [Buy me a coffee](https://www.buymeacoffee.com/kepano).
-
-<a href="https://www.buymeacoffee.com/kepano"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=kepano&button_colour=6a8695&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00"></a>
+This plugin accompanies [Oxygen Theme](https://github.com/davidvkimball/obsidian-oxygen), allowing you to customize the theme from the Obsidian Settings panel. This plugin is not required to use Oxygen Theme, but highly recommended.
 
 
 ## Usage
 
-- Requires Minimal Theme
-- Works with [Hider Plugin](https://github.com/kepano/obsidian-hider) to simplify the Obsidian UI by removing the menu ribbon, tooltips, title bar, scrollbars, etc. This functionality was previously included in Minimal Theme but has now been separated out.
-
+- Requires Oxygen Theme
+- Works with [Hider Plugin](https://github.com/kepano/obsidian-hider) to simplify the Obsidian UI by removing the menu ribbon, tooltips, title bar, scrollbars, etc.
 
 
 ## Settings

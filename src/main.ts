@@ -1,5 +1,8 @@
 import { App, Workspace, Plugin } from 'obsidian';
 import { MinimalSettings, MinimalSettingsTab, DEFAULT_SETTINGS } from './settings';
+import { PresetManager } from './presets/PresetManager';
+import { PresetEditorModal } from './modals/PresetEditorModal';
+import { PresetImportModal } from './modals/PresetImportModal';
 
 export default class MinimalTheme extends Plugin {
 
@@ -346,10 +349,10 @@ export default class MinimalTheme extends Plugin {
     });
 
     this.addCommand({
-      id: 'toggle-minimal-default-light',
-      name: 'Switch light color scheme to default (light)',
+      id: 'toggle-minimal-oxygen-light',
+      name: 'Switch light color scheme to Oxygen (light)',
       callback: () => {
-        this.settings.lightScheme = 'minimal-default-light';
+        this.settings.lightScheme = 'minimal-oxygen-light';
         this.saveData(this.settings);
         this.updateLightScheme();
         this.updateLightStyle();
@@ -511,10 +514,10 @@ export default class MinimalTheme extends Plugin {
     });
 
     this.addCommand({
-      id: 'toggle-minimal-default-dark',
-      name: 'Switch dark color scheme to default (dark)',
+      id: 'toggle-minimal-oxygen-dark',
+      name: 'Switch dark color scheme to Oxygen (dark)',
       callback: () => {
-        this.settings.darkScheme = 'minimal-default-dark';
+        this.settings.darkScheme = 'minimal-oxygen-dark';
         this.saveData(this.settings);
         this.updateDarkScheme();
         this.updateDarkStyle();
@@ -641,6 +644,67 @@ export default class MinimalTheme extends Plugin {
       }
     });
 
+    // Custom Preset Commands
+    this.addCommand({
+      id: 'create-custom-preset',
+      name: 'Create custom color preset',
+      callback: () => {
+        const modal = new PresetEditorModal(this.app, this, null, (preset) => {
+          this.settings.customPresets.push(preset);
+          this.saveData(this.settings);
+        });
+        modal.open();
+      }
+    });
+
+    this.addCommand({
+      id: 'import-custom-preset',
+      name: 'Import custom color preset',
+      callback: () => {
+        const modal = new PresetImportModal(this.app, this, (preset) => {
+          this.settings.customPresets.push(preset);
+          this.saveData(this.settings);
+        });
+        modal.open();
+      }
+    });
+
+    this.addCommand({
+      id: 'cycle-custom-presets-light',
+      name: 'Cycle through custom presets (light mode)',
+      callback: () => {
+        if (this.settings.customPresets.length === 0) return;
+        
+        const currentIndex = this.settings.customPresets.findIndex(p => 
+          this.settings.lightScheme === `minimal-custom-${p.id}`
+        );
+        const nextIndex = (currentIndex + 1) % this.settings.customPresets.length;
+        const nextPreset = this.settings.customPresets[nextIndex];
+        
+        this.settings.lightScheme = `minimal-custom-${nextPreset.id}`;
+        this.saveData(this.settings);
+        this.updateLightScheme();
+      }
+    });
+
+    this.addCommand({
+      id: 'cycle-custom-presets-dark',
+      name: 'Cycle through custom presets (dark mode)',
+      callback: () => {
+        if (this.settings.customPresets.length === 0) return;
+        
+        const currentIndex = this.settings.customPresets.findIndex(p => 
+          this.settings.darkScheme === `minimal-custom-${p.id}`
+        );
+        const nextIndex = (currentIndex + 1) % this.settings.customPresets.length;
+        const nextPreset = this.settings.customPresets[nextIndex];
+        
+        this.settings.darkScheme = `minimal-custom-${nextPreset.id}`;
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+      }
+    });
+
     this.refresh()
   }
 
@@ -660,14 +724,55 @@ export default class MinimalTheme extends Plugin {
     this.removeSettings();
     this.removeLightScheme();
     this.removeDarkScheme();
+    
+    // Remove injected custom preset styles
+    document.querySelectorAll('style[data-custom-preset]').forEach(el => el.remove());
   }
 
   async loadSettings() {
     this.settings = Object.assign(DEFAULT_SETTINGS, await this.loadData());
+    
+    // Migration for renamed default schemes
+    if (this.settings.lightScheme === 'minimal-default-light') {
+      this.settings.lightScheme = 'minimal-minimal-light';
+    }
+    if (this.settings.darkScheme === 'minimal-default-dark') {
+      this.settings.darkScheme = 'minimal-minimal-dark';
+    }
+    
+    // Ensure custom presets array exists (for existing users)
+    if (!this.settings.customPresets) {
+      this.settings.customPresets = [];
+    }
+    if (this.settings.enableCustomPresets === undefined) {
+      this.settings.enableCustomPresets = true;
+    }
   }
 
   async saveSettings() {
     await this.saveData(this.settings);
+  }
+
+  /**
+   * Inject CSS for a custom preset
+   */
+  injectCustomPresetCSS(presetId: string): void {
+    const preset = this.settings.customPresets.find(p => p.id === presetId);
+    if (!preset) return;
+    
+    // Remove existing custom preset styles
+    document.querySelectorAll('style[data-custom-preset]').forEach(el => el.remove());
+    
+    // Generate and inject CSS for both modes
+    const styleEl = document.createElement('style');
+    styleEl.id = `minimal-custom-preset-${presetId}`;
+    styleEl.setAttribute('data-custom-preset', 'true');
+    
+    const lightCSS = PresetManager.generatePresetCSS(preset, 'light');
+    const darkCSS = PresetManager.generatePresetCSS(preset, 'dark');
+    
+    styleEl.textContent = lightCSS + '\n' + darkCSS;
+    document.head.appendChild(styleEl);
   }
 
   // refresh function for when we change settings
@@ -692,7 +797,7 @@ export default class MinimalTheme extends Plugin {
   unloadRules() {
     const styleElement = document.getElementById('minimal-theme');
     if (styleElement) {
-      styleElement.parentNode.removeChild(styleElement);
+      styleElement.parentNode?.removeChild(styleElement);
     }
     document.body.classList.remove('minimal-theme');
   }
@@ -709,12 +814,23 @@ export default class MinimalTheme extends Plugin {
     this.removeStyle();
     this.removeSettings();
 
+    // Add style classes
     document.body.addClass(
       this.settings.lightStyle,
-      this.settings.lightScheme,
-      this.settings.darkStyle,
-      this.settings.darkScheme
+      this.settings.darkStyle
     );
+
+    // Update schemes using proper methods (handles custom presets)
+    // Only apply the scheme for the current theme mode
+    try {
+      if (document.body.classList.contains('theme-light')) {
+        this.updateLightScheme();
+      } else if (document.body.classList.contains('theme-dark')) {
+        this.updateDarkScheme();
+      }
+    } catch (error) {
+      console.error('Error updating schemes:', error);
+    }
 
     document.body.classList.toggle('borders-none', !this.settings.bordersToggle);
     document.body.classList.toggle('colorful-headings', this.settings.colorfulHeadings);
@@ -800,11 +916,27 @@ export default class MinimalTheme extends Plugin {
 
   updateDarkScheme() {
     this.removeDarkScheme();
+    this.removeLightScheme(); // Also remove light scheme to prevent conflicts
+    
+    // Check if it's a custom preset
+    if (this.settings.darkScheme.startsWith('minimal-custom-')) {
+      const presetId = this.settings.darkScheme.replace('minimal-custom-', '');
+      this.injectCustomPresetCSS(presetId);
+    }
+    
     document.body.addClass(this.settings.darkScheme);
   }
 
   updateLightScheme() {
     this.removeLightScheme();
+    this.removeDarkScheme(); // Also remove dark scheme to prevent conflicts
+    
+    // Check if it's a custom preset
+    if (this.settings.lightScheme.startsWith('minimal-custom-')) {
+      const presetId = this.settings.lightScheme.replace('minimal-custom-', '');
+      this.injectCustomPresetCSS(presetId);
+    }
+    
     document.body.addClass(this.settings.lightScheme);
   }
 
@@ -894,7 +1026,8 @@ export default class MinimalTheme extends Plugin {
       'minimal-atom-dark',
       'minimal-ayu-dark',
       'minimal-catppuccin-dark',
-      'minimal-default-dark',
+      'minimal-oxygen-dark',
+      'minimal-minimal-dark',
       'minimal-dracula-dark',
       'minimal-eink-dark',
       'minimal-everforest-dark',
@@ -907,13 +1040,19 @@ export default class MinimalTheme extends Plugin {
       'minimal-solarized-dark',
       'minimal-things-dark'
     );
+    
+    // Remove custom preset classes
+    this.settings.customPresets.forEach(preset => {
+      document.body.removeClass(`minimal-custom-${preset.id}`);
+    });
   }
   removeLightScheme() {
     document.body.removeClass(
       'minimal-atom-light',
       'minimal-ayu-light',
       'minimal-catppuccin-light',
-      'minimal-default-light',
+      'minimal-oxygen-light',
+      'minimal-minimal-light',
       'minimal-eink-light',
       'minimal-everforest-light',
       'minimal-flexoki-light',
@@ -925,6 +1064,11 @@ export default class MinimalTheme extends Plugin {
       'minimal-solarized-light',
       'minimal-things-light'
     );
+    
+    // Remove custom preset classes
+    this.settings.customPresets.forEach(preset => {
+      document.body.removeClass(`minimal-custom-${preset.id}`);
+    });
   }
 
 }

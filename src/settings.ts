@@ -1,5 +1,10 @@
 import { PluginSettingTab, Setting } from 'obsidian';
 import MinimalTheme from "./main";
+import { CustomColorPreset } from './presets/CustomPreset';
+import { PresetManager } from './presets/PresetManager';
+import { PresetEditorModal } from './modals/PresetEditorModal';
+import { PresetImportModal } from './modals/PresetImportModal';
+import { generateColorSwatch } from './utils/color-utils';
 
 export interface MinimalSettings {
   lightStyle: string;
@@ -34,13 +39,15 @@ export interface MinimalSettings {
   folding: boolean;
   lineNumbers: boolean;
   readableLineLength: boolean;
+  customPresets: CustomColorPreset[];
+  enableCustomPresets: boolean;
 }
 
 export const DEFAULT_SETTINGS: MinimalSettings = {
   lightStyle: 'minimal-light',
   darkStyle: 'minimal-dark',
-  lightScheme: 'minimal-default-light',
-  darkScheme: 'minimal-default-dark',
+  lightScheme: 'minimal-oxygen-light',
+  darkScheme: 'minimal-oxygen-dark',
   editorFont: '',
   lineHeight: 1.5,
   lineWidth: 40,
@@ -69,6 +76,8 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   lineNumbers: false,
   readableLineLength: false,
   devBlockWidth: false,
+  customPresets: [],
+  enableCustomPresets: true,
 }
 
 export class MinimalSettingsTab extends PluginSettingTab {
@@ -117,27 +126,44 @@ export class MinimalSettingsTab extends PluginSettingTab {
       new Setting(containerEl)
         .setName('Light mode color scheme')
         .setDesc('Preset color options for light mode.')
-        .addDropdown(dropdown => dropdown
-          .addOption('minimal-default-light','Default')
+        .addDropdown(dropdown => {
+          // Built-in schemes
+        dropdown
+          .addOption('minimal-oxygen-light','Oxygen')
+          .addOption('minimal-minimal-light','Minimal')
           .addOption('minimal-atom-light','Atom')
-          .addOption('minimal-ayu-light','Ayu')
-          .addOption('minimal-catppuccin-light','Catppuccin')
-          .addOption('minimal-eink-light','E-ink (beta)')
-          .addOption('minimal-everforest-light','Everforest')
-          .addOption('minimal-flexoki-light','Flexoki')
-          .addOption('minimal-gruvbox-light','Gruvbox')
-          .addOption('minimal-macos-light','macOS')
-          .addOption('minimal-nord-light','Nord')
-          .addOption('minimal-rose-pine-light','Rosé Pine')
-          .addOption('minimal-notion-light','Sky')
-          .addOption('minimal-solarized-light','Solarized')
-          .addOption('minimal-things-light','Things')
-          .setValue(this.plugin.settings.lightScheme)
-        .onChange((value) => {
-          this.plugin.settings.lightScheme = value;
-          this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateLightScheme();
-        }));
+            .addOption('minimal-ayu-light','Ayu')
+            .addOption('minimal-catppuccin-light','Catppuccin')
+            .addOption('minimal-eink-light','E-ink (beta)')
+            .addOption('minimal-everforest-light','Everforest')
+            .addOption('minimal-flexoki-light','Flexoki')
+            .addOption('minimal-gruvbox-light','Gruvbox')
+            .addOption('minimal-macos-light','macOS')
+            .addOption('minimal-nord-light','Nord')
+            .addOption('minimal-rose-pine-light','Rosé Pine')
+            .addOption('minimal-notion-light','Sky')
+            .addOption('minimal-solarized-light','Solarized')
+            .addOption('minimal-things-light','Things');
+
+          // Add custom presets if any exist
+          if (this.plugin.settings.customPresets.length > 0) {
+            dropdown.addOption('', '────── Custom Presets ──────');
+            
+            this.plugin.settings.customPresets
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .forEach(preset => {
+                dropdown.addOption(`minimal-custom-${preset.id}`, preset.name);
+              });
+          }
+
+          dropdown
+            .setValue(this.plugin.settings.lightScheme)
+            .onChange((value) => {
+              this.plugin.settings.lightScheme = value;
+              this.plugin.saveData(this.plugin.settings);
+              this.plugin.updateLightScheme();
+            });
+        });
 
       new Setting(containerEl)
         .setName('Light mode background contrast')
@@ -157,28 +183,45 @@ export class MinimalSettingsTab extends PluginSettingTab {
       new Setting(containerEl)
         .setName('Dark mode color scheme')
         .setDesc('Preset colors options for dark mode.')
-        .addDropdown(dropdown => dropdown
-          .addOption('minimal-default-dark','Default')
+        .addDropdown(dropdown => {
+          // Built-in schemes
+        dropdown
+          .addOption('minimal-oxygen-dark','Oxygen')
+          .addOption('minimal-minimal-dark','Minimal')
           .addOption('minimal-atom-dark','Atom')
-          .addOption('minimal-ayu-dark','Ayu')
-          .addOption('minimal-catppuccin-dark','Catppuccin')
-          .addOption('minimal-dracula-dark','Dracula')
-          .addOption('minimal-eink-dark','E-ink (beta)')
-          .addOption('minimal-everforest-dark','Everforest')
-          .addOption('minimal-flexoki-dark','Flexoki')
-          .addOption('minimal-gruvbox-dark','Gruvbox')
-          .addOption('minimal-macos-dark','macOS')
-          .addOption('minimal-nord-dark','Nord')
-          .addOption('minimal-rose-pine-dark','Rosé Pine')
-          .addOption('minimal-notion-dark','Sky')
-          .addOption('minimal-solarized-dark','Solarized')
-          .addOption('minimal-things-dark','Things')
-          .setValue(this.plugin.settings.darkScheme)
-          .onChange((value) => {
-            this.plugin.settings.darkScheme = value;
-            this.plugin.saveData(this.plugin.settings);
-            this.plugin.updateDarkScheme();
-          }));
+            .addOption('minimal-ayu-dark','Ayu')
+            .addOption('minimal-catppuccin-dark','Catppuccin')
+            .addOption('minimal-dracula-dark','Dracula')
+            .addOption('minimal-eink-dark','E-ink (beta)')
+            .addOption('minimal-everforest-dark','Everforest')
+            .addOption('minimal-flexoki-dark','Flexoki')
+            .addOption('minimal-gruvbox-dark','Gruvbox')
+            .addOption('minimal-macos-dark','macOS')
+            .addOption('minimal-nord-dark','Nord')
+            .addOption('minimal-rose-pine-dark','Rosé Pine')
+            .addOption('minimal-notion-dark','Sky')
+            .addOption('minimal-solarized-dark','Solarized')
+            .addOption('minimal-things-dark','Things');
+
+          // Add custom presets if any exist
+          if (this.plugin.settings.customPresets.length > 0) {
+            dropdown.addOption('', '────── Custom Presets ──────');
+            
+            this.plugin.settings.customPresets
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .forEach(preset => {
+                dropdown.addOption(`minimal-custom-${preset.id}`, preset.name);
+              });
+          }
+
+          dropdown
+            .setValue(this.plugin.settings.darkScheme)
+            .onChange((value) => {
+              this.plugin.settings.darkScheme = value;
+              this.plugin.saveData(this.plugin.settings);
+              this.plugin.updateDarkScheme();
+            });
+        });
 
       new Setting(containerEl)
         .setName('Dark mode background contrast')
@@ -193,6 +236,9 @@ export class MinimalSettingsTab extends PluginSettingTab {
             this.plugin.saveData(this.plugin.settings);
             this.plugin.updateDarkStyle();
           }));
+
+    // Custom Presets Section
+    this.addCustomPresetsSection(containerEl);
 
     containerEl.createEl('br');
 
@@ -526,5 +572,186 @@ export class MinimalSettingsTab extends PluginSettingTab {
           this.plugin.refresh();
         }));
 
+  }
+
+  private addCustomPresetsSection(containerEl: HTMLElement) {
+    // Custom Presets Section Header
+    const customPresetsSection = containerEl.createEl('div', { cls: 'setting-item setting-item-heading' });
+    const customPresetsSectionInfo = customPresetsSection.createEl('div', { cls: 'setting-item-info' });
+    customPresetsSectionInfo.createEl('div', { text: 'Custom Presets', cls: 'setting-item-name' });
+    
+    const customPresetsDesc = customPresetsSectionInfo.createEl('div', { cls: 'setting-item-description' });
+    customPresetsDesc.createEl('span', { text: 'Create and manage custom color schemes. ' });
+    customPresetsDesc.appendChild(
+      createEl('a', {
+        text: 'Learn more',
+        href: 'https://minimal.guide/features/color-schemes',
+      })
+    );
+    customPresetsDesc.appendText(' about color schemes.');
+
+    // Enable/Disable Custom Presets
+    new Setting(containerEl)
+      .setName('Enable custom presets')
+      .setDesc('Allow creation and use of custom color presets')
+      .addToggle(toggle => toggle
+        .setValue(this.plugin.settings.enableCustomPresets)
+        .onChange((value) => {
+          this.plugin.settings.enableCustomPresets = value;
+          this.plugin.saveData(this.plugin.settings);
+          this.display(); // Refresh the settings tab
+        }));
+
+    if (!this.plugin.settings.enableCustomPresets) {
+      return;
+    }
+
+    // Action buttons
+    new Setting(containerEl)
+      .setName('Create new preset')
+      .setDesc('Design a custom color scheme from scratch')
+      .addExtraButton(button => button
+        .setIcon('plus')
+        .setTooltip('Create new preset')
+        .onClick(() => this.openPresetEditor()));
+
+    new Setting(containerEl)
+      .setName('Import preset')
+      .setDesc('Import a preset from JSON data')
+      .addExtraButton(button => button
+        .setIcon('download')
+        .setTooltip('Import preset')
+        .onClick(() => this.openPresetImporter()));
+
+    // Presets list
+    if (this.plugin.settings.customPresets.length > 0) {
+      const presetsList = containerEl.createEl('div', { cls: 'custom-presets-list' });
+      presetsList.createEl('h4', { text: 'Your Custom Presets' });
+
+      this.plugin.settings.customPresets
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(preset => {
+          this.addPresetListItem(presetsList, preset);
+        });
+    } else {
+      const emptyState = containerEl.createEl('div', { cls: 'custom-presets-empty' });
+      emptyState.createEl('p', { 
+        text: 'No custom presets yet. Create your first preset to get started!',
+        cls: 'empty-message'
+      });
+    }
+  }
+
+  private addPresetListItem(container: HTMLElement, preset: CustomColorPreset) {
+    const presetItem = container.createEl('div', { cls: 'custom-preset-item' });
+    
+    // Preset info
+    const presetInfo = presetItem.createEl('div', { cls: 'preset-info' });
+    
+    // Color swatch
+    const swatch = generateColorSwatch(preset);
+    presetInfo.appendChild(swatch);
+    
+    // Preset details
+    const details = presetInfo.createEl('div', { cls: 'preset-details' });
+    details.createEl('div', { text: preset.name, cls: 'preset-name' });
+    
+    if (preset.author) {
+      details.createEl('div', { text: `by ${preset.author}`, cls: 'preset-author' });
+    }
+    
+    const idSpan = details.createEl('div', { text: preset.id, cls: 'preset-id' });
+    idSpan.style.fontSize = '0.8rem';
+    idSpan.style.color = 'var(--text-muted)';
+    idSpan.style.fontFamily = 'monospace';
+
+    // Action buttons using proper Obsidian API
+    new Setting(presetItem)
+      .setName('')
+      .setDesc('')
+      .addExtraButton(button => button
+        .setIcon('edit')
+        .setTooltip('Edit preset')
+        .onClick(() => this.openPresetEditor(preset)))
+      .addExtraButton(button => button
+        .setIcon('download')
+        .setTooltip('Export preset')
+        .onClick(() => this.exportPreset(preset)))
+      .addExtraButton(button => button
+        .setIcon('trash')
+        .setTooltip('Delete preset')
+        .onClick(() => this.deletePreset(preset)));
+  }
+
+  private openPresetEditor(preset?: CustomColorPreset) {
+    const modal = new PresetEditorModal(this.app, this.plugin, preset || null, (updatedPreset) => {
+      if (preset) {
+        // Update existing preset
+        const index = this.plugin.settings.customPresets.findIndex(p => p.id === preset.id);
+        if (index !== -1) {
+          this.plugin.settings.customPresets[index] = updatedPreset;
+        }
+      } else {
+        // Add new preset
+        this.plugin.settings.customPresets.push(updatedPreset);
+      }
+      
+      this.plugin.saveData(this.plugin.settings);
+      this.display(); // Refresh the settings tab
+    });
+    modal.open();
+  }
+
+  private openPresetImporter() {
+    const modal = new PresetImportModal(this.app, this.plugin, (importedPreset) => {
+      this.plugin.settings.customPresets.push(importedPreset);
+      this.plugin.saveData(this.plugin.settings);
+      this.display(); // Refresh the settings tab
+    });
+    modal.open();
+  }
+
+  private exportPreset(preset: CustomColorPreset) {
+    const json = PresetManager.exportPresetAsJSON(preset);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${preset.id}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  private deletePreset(preset: CustomColorPreset) {
+    // Check if preset is currently active
+    const isActive = PresetManager.isPresetActive(
+      preset.id, 
+      this.plugin.settings.lightScheme, 
+      this.plugin.settings.darkScheme
+    );
+    
+    if (isActive) {
+      // Show warning
+      const confirmed = confirm(
+        `This preset is currently active. Deleting it will switch to the default scheme. Continue?`
+      );
+      if (!confirmed) return;
+      
+      // Switch to default scheme
+      this.plugin.settings.lightScheme = 'minimal-oxygen-light';
+      this.plugin.settings.darkScheme = 'minimal-oxygen-dark';
+    }
+    
+    // Remove preset
+    this.plugin.settings.customPresets = PresetManager.deletePreset(
+      preset.id, 
+      this.plugin.settings.customPresets
+    );
+    
+    this.plugin.saveData(this.plugin.settings);
+    this.display(); // Refresh the settings tab
   }
 }

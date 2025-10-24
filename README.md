@@ -1,94 +1,73 @@
-# Obsidian Sample Plugin
+Full documentation at [minimal.guide](https://minimal.guide/)
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+## Overview
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+This plugin accompanies [Minimal Theme](https://github.com/kepano/obsidian-minimal), allowing you to customize the theme from the Obsidian Settings panel. This plugin is not required to use Minimal Theme, but highly recommended.
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+Support the development of my plugins and themes **@kepano** on [Twitter](https://www.twitter.com/kepano) or [Buy me a coffee](https://www.buymeacoffee.com/kepano).
 
-## First time developing plugins?
+<a href="https://www.buymeacoffee.com/kepano"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=kepano&button_colour=6a8695&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00"></a>
 
-Quick starting guide for new plugin devs:
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+## Usage
 
-## Releasing new releases
+- Requires Minimal Theme
+- Works with [Hider Plugin](https://github.com/kepano/obsidian-hider) to simplify the Obsidian UI by removing the menu ribbon, tooltips, title bar, scrollbars, etc. This functionality was previously included in Minimal Theme but has now been separated out.
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
 
-## Adding your plugin to the community plugin list
+## Settings
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+### Color scheme
 
-## How to use
+Switch between preset color schemes or create your own using Style Settings plugin.
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+- Atom
+- Ayu
+- Catppuccin
+- Dracula
+- E-ink (beta)
+- Everforest
+- Flexoki
+- Gruvbox
+- macOS
+- Nord
+- Rosé Pine
+- Solarized
+- Sky
+- Things
 
-## Manually installing the plugin
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+### Background styles
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint ./src/`
+Several alternate light/dark mode background are availably. These options can be toggled via hotkeys
 
-## Funding URL
+- **Default** uses a slighty darker background for the sidebar
+- **Low contrast** uses the same background for sidebar and main panel
+- **High contrast (light mode only)** uses dark sidebar and light main panel
+- **True black (dark mode only)** uses pure black sidebar and main panel
 
-You can include funding URLs where people who use your plugin can financially support it.
+### Customization
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+- Fonts, font sizes, and line width settings
+- Underline links
+- Focus mode
+- Custom icons
+- Image grids
+- Width settings for tables, images and iframes
 
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
-```
 
-If you have multiple URLs, you can also do:
+## Hotkeys
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+Hotkeys can be customized to perform the following actions:
 
-## API Documentation
-
-See https://github.com/obsidianmd/obsidian-api
+- Toggle light/dark mode
+- Cycle between light mode styles
+- Cycle between dark mode styles
+- Switch between color schemes
+- Increase/decrease font size
+- Toggle image grids
+- Toggle sidebar borders
+- Cycle image width options
+- Cycle table width options
+- Cycle iframe width options

@@ -821,12 +821,16 @@ export default class MinimalTheme extends Plugin {
     );
 
     // Update schemes using proper methods (handles custom presets)
-    // Only apply the scheme for the current theme mode
+    // Apply the appropriate scheme based on current theme mode
     try {
       if (document.body.classList.contains('theme-light')) {
         this.updateLightScheme();
       } else if (document.body.classList.contains('theme-dark')) {
         this.updateDarkScheme();
+      } else {
+        // If no theme class is present, default to light theme
+        document.body.addClass('theme-light');
+        this.updateLightScheme();
       }
     } catch (error) {
       console.error('Error updating schemes:', error);
@@ -918,6 +922,12 @@ export default class MinimalTheme extends Plugin {
     this.removeDarkScheme();
     this.removeLightScheme(); // Also remove light scheme to prevent conflicts
     
+    // Ensure we're in dark theme mode
+    if (!document.body.classList.contains('theme-dark')) {
+      document.body.removeClass('theme-light');
+      document.body.addClass('theme-dark');
+    }
+    
     // Check if it's a custom preset
     if (this.settings.darkScheme.startsWith('minimal-custom-')) {
       const presetId = this.settings.darkScheme.replace('minimal-custom-', '');
@@ -930,6 +940,12 @@ export default class MinimalTheme extends Plugin {
   updateLightScheme() {
     this.removeLightScheme();
     this.removeDarkScheme(); // Also remove dark scheme to prevent conflicts
+    
+    // Ensure we're in light theme mode
+    if (!document.body.classList.contains('theme-light')) {
+      document.body.removeClass('theme-dark');
+      document.body.addClass('theme-light');
+    }
     
     // Check if it's a custom preset
     if (this.settings.lightScheme.startsWith('minimal-custom-')) {

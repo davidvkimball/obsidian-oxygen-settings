@@ -164,7 +164,10 @@ export class MinimalSettingsTab extends PluginSettingTab {
             .onChange((value) => {
               this.plugin.settings.lightScheme = value;
               this.plugin.saveData(this.plugin.settings);
-              this.plugin.updateLightScheme();
+              // Only apply light scheme if currently in light mode
+              if (document.body.classList.contains('theme-light')) {
+                this.plugin.updateLightScheme();
+              }
             });
         });
 
@@ -180,7 +183,10 @@ export class MinimalSettingsTab extends PluginSettingTab {
         .onChange((value) => {
           this.plugin.settings.lightStyle = value;
           this.plugin.saveData(this.plugin.settings);
-          this.plugin.updateLightStyle();
+          // Only apply light style if currently in light mode
+          if (document.body.classList.contains('theme-light')) {
+            this.plugin.updateLightStyle();
+          }
         }));
 
       new Setting(containerEl)
@@ -222,7 +228,10 @@ export class MinimalSettingsTab extends PluginSettingTab {
             .onChange((value) => {
               this.plugin.settings.darkScheme = value;
               this.plugin.saveData(this.plugin.settings);
-              this.plugin.updateDarkScheme();
+              // Only apply dark scheme if currently in dark mode
+              if (document.body.classList.contains('theme-dark')) {
+                this.plugin.updateDarkScheme();
+              }
             });
         });
 
@@ -237,7 +246,10 @@ export class MinimalSettingsTab extends PluginSettingTab {
           .onChange((value) => {
             this.plugin.settings.darkStyle = value;
             this.plugin.saveData(this.plugin.settings);
-            this.plugin.updateDarkStyle();
+            // Only apply dark style if currently in dark mode
+            if (document.body.classList.contains('theme-dark')) {
+              this.plugin.updateDarkStyle();
+            }
           }));
 
     // Custom Presets Section
@@ -578,21 +590,6 @@ export class MinimalSettingsTab extends PluginSettingTab {
   }
 
   private addCustomPresetsSection(containerEl: HTMLElement) {
-    // Custom Presets Section Header
-    const customPresetsSection = containerEl.createEl('div', { cls: 'setting-item setting-item-heading' });
-    const customPresetsSectionInfo = customPresetsSection.createEl('div', { cls: 'setting-item-info' });
-    customPresetsSectionInfo.createEl('div', { text: 'Custom Presets', cls: 'setting-item-name' });
-    
-    const customPresetsDesc = customPresetsSectionInfo.createEl('div', { cls: 'setting-item-description' });
-    customPresetsDesc.createEl('span', { text: 'Create and manage custom color schemes. ' });
-    customPresetsDesc.appendChild(
-      createEl('a', {
-        text: 'Learn more',
-        href: 'https://minimal.guide/features/color-schemes',
-      })
-    );
-    customPresetsDesc.appendText(' about color schemes.');
-
     // Enable/Disable Custom Presets
     new Setting(containerEl)
       .setName('Enable custom presets')
@@ -629,7 +626,6 @@ export class MinimalSettingsTab extends PluginSettingTab {
     // Presets list
     if (this.plugin.settings.customPresets.length > 0) {
       const presetsList = containerEl.createEl('div', { cls: 'custom-presets-list' });
-      presetsList.createEl('h4', { text: 'Your Custom Presets' });
 
       this.plugin.settings.customPresets
         .sort((a, b) => a.name.localeCompare(b.name))

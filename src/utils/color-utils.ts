@@ -77,10 +77,10 @@ export function hslToHex(hsl: HSLColor): string {
 }
 
 /**
- * Validate hex color format
+ * Validate hex color format (supports transparency)
  */
 export function validateHex(hex: string): boolean {
-  const hexRegex = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+  const hexRegex = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{8}|[A-Fa-f0-9]{4})$/;
   return hexRegex.test(hex);
 }
 

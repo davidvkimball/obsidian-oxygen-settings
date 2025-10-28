@@ -2,7 +2,7 @@
  * Modal for creating and editing custom color presets
  */
 
-import { Modal, Setting, App } from 'obsidian';
+import { Modal, Setting, App, setIcon } from 'obsidian';
 import { CustomColorPreset, ColorPalette, HSLColor, DEFAULT_COLOR_PALETTE } from '../presets/CustomPreset';
 import { PresetManager } from '../presets/PresetManager';
 import { hslToHex, hexToHSL, validateHex, formatHSL } from '../utils/color-utils';
@@ -158,15 +158,15 @@ export class PresetEditorModal extends Modal {
     const advancedHeader = advancedSection.createEl('div', { cls: 'collapsible-header' });
     advancedHeader.createEl('h4', { text: 'Advanced Overrides (Optional)' });
     const advancedToggle = advancedHeader.createEl('button', { 
-      text: '▼', 
       cls: 'collapse-toggle' 
     });
+    setIcon(advancedToggle, 'chevron-down');
     
     const advancedContent = advancedSection.createEl('div', { cls: 'collapsible-content collapsed' });
     
     advancedToggle.onclick = () => {
       advancedContent.classList.toggle('collapsed');
-      advancedToggle.textContent = advancedContent.classList.contains('collapsed') ? '▼' : '▲';
+      setIcon(advancedToggle, advancedContent.classList.contains('collapsed') ? 'chevron-down' : 'chevron-up');
     };
 
     // Initialize colors object if not exists
@@ -199,15 +199,15 @@ export class PresetEditorModal extends Modal {
     const syntaxHeader = syntaxSection.createEl('div', { cls: 'collapsible-header' });
     syntaxHeader.createEl('h4', { text: 'Syntax Colors (Optional)' });
     const syntaxToggle = syntaxHeader.createEl('button', { 
-      text: '▼', 
       cls: 'collapse-toggle' 
     });
+    setIcon(syntaxToggle, 'chevron-down');
     
     const syntaxContent = syntaxSection.createEl('div', { cls: 'collapsible-content collapsed' });
     
     syntaxToggle.onclick = () => {
       syntaxContent.classList.toggle('collapsed');
-      syntaxToggle.textContent = syntaxContent.classList.contains('collapsed') ? '▼' : '▲';
+      setIcon(syntaxToggle, syntaxContent.classList.contains('collapsed') ? 'chevron-down' : 'chevron-up');
     };
 
     const syntaxColors = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple', 'pink'];
@@ -218,6 +218,15 @@ export class PresetEditorModal extends Modal {
 
   private createHSLControls(container: HTMLElement, hsl: HSLColor, onChange: (hsl: HSLColor) => void) {
     const controls = container.createEl('div', { cls: 'hsl-controls' });
+    
+    // Color preview
+    const preview = controls.createEl('div', { cls: 'color-preview' });
+    preview.style.backgroundColor = hslToHex(hsl);
+    
+    // Update preview function
+    const updatePreview = () => {
+      preview.style.backgroundColor = hslToHex(hsl);
+    };
     
     // Hue
     const hueControl = controls.createEl('div', { cls: 'hsl-control' });
@@ -230,6 +239,7 @@ export class PresetEditorModal extends Modal {
     hueSlider.oninput = () => {
       hsl.h = parseInt(hueSlider.value);
       hueValue.textContent = hsl.h.toString();
+      updatePreview();
       onChange(hsl);
     };
 
@@ -244,6 +254,7 @@ export class PresetEditorModal extends Modal {
     satSlider.oninput = () => {
       hsl.s = parseInt(satSlider.value);
       satValue.textContent = hsl.s.toString();
+      updatePreview();
       onChange(hsl);
     };
 
@@ -258,12 +269,9 @@ export class PresetEditorModal extends Modal {
     lightSlider.oninput = () => {
       hsl.l = parseInt(lightSlider.value);
       lightValue.textContent = hsl.l.toString();
+      updatePreview();
       onChange(hsl);
     };
-
-    // Color preview
-    const preview = controls.createEl('div', { cls: 'color-preview' });
-    preview.style.backgroundColor = hslToHex(hsl);
   }
 
   private createColorOverride(container: HTMLElement, label: string, key: string, colors: any) {
@@ -276,11 +284,28 @@ export class PresetEditorModal extends Modal {
     const colorInput = header.createEl('input', { type: 'color' });
     colorInput.disabled = true;
     
+    // Store the original color value when toggling off
+    let originalColor: string | null = null;
+    
     if (colors[key]) {
       toggle.checked = true;
       colorInput.disabled = false;
       colorInput.value = colors[key];
+      originalColor = colors[key];
     }
+    
+    // Make clicking the color input automatically check the toggle
+    colorInput.onclick = () => {
+      if (!toggle.checked) {
+        toggle.checked = true;
+        colorInput.disabled = false;
+        if (!colors[key]) {
+          colors[key] = '#000000';
+        }
+        colorInput.value = colors[key];
+        originalColor = colors[key];
+      }
+    };
     
     toggle.onchange = () => {
       if (toggle.checked) {
@@ -289,8 +314,11 @@ export class PresetEditorModal extends Modal {
           colors[key] = '#000000';
         }
         colorInput.value = colors[key];
+        originalColor = colors[key];
       } else {
         colorInput.disabled = true;
+        // Store the current value before deleting
+        originalColor = colors[key];
         delete colors[key];
       }
     };
@@ -298,6 +326,15 @@ export class PresetEditorModal extends Modal {
     colorInput.onchange = () => {
       if (validateHex(colorInput.value)) {
         colors[key] = colorInput.value;
+        originalColor = colorInput.value;
+      }
+    };
+    
+    // Also handle input event for real-time updates
+    colorInput.oninput = () => {
+      if (validateHex(colorInput.value)) {
+        colors[key] = colorInput.value;
+        originalColor = colorInput.value;
       }
     };
   }
@@ -389,11 +426,18 @@ export class PresetEditorModal extends Modal {
         cursor: pointer;
         border-bottom: 2px solid transparent;
         color: var(--text-muted);
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+      }
+      
+      .mode-tab:hover {
+        color: var(--text-normal);
       }
       
       .mode-tab.active {
         color: var(--text-normal);
         border-bottom-color: var(--text-accent);
+        font-weight: 500;
       }
       
       .mode-content {
@@ -458,21 +502,47 @@ export class PresetEditorModal extends Modal {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        cursor: pointer;
+        cursor: default;
         padding: 0.5rem 0;
       }
       
       .collapse-toggle {
         background: none;
         border: none;
-        font-size: 0.8rem;
         color: var(--text-muted);
-        cursor: pointer;
+        cursor: default;
+        padding: 0;
+        margin: 0;
+        width: auto;
+        height: auto;
+        box-shadow: none;
+        outline: none;
+        font-family: inherit;
+        --icon-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .collapse-toggle:hover {
+        color: var(--text-normal);
+      }
+      
+      .collapse-toggle:focus {
+        outline: none;
+        box-shadow: none;
+      }
+      
+      .collapse-toggle svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 2;
       }
       
       .collapsible-content {
         transition: max-height 0.3s ease;
         overflow: hidden;
+        max-height: 1000px;
       }
       
       .collapsible-content.collapsed {
@@ -533,6 +603,19 @@ export class PresetEditorModal extends Modal {
         height: 2rem;
         border-radius: 3px;
         border: 1px solid var(--background-modifier-border);
+      }
+      
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--background-modifier-border);
+      }
+      
+      .modal-footer button {
+        min-width: 80px;
       }
     `;
     document.head.appendChild(style);

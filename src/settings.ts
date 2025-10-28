@@ -93,6 +93,9 @@ export class MinimalSettingsTab extends PluginSettingTab {
     let {containerEl} = this;
 
     containerEl.empty();
+    
+    // Add CSS styles for preset items
+    this.addPresetStyles();
 
     const colorSection = containerEl.createEl('div', {cls: 'setting-item setting-item-heading'});
 
@@ -753,5 +756,84 @@ export class MinimalSettingsTab extends PluginSettingTab {
     
     this.plugin.saveData(this.plugin.settings);
     this.display(); // Refresh the settings tab
+  }
+
+  private addPresetStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .custom-preset-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid var(--background-modifier-border);
+        border-radius: 6px;
+        background: var(--background-primary);
+        transition: background-color 0.2s ease;
+      }
+      
+      .custom-preset-item:hover {
+        background: var(--background-secondary);
+      }
+      
+      .preset-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex: 1;
+      }
+      
+      .preset-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      
+      .preset-name {
+        font-weight: 500;
+        color: var(--text-normal);
+        font-size: 0.9rem;
+      }
+      
+      .preset-author {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      
+      .preset-id {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-family: monospace;
+      }
+      
+      .custom-preset-item .setting-item {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: none;
+      }
+      
+      .custom-preset-item .setting-item-info {
+        display: none;
+      }
+      
+      .custom-preset-item .setting-item-control {
+        display: flex;
+        gap: 0.25rem;
+        align-items: center;
+      }
+      
+      .custom-preset-item .clickable-icon {
+        padding: 0.25rem;
+        border-radius: 3px;
+        transition: background-color 0.2s ease;
+      }
+      
+      .custom-preset-item .clickable-icon:hover {
+        background: var(--background-modifier-hover);
+      }
+    `;
+    document.head.appendChild(style);
   }
 }

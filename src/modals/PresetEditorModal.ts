@@ -55,7 +55,6 @@ export class PresetEditorModal extends Modal {
 
     // Basic info section
     const basicInfo = contentEl.createEl('div', { cls: 'modal-section' });
-    basicInfo.createEl('h3', { text: 'Basic Information' });
 
     new Setting(basicInfo)
       .setName('Preset name')
@@ -141,7 +140,12 @@ export class PresetEditorModal extends Modal {
     const baseSection = requiredSection.createEl('div', { cls: 'color-group' });
     baseSection.createEl('label', { text: 'Base Color' });
     this.createHSLControls(baseSection, palette.base, (hsl) => {
-      palette.base = hsl;
+      // Ensure we're updating the correct mode's palette
+      if (mode === 'light') {
+        this.preset.light.base = hsl;
+      } else {
+        this.preset.dark.base = hsl;
+      }
       this.updatePreview();
     });
 
@@ -149,7 +153,12 @@ export class PresetEditorModal extends Modal {
     const accentSection = requiredSection.createEl('div', { cls: 'color-group' });
     accentSection.createEl('label', { text: 'Accent Color' });
     this.createHSLControls(accentSection, palette.accent, (hsl) => {
-      palette.accent = hsl;
+      // Ensure we're updating the correct mode's palette
+      if (mode === 'light') {
+        this.preset.light.accent = hsl;
+      } else {
+        this.preset.dark.accent = hsl;
+      }
       this.updatePreview();
     });
 
@@ -175,24 +184,24 @@ export class PresetEditorModal extends Modal {
     }
 
     // Background colors
-    this.createColorOverride(advancedContent, 'Background 1', 'bg1', palette.colors);
-    this.createColorOverride(advancedContent, 'Background 2', 'bg2', palette.colors);
-    this.createColorOverride(advancedContent, 'Background 3', 'bg3', palette.colors);
+    this.createColorOverride(advancedContent, 'Background 1', 'bg1', palette.colors, mode);
+    this.createColorOverride(advancedContent, 'Background 2', 'bg2', palette.colors, mode);
+    this.createColorOverride(advancedContent, 'Background 3', 'bg3', palette.colors, mode);
     
     // UI colors
-    this.createColorOverride(advancedContent, 'UI 1', 'ui1', palette.colors);
-    this.createColorOverride(advancedContent, 'UI 2', 'ui2', palette.colors);
-    this.createColorOverride(advancedContent, 'UI 3', 'ui3', palette.colors);
+    this.createColorOverride(advancedContent, 'UI 1', 'ui1', palette.colors, mode);
+    this.createColorOverride(advancedContent, 'UI 2', 'ui2', palette.colors, mode);
+    this.createColorOverride(advancedContent, 'UI 3', 'ui3', palette.colors, mode);
     
     // Text colors
-    this.createColorOverride(advancedContent, 'Text 1', 'tx1', palette.colors);
-    this.createColorOverride(advancedContent, 'Text 2', 'tx2', palette.colors);
-    this.createColorOverride(advancedContent, 'Text 3', 'tx3', palette.colors);
-    this.createColorOverride(advancedContent, 'Text 4', 'tx4', palette.colors);
+    this.createColorOverride(advancedContent, 'Text 1', 'tx1', palette.colors, mode);
+    this.createColorOverride(advancedContent, 'Text 2', 'tx2', palette.colors, mode);
+    this.createColorOverride(advancedContent, 'Text 3', 'tx3', palette.colors, mode);
+    this.createColorOverride(advancedContent, 'Text 4', 'tx4', palette.colors, mode);
     
     // Highlight colors
-    this.createColorOverride(advancedContent, 'Highlight 1', 'hl1', palette.colors);
-    this.createColorOverride(advancedContent, 'Highlight 2', 'hl2', palette.colors);
+    this.createColorOverride(advancedContent, 'Highlight 1', 'hl1', palette.colors, mode);
+    this.createColorOverride(advancedContent, 'Highlight 2', 'hl2', palette.colors, mode);
 
     // Syntax colors (collapsible)
     const syntaxSection = container.createEl('div', { cls: 'color-section' });
@@ -212,20 +221,23 @@ export class PresetEditorModal extends Modal {
 
     const syntaxColors = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple', 'pink'];
     syntaxColors.forEach(color => {
-      this.createColorOverride(syntaxContent, color.charAt(0).toUpperCase() + color.slice(1), color, palette.colors);
+      this.createColorOverride(syntaxContent, color.charAt(0).toUpperCase() + color.slice(1), color, palette.colors, mode);
     });
   }
 
   private createHSLControls(container: HTMLElement, hsl: HSLColor, onChange: (hsl: HSLColor) => void) {
     const controls = container.createEl('div', { cls: 'hsl-controls' });
     
+    // Create a copy of the HSL object to avoid modifying the original
+    const hslCopy = { ...hsl };
+    
     // Color preview
     const preview = controls.createEl('div', { cls: 'color-preview' });
-    preview.style.backgroundColor = hslToHex(hsl);
+    preview.style.backgroundColor = hslToHex(hslCopy);
     
     // Update preview function
     const updatePreview = () => {
-      preview.style.backgroundColor = hslToHex(hsl);
+      preview.style.backgroundColor = hslToHex(hslCopy);
     };
     
     // Hue
@@ -237,10 +249,10 @@ export class PresetEditorModal extends Modal {
     const hueValue = hueControl.createEl('span', { text: hsl.h.toString() });
     hueSlider.value = hsl.h.toString();
     hueSlider.oninput = () => {
-      hsl.h = parseInt(hueSlider.value);
-      hueValue.textContent = hsl.h.toString();
+      hslCopy.h = parseInt(hueSlider.value);
+      hueValue.textContent = hslCopy.h.toString();
       updatePreview();
-      onChange(hsl);
+      onChange(hslCopy);
     };
 
     // Saturation
@@ -252,10 +264,10 @@ export class PresetEditorModal extends Modal {
     const satValue = satControl.createEl('span', { text: hsl.s.toString() });
     satSlider.value = hsl.s.toString();
     satSlider.oninput = () => {
-      hsl.s = parseInt(satSlider.value);
-      satValue.textContent = hsl.s.toString();
+      hslCopy.s = parseInt(satSlider.value);
+      satValue.textContent = hslCopy.s.toString();
       updatePreview();
-      onChange(hsl);
+      onChange(hslCopy);
     };
 
     // Lightness
@@ -267,14 +279,14 @@ export class PresetEditorModal extends Modal {
     const lightValue = lightControl.createEl('span', { text: hsl.l.toString() });
     lightSlider.value = hsl.l.toString();
     lightSlider.oninput = () => {
-      hsl.l = parseInt(lightSlider.value);
-      lightValue.textContent = hsl.l.toString();
+      hslCopy.l = parseInt(lightSlider.value);
+      lightValue.textContent = hslCopy.l.toString();
       updatePreview();
-      onChange(hsl);
+      onChange(hslCopy);
     };
   }
 
-  private createColorOverride(container: HTMLElement, label: string, key: string, colors: any) {
+  private createColorOverride(container: HTMLElement, label: string, key: string, colors: any, mode: 'light' | 'dark') {
     const override = container.createEl('div', { cls: 'color-override' });
     
     const header = override.createEl('div', { cls: 'override-header' });
@@ -315,18 +327,38 @@ export class PresetEditorModal extends Modal {
         }
         colorInput.value = colors[key];
         originalColor = colors[key];
+        // Ensure we're updating the correct mode's palette
+        if (mode === 'light') {
+          this.preset.light.colors = colors;
+        } else {
+          this.preset.dark.colors = colors;
+        }
       } else {
         colorInput.disabled = true;
         // Store the current value before deleting
         originalColor = colors[key];
         delete colors[key];
+        // Ensure we're updating the correct mode's palette
+        if (mode === 'light') {
+          this.preset.light.colors = colors;
+        } else {
+          this.preset.dark.colors = colors;
+        }
       }
+      this.updatePreview();
     };
     
     colorInput.onchange = () => {
       if (validateHex(colorInput.value)) {
         colors[key] = colorInput.value;
         originalColor = colorInput.value;
+        // Ensure we're updating the correct mode's palette
+        if (mode === 'light') {
+          this.preset.light.colors = colors;
+        } else {
+          this.preset.dark.colors = colors;
+        }
+        this.updatePreview();
       }
     };
     
@@ -335,6 +367,13 @@ export class PresetEditorModal extends Modal {
       if (validateHex(colorInput.value)) {
         colors[key] = colorInput.value;
         originalColor = colorInput.value;
+        // Ensure we're updating the correct mode's palette
+        if (mode === 'light') {
+          this.preset.light.colors = colors;
+        } else {
+          this.preset.dark.colors = colors;
+        }
+        this.updatePreview();
       }
     };
   }
@@ -349,29 +388,36 @@ export class PresetEditorModal extends Modal {
     // Update content visibility
     this.lightContent.classList.toggle('active', mode === 'light');
     this.darkContent.classList.toggle('active', mode === 'dark');
+    
+    // Update preview to show current mode colors
+    this.updatePreview();
   }
 
   private updatePreview() {
     this.previewSwatch.empty();
     
-    const lightHex = hslToHex(this.preset.light.base);
-    const lightAccent = hslToHex(this.preset.light.accent);
-    const darkHex = hslToHex(this.preset.dark.base);
-    const darkAccent = hslToHex(this.preset.dark.accent);
+    // Get colors for both modes
+    const lightPalette = this.preset.light;
+    const darkPalette = this.preset.dark;
+    
+    const lightBaseHex = hslToHex(lightPalette.base);
+    const lightAccentHex = hslToHex(lightPalette.accent);
+    const darkBaseHex = hslToHex(darkPalette.base);
+    const darkAccentHex = hslToHex(darkPalette.accent);
     
     this.previewSwatch.innerHTML = `
       <div class="preview-row">
         <div class="preview-label">Light Mode</div>
         <div class="preview-colors">
-          <div class="preview-color" style="background: ${lightHex}"></div>
-          <div class="preview-color" style="background: ${lightAccent}"></div>
+          <div class="preview-color" style="background: ${lightBaseHex}"></div>
+          <div class="preview-color" style="background: ${lightAccentHex}"></div>
         </div>
       </div>
       <div class="preview-row">
         <div class="preview-label">Dark Mode</div>
         <div class="preview-colors">
-          <div class="preview-color" style="background: ${darkHex}"></div>
-          <div class="preview-color" style="background: ${darkAccent}"></div>
+          <div class="preview-color" style="background: ${darkBaseHex}"></div>
+          <div class="preview-color" style="background: ${darkAccentHex}"></div>
         </div>
       </div>
     `;
@@ -542,11 +588,11 @@ export class PresetEditorModal extends Modal {
       .collapsible-content {
         transition: max-height 0.3s ease;
         overflow: hidden;
-        max-height: 1000px;
+        max-height: 0;
       }
       
-      .collapsible-content.collapsed {
-        max-height: 0;
+      .collapsible-content:not(.collapsed) {
+        max-height: 400px; /* Reasonable max height when expanded */
       }
       
       .color-override {
@@ -616,6 +662,22 @@ export class PresetEditorModal extends Modal {
       
       .modal-footer button {
         min-width: 80px;
+      }
+      
+      /* Fix button styling issues */
+      .collapse-toggle {
+        box-shadow: none !important;
+        background-color: transparent !important;
+      }
+      
+      .collapse-toggle:hover {
+        box-shadow: none !important;
+        background-color: transparent !important;
+      }
+      
+      .collapse-toggle:focus {
+        box-shadow: none !important;
+        background-color: transparent !important;
       }
     `;
     document.head.appendChild(style);

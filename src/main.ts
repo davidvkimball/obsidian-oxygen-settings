@@ -27,31 +27,25 @@ export default class MinimalTheme extends Plugin {
       // @ts-ignore
       if (this.app.vault.getConfig('foldHeading')) {
         this.settings.folding = true;
-        console.log('Folding is on');
         folding = true;
       } else {
         this.settings.folding = false;
-        console.log('Folding is off');
       }
 
       // @ts-ignore
       if (this.app.vault.getConfig('showLineNumber')) {
         this.settings.lineNumbers = true;
-        console.log('Line numbers are on');
         lineNumbers = true;
       } else {
         this.settings.lineNumbers = false;
-        console.log('Line numbers are off');
       }
 
       // @ts-ignore
       if (this.app.vault.getConfig('readableLineLength')) {
         this.settings.readableLineLength = true;
-        console.log('Readable line length is on');
         readableLineLength = true;
       } else {
         this.settings.readableLineLength = false;
-        console.log('Readable line length is off');
       }
 
       const bodyClassList = document.body.classList;
@@ -709,7 +703,6 @@ export default class MinimalTheme extends Plugin {
   }
 
   onunload() {
-    console.log('Unloading Minimal Theme Settings plugin');
     const sidebarEl = document.getElementsByClassName('mod-left-split')[0];
     if (sidebarEl) {
       sidebarEl.removeClass('theme-dark');
@@ -754,26 +747,113 @@ export default class MinimalTheme extends Plugin {
   }
 
   /**
-   * Inject CSS for a custom preset
+   * Create a separate style element specifically for custom presets
    */
-  injectCustomPresetCSS(presetId: string): void {
-    const preset = this.settings.customPresets.find(p => p.id === presetId);
-    if (!preset) return;
+  createCustomPresetStyleElement() {
+    // Remove existing custom preset style element
+    const existing = document.getElementById('minimal-custom-presets');
+    if (existing) {
+      existing.remove();
+    }
     
-    // Remove existing custom preset styles
-    document.querySelectorAll('style[data-custom-preset]').forEach(el => el.remove());
-    
-    // Generate and inject CSS for both modes
+    // Create new style element
     const styleEl = document.createElement('style');
-    styleEl.id = `minimal-custom-preset-${presetId}`;
-    styleEl.setAttribute('data-custom-preset', 'true');
+    styleEl.id = 'minimal-custom-presets';
+    styleEl.setAttribute('data-custom-presets', 'true');
     
-    const lightCSS = PresetManager.generatePresetCSS(preset, 'light');
-    const darkCSS = PresetManager.generatePresetCSS(preset, 'dark');
-    
-    styleEl.textContent = lightCSS + '\n' + darkCSS;
+    // Append to the very end of head, after all other stylesheets
     document.head.appendChild(styleEl);
   }
+
+  /**
+   * Setup a watcher to reapply CSS when the document changes
+   */
+  setupCSSWatcher() {
+    // Watch for changes to style elements
+    const observer = new MutationObserver((mutations) => {
+      let shouldUpdate = false;
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          // Check if any style elements were added
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName === 'STYLE') {
+              shouldUpdate = true;
+            }
+          });
+        }
+      });
+      
+      if (shouldUpdate) {
+        setTimeout(() => {
+          this.updateCustomPresetCSS();
+        }, 50);
+      }
+    });
+    
+    observer.observe(document.head, {
+      childList: true,
+      subtree: true
+    });
+    
+    // Store observer for cleanup
+    (this as any).cssObserver = observer;
+  }
+
+  /**
+   * Update custom preset CSS using inline styles for maximum specificity
+   */
+  updateCustomPresetCSS() {
+    // Remove existing custom preset styles
+    document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
+    
+    // Create new style element
+    const styleEl = document.createElement('style');
+    styleEl.id = 'minimal-custom-presets';
+    styleEl.setAttribute('data-custom-presets', 'true');
+    
+    let css = '';
+    
+    // Generate CSS for both light and dark modes, but only apply the active one
+    const activeLightPreset = this.settings.customPresets.find(p => 
+      this.settings.lightScheme === `minimal-custom-${p.id}`
+    );
+    const activeDarkPreset = this.settings.customPresets.find(p => 
+      this.settings.darkScheme === `minimal-custom-${p.id}`
+    );
+    
+    // Always generate both light and dark CSS to avoid theme switching issues
+    if (activeLightPreset) {
+      css += PresetManager.generatePresetCSS(activeLightPreset, 'light') + '\n';
+    }
+    if (activeDarkPreset) {
+      css += PresetManager.generatePresetCSS(activeDarkPreset, 'dark') + '\n';
+    }
+    
+    // Add additional CSS to ensure it overrides everything
+    css += `
+      /* Force override of main theme variables */
+      :root {
+        --base-h: var(--base-h) !important;
+        --base-s: var(--base-s) !important;
+        --base-l: var(--base-l) !important;
+        --accent-h: var(--accent-h) !important;
+        --accent-s: var(--accent-s) !important;
+        --accent-l: var(--accent-l) !important;
+      }
+    `;
+    
+    styleEl.textContent = css;
+    
+    // Append to the very end of head
+    document.head.appendChild(styleEl);
+    
+    // Gentle style recalculation without visual disruption
+    setTimeout(() => {
+      // Just trigger a reflow without changing display
+      document.body.offsetHeight;
+    }, 50);
+  }
+
 
   // refresh function for when we change settings
   refresh() {
@@ -786,6 +866,8 @@ export default class MinimalTheme extends Plugin {
     // add a css block for our settings-dependent styles
     const css = document.createElement('style');
     css.id = 'minimal-theme';
+    css.setAttribute('data-theme-override', 'true');
+    // Append to the very end of head to ensure it loads after main theme CSS
     document.getElementsByTagName("head")[0].appendChild(css);
 
     // add the main class
@@ -793,12 +875,35 @@ export default class MinimalTheme extends Plugin {
 
     // update the style with the settings-dependent styles
     this.updateStyle();
+    
+    // Create a separate style element specifically for custom presets that loads after everything else
+    this.createCustomPresetStyleElement();
+    
+    // Ensure our CSS is applied after main theme CSS by adding a small delay
+    setTimeout(() => {
+      this.updateStyle();
+      this.updateCustomPresetCSS();
+    }, 100);
+    
+    // Watch for changes to the document and reapply our CSS
+    this.setupCSSWatcher();
   }
   unloadRules() {
     const styleElement = document.getElementById('minimal-theme');
     if (styleElement) {
       styleElement.parentNode?.removeChild(styleElement);
     }
+    
+    const customPresetElement = document.getElementById('minimal-custom-presets');
+    if (customPresetElement) {
+      customPresetElement.parentNode?.removeChild(customPresetElement);
+    }
+    
+    // Clean up CSS observer
+    if ((this as any).cssObserver) {
+      (this as any).cssObserver.disconnect();
+    }
+    
     document.body.classList.remove('minimal-theme');
   }
 
@@ -863,15 +968,21 @@ export default class MinimalTheme extends Plugin {
     const el = document.getElementById('minimal-theme');
     if (!el) throw "minimal-theme element not found!";
     else {
-      // set the settings-dependent css
-      el.innerText = 
-        'body.minimal-theme{'
+      // Build the base CSS (without custom presets)
+      let css = 'body.minimal-theme{'
         + '--font-ui-small:' + this.settings.textSmall + 'px;'
         + '--line-height:' + this.settings.lineHeight + ';'
         + '--line-width:' + this.settings.lineWidth + 'rem;'
         + '--line-width-wide:' + this.settings.lineWidthWide + 'rem;'
         + '--max-width:' + this.settings.maxWidth + '%;'
-        + '--font-editor-override:' + this.settings.editorFont + ';';
+        + '--font-editor-override:' + this.settings.editorFont + ';'
+        + '}\n';
+      
+      // set the base css
+      el.innerText = css;
+      
+      // Update custom preset CSS after all classes are applied
+      this.updateCustomPresetCSS();
     }
   }
 
@@ -928,12 +1039,7 @@ export default class MinimalTheme extends Plugin {
       document.body.addClass('theme-dark');
     }
     
-    // Check if it's a custom preset
-    if (this.settings.darkScheme.startsWith('minimal-custom-')) {
-      const presetId = this.settings.darkScheme.replace('minimal-custom-', '');
-      this.injectCustomPresetCSS(presetId);
-    }
-    
+    // Add the scheme class
     document.body.addClass(this.settings.darkScheme);
   }
 
@@ -947,12 +1053,7 @@ export default class MinimalTheme extends Plugin {
       document.body.addClass('theme-light');
     }
     
-    // Check if it's a custom preset
-    if (this.settings.lightScheme.startsWith('minimal-custom-')) {
-      const presetId = this.settings.lightScheme.replace('minimal-custom-', '');
-      this.injectCustomPresetCSS(presetId);
-    }
-    
+    // Add the scheme class
     document.body.addClass(this.settings.lightScheme);
   }
 

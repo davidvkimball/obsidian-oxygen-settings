@@ -4,6 +4,7 @@ import { CustomColorPreset } from './presets/CustomPreset';
 import { PresetManager } from './presets/PresetManager';
 import { PresetEditorModal } from './modals/PresetEditorModal';
 import { PresetImportModal } from './modals/PresetImportModal';
+import { ConfirmationModal } from './modals/ConfirmationModal';
 import { generateColorSwatch } from './utils/color-utils';
 
 export interface MinimalSettings {
@@ -164,10 +165,9 @@ export class MinimalSettingsTab extends PluginSettingTab {
             .onChange((value) => {
               this.plugin.settings.lightScheme = value;
               this.plugin.saveData(this.plugin.settings);
-              // Only apply light scheme if currently in light mode
-              if (document.body.classList.contains('theme-light')) {
-                this.plugin.updateLightScheme();
-              }
+              // Regenerate all CSS including custom presets
+              this.plugin.updateStyle();
+              this.plugin.updateCustomPresetCSS();
             });
         });
 
@@ -228,10 +228,9 @@ export class MinimalSettingsTab extends PluginSettingTab {
             .onChange((value) => {
               this.plugin.settings.darkScheme = value;
               this.plugin.saveData(this.plugin.settings);
-              // Only apply dark scheme if currently in dark mode
-              if (document.body.classList.contains('theme-dark')) {
-                this.plugin.updateDarkScheme();
-              }
+              // Regenerate all CSS including custom presets
+              this.plugin.updateStyle();
+              this.plugin.updateCustomPresetCSS();
             });
         });
 
@@ -679,7 +678,7 @@ export class MinimalSettingsTab extends PluginSettingTab {
       .addExtraButton(button => button
         .setIcon('trash')
         .setTooltip('Delete preset')
-        .onClick(() => this.deletePreset(preset)));
+        .onClick(async () => await this.deletePreset(preset)));
   }
 
   private openPresetEditor(preset?: CustomColorPreset) {
@@ -724,7 +723,7 @@ export class MinimalSettingsTab extends PluginSettingTab {
     URL.revokeObjectURL(url);
   }
 
-  private deletePreset(preset: CustomColorPreset) {
+  private async deletePreset(preset: CustomColorPreset) {
     // Check if preset is currently active
     const isActive = PresetManager.isPresetActive(
       preset.id, 
@@ -733,9 +732,13 @@ export class MinimalSettingsTab extends PluginSettingTab {
     );
     
     if (isActive) {
-      // Show warning
-      const confirmed = confirm(
-        `This preset is currently active. Deleting it will switch to the default scheme. Continue?`
+      // Show warning modal
+      const confirmed = await ConfirmationModal.show(
+        this.plugin.app,
+        'Delete Active Preset',
+        'This preset is currently active. Deleting it will switch to the default scheme. Continue?',
+        'Delete',
+        'Cancel'
       );
       if (!confirmed) return;
       

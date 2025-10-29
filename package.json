@@ -1,6 +1,6 @@
 {
   "name": "oxygen-settings",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Settings plugin to control color schemes in Oxygen Theme.",
   "main": "main.js",
   "scripts": {

@@ -4,7 +4,7 @@
  */
 
 import { PluginContext } from '../types';
-import { PresetManager } from '../presets/PresetManager';
+import { CustomPresetCSS } from './custom-preset-css';
 import { 
   CSS_CLASSES, 
   LIGHT_SCHEMES, 
@@ -16,9 +16,11 @@ import {
 export class StyleManagerImpl {
   private plugin: PluginContext;
   private cssObserver: MutationObserver | null = null;
+  private customPresetCSS: CustomPresetCSS;
 
   constructor(plugin: PluginContext) {
     this.plugin = plugin;
+    this.customPresetCSS = new CustomPresetCSS(plugin);
   }
 
   /**
@@ -36,8 +38,7 @@ export class StyleManagerImpl {
    * Initialize custom preset CSS (called after main load completes)
    */
   initializeCustomPresets(): void {
-    this.createCustomPresetStyleElement();
-    this.updateCustomPresetCSS();
+    this.customPresetCSS.initialize();
   }
 
   /**
@@ -50,8 +51,8 @@ export class StyleManagerImpl {
     this.removeLightScheme();
     this.removeDarkScheme();
     
-    // Remove custom preset styles
-    document.querySelectorAll('style[data-custom-preset]').forEach(el => el.remove());
+    // Cleanup custom preset CSS
+    this.customPresetCSS.cleanup();
     
     // Cleanup CSS observer
     if (this.cssObserver) {
@@ -65,6 +66,13 @@ export class StyleManagerImpl {
    */
   refresh(): void {
     this.updateStyle();
+  }
+  
+  /**
+   * Update custom preset CSS (public interface)
+   */
+  updateCustomPresetCSS(): void {
+    this.customPresetCSS.updateCSS();
   }
 
   /**
@@ -133,7 +141,7 @@ export class StyleManagerImpl {
         + '}\n';
       
       el.innerText = css;
-      this.updateCustomPresetCSS();
+      this.customPresetCSS.updateCSS();
     }
   }
 
@@ -210,55 +218,6 @@ export class StyleManagerImpl {
     document.body.addClass(this.plugin.settings.darkScheme);
   }
 
-  /**
-   * Update custom preset CSS
-   */
-  updateCustomPresetCSS(): void {
-    // Remove existing custom preset styles
-    document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
-    
-    // Create new style element
-    const styleEl = document.createElement('style');
-    styleEl.id = CSS_CLASSES.CUSTOM_PRESETS_STYLE;
-    styleEl.setAttribute('data-custom-presets', 'true');
-    
-    let css = '';
-    
-    // Generate CSS for active presets
-    const activeLightPreset = this.plugin.settings.customPresets.find(p => 
-      this.plugin.settings.lightScheme === `minimal-custom-${p.id}`
-    );
-    const activeDarkPreset = this.plugin.settings.customPresets.find(p => 
-      this.plugin.settings.darkScheme === `minimal-custom-${p.id}`
-    );
-    
-    if (activeLightPreset) {
-      css += PresetManager.generatePresetCSS(activeLightPreset, 'light') + '\n';
-    }
-    if (activeDarkPreset) {
-      css += PresetManager.generatePresetCSS(activeDarkPreset, 'dark') + '\n';
-    }
-    
-    // Add force override
-    css += `
-      :root {
-        --base-h: var(--base-h) !important;
-        --base-s: var(--base-s) !important;
-        --base-l: var(--base-l) !important;
-        --accent-h: var(--accent-h) !important;
-        --accent-s: var(--accent-s) !important;
-        --accent-l: var(--accent-l) !important;
-      }
-    `;
-    
-    styleEl.textContent = css;
-    document.head.appendChild(styleEl);
-    
-    // Trigger reflow
-    setTimeout(() => {
-      document.body.offsetHeight;
-    }, CSS_REFLOW_DELAY);
-  }
 
   /**
    * Remove style classes
@@ -365,27 +324,7 @@ export class StyleManagerImpl {
       styleElement.remove();
     }
     
-    const customPresetElement = document.getElementById(CSS_CLASSES.CUSTOM_PRESETS_STYLE);
-    if (customPresetElement) {
-      customPresetElement.remove();
-    }
-    
     document.body.classList.remove(CSS_CLASSES.PLUGIN_THEME);
-  }
-
-  /**
-   * Create custom preset style element
-   */
-  private createCustomPresetStyleElement(): void {
-    const existing = document.getElementById(CSS_CLASSES.CUSTOM_PRESETS_STYLE);
-    if (existing) {
-      existing.remove();
-    }
-    
-    const styleEl = document.createElement('style');
-    styleEl.id = CSS_CLASSES.CUSTOM_PRESETS_STYLE;
-    styleEl.setAttribute('data-custom-presets', 'true');
-    document.head.appendChild(styleEl);
   }
 
   /**
@@ -406,7 +345,7 @@ export class StyleManagerImpl {
       
       if (shouldUpdate) {
         setTimeout(() => {
-          this.updateCustomPresetCSS();
+          this.customPresetCSS.updateCSS();
         }, CSS_UPDATE_DELAY);
       }
     });

@@ -34,6 +34,12 @@
   margin-bottom: 1.5rem;
 }
 
+.preset-editor-modal .color-section h3 {
+  color: var(--text-normal) !important;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
 .color-group {
   margin-bottom: 1rem;
 }

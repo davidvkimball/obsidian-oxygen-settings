@@ -19,6 +19,9 @@ export default class MinimalTheme extends Plugin {
   styleManager: StyleManagerImpl;
   themeManager: ThemeManagerImpl;
   settingsSyncManager: SettingsSyncManager;
+  
+  // Cache theme state to avoid repeated vault config calls (performance optimization)
+  private _isOxygenActive: boolean = false;
 
   async onload() {
     await this.loadSettings();
@@ -31,8 +34,11 @@ export default class MinimalTheme extends Plugin {
     // Setup UI
     this.addSettingTab(new MinimalSettingsTab(this.app, this));
     
+    // Cache theme state once at startup for performance
+    this._isOxygenActive = this.checkOxygenTheme();
+    
     // Only initialize styles if Oxygen theme is active
-    if (this.isOxygenThemeActive()) {
+    if (this._isOxygenActive) {
       this.styleManager.initialize();
     }
     
@@ -43,7 +49,7 @@ export default class MinimalTheme extends Plugin {
     
     // Setup sidebar theme update on layout ready
     this.app.workspace.onLayoutReady(() => {
-      if (this.isOxygenThemeActive()) {
+      if (this._isOxygenActive) {
         this.themeManager.updateSidebarTheme();
       }
     });
@@ -54,29 +60,33 @@ export default class MinimalTheme extends Plugin {
     // Defer custom preset CSS initialization to after load completes
     // This prevents blocking the main load process
     setTimeout(() => {
-      if (this.isOxygenThemeActive()) {
+      if (this._isOxygenActive) {
         this.styleManager.initializeCustomPresets();
       }
     }, 100);
     
-    // Watch for theme changes and remove styles if switched away from Oxygen
-    // Track current theme state to avoid unnecessary cleanup/initialization
-    let wasOxygenActive = this.isOxygenThemeActive();
+    // Watch for theme changes with debouncing for performance
+    // css-change fires very frequently, so we debounce and cache the theme state
+    let debounceTimer: number;
     
     this.registerEvent(
       this.app.workspace.on('css-change', () => {
-        const isOxygenActive = this.isOxygenThemeActive();
-        
-        // Only act when theme actually changes (not on every css-change)
-        if (wasOxygenActive && !isOxygenActive) {
-          // Switched away from Oxygen - cleanup
-          this.styleManager.cleanup();
-        } else if (!wasOxygenActive && isOxygenActive) {
-          // Switched to Oxygen - initialize
-          this.styleManager.initialize();
-        }
-        
-        wasOxygenActive = isOxygenActive;
+        // Debounce to avoid excessive checks (performance optimization)
+        window.clearTimeout(debounceTimer);
+        debounceTimer = window.setTimeout(() => {
+          const newThemeState = this.checkOxygenTheme();
+          
+          // Only act when theme actually changes
+          if (this._isOxygenActive && !newThemeState) {
+            // Switched away from Oxygen - cleanup
+            this._isOxygenActive = false;
+            this.styleManager.cleanup();
+          } else if (!this._isOxygenActive && newThemeState) {
+            // Switched to Oxygen - initialize
+            this._isOxygenActive = true;
+            this.styleManager.initialize();
+          }
+        }, 100); // 100ms debounce
       })
     );
   }
@@ -146,10 +156,18 @@ export default class MinimalTheme extends Plugin {
   }
   
   /**
-   * Check if the Oxygen theme is currently active
+   * Check if the Oxygen theme is currently active (uses cached value for performance)
    * @returns true if Oxygen theme is active, false otherwise
    */
   isOxygenThemeActive(): boolean {
+    return this._isOxygenActive;
+  }
+  
+  /**
+   * Check theme state from vault config (called only when needed)
+   * @private
+   */
+  private checkOxygenTheme(): boolean {
     const app = this.app as any;
     const cssTheme = app.vault.getConfig('cssTheme');
     return cssTheme === OXYGEN_THEME_NAME;

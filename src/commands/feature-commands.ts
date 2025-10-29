@@ -83,6 +83,11 @@ function refresh(plugin: PluginContext): void {
 }
 
 function updateTheme(plugin: PluginContext): void {
+  // Only apply styles if Oxygen theme is active
+  if (!plugin.isOxygenThemeActive()) {
+    return;
+  }
+  
   const app = plugin.app as any;
   
   if (app.vault.getConfig('theme') === 'system') {

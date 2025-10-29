@@ -55,10 +55,9 @@ export class PresetCSSGenerator {
     const tx3 = `hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx3L}%)`;
     const tx4 = `hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx4L}%)`;
     
-    // Accent colors
-    const ax1 = `hsl(${accentH}, ${accentS}%, ${accentL}%)`;
-    const ax2 = `hsl(${accentH}, ${accentS}%, ${Math.max(0, Math.min(100, accentL + 8))}%)`;
-    const ax3 = `hsl(${accentH}, ${accentS}%, ${Math.max(0, Math.min(100, accentL - 5))}%)`;
+    // Accent colors - Not calculated here anymore
+    // Let the Oxygen theme calculate ax1/ax2/ax3 from --accent-h/s/l
+    // This allows Obsidian's native accent picker to override properly
     
     // Highlight colors
     const hl1 = `hsla(${accentH}, 50%, 40%, 30%)`;
@@ -67,9 +66,45 @@ export class PresetCSSGenerator {
     // Special colors
     const sp1 = isLightMode ? 'white' : 'black';
     
-    // Calculate proper contrast for accent color
-    const accentIsLight = accentL > 50;
-    const textOnAccent = accentIsLight ? 'black' : 'white';
+    // Calculate proper contrast for accent color using relative luminance
+    // Convert HSL to RGB for luminance calculation
+    const hslToRgb = (h: number, s: number, l: number): [number, number, number] => {
+      h = h / 360;
+      s = s / 100;
+      l = l / 100;
+      
+      const hue2rgb = (p: number, q: number, t: number) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+      };
+      
+      if (s === 0) {
+        return [l, l, l];
+      }
+      
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      const r = hue2rgb(p, q, h + 1/3);
+      const g = hue2rgb(p, q, h);
+      const b = hue2rgb(p, q, h - 1/3);
+      
+      return [r, g, b];
+    };
+    
+    const [r, g, b] = hslToRgb(accentH, accentS, accentL);
+    
+    // Calculate relative luminance (WCAG formula)
+    const luminance = 0.2126 * (r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4))
+                    + 0.7152 * (g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4))
+                    + 0.0722 * (b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4));
+    
+    // Use white text if luminance is low (dark color), black text if high (light color)
+    // Threshold of 0.5 works well for most cases (WCAG uses 0.179 for AA contrast)
+    const textOnAccent = luminance > 0.5 ? 'black' : 'white';
     
     // === BASE HSL VALUES (Required for colorful-frame and colorful-headings) ===
     css += `  --base-h: ${baseH};\n`;
@@ -102,11 +137,13 @@ export class PresetCSSGenerator {
     css += `  --tx4: ${tx4};\n`;
     css += `\n`;
     
-    // Accent Colors
-    css += `  --ax1: ${ax1};\n`;
-    css += `  --ax2: ${ax2};\n`;
-    css += `  --ax3: ${ax3};\n`;
-    css += `\n`;
+    // Accent Colors - Don't set ax1/ax2/ax3 explicitly
+    // Let the Oxygen theme CSS calculate these from --accent-h/s/l
+    // This allows Obsidian's native accent color picker to work properly
+    // css += `  --ax1: ${ax1};\n`;
+    // css += `  --ax2: ${ax2};\n`;
+    // css += `  --ax3: ${ax3};\n`;
+    // css += `\n`;
     
     // Highlights
     css += `  --hl1: ${hl1};\n`;
@@ -115,6 +152,10 @@ export class PresetCSSGenerator {
     
     // Special
     css += `  --sp1: ${sp1};\n`;
+    css += `\n`;
+    
+    // Text on accent (for proper contrast on accent-colored backgrounds)
+    css += `  --text-on-accent: ${textOnAccent};\n`;
     
     // Optional color overrides (if user provided specific colors)
     if (palette.colors) {

@@ -192,6 +192,9 @@ export const OBSIDIAN_THEMES = {
   SYSTEM: 'system',
 } as const;
 
+// Oxygen theme name for detection
+export const OXYGEN_THEME_NAME = 'Oxygen';
+
 // Custom preset prefix
 export const CUSTOM_PRESET_PREFIX = 'minimal-custom-';
 

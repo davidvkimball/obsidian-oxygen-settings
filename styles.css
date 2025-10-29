@@ -75,72 +75,20 @@
   height: 2rem;
   display: inline-block;
   position: relative;
-  overflow: hidden;
-  border-radius: 50%;
 }
 
-.preset-editor-modal .preset-color-input,
-.preset-editor-modal input.preset-color-input[type="color"] {
-  width: 2rem !important;
-  height: 2rem !important;
-  min-width: 2rem !important;
-  min-height: 2rem !important;
-  max-width: 2rem !important;
-  max-height: 2rem !important;
-  border: none !important;
-  border-radius: 50% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  cursor: pointer !important;
-  box-shadow: none !important;
-  outline: none !important;
-  background: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  display: block !important;
+.color-preview-swatch {
+  transition: opacity 0.2s ease, border-color 0.2s ease;
 }
 
-.preset-editor-modal .preset-color-input:hover,
-.preset-editor-modal input.preset-color-input[type="color"]:hover {
-  box-shadow: none !important;
-  background: none !important;
-  border: none !important;
-  outline: none !important;
+.color-preview-swatch:hover {
+  border-color: var(--text-muted) !important;
 }
 
-.preset-editor-modal .preset-color-input:focus,
-.preset-editor-modal input.preset-color-input[type="color"]:focus {
-  box-shadow: none !important;
-  background: none !important;
-  border: none !important;
-  outline: none !important;
-}
-
-.preset-editor-modal .preset-color-input::-webkit-color-swatch-wrapper,
-.preset-editor-modal input.preset-color-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0 !important;
-  border: none !important;
-  border-radius: 50% !important;
-}
-
-.preset-editor-modal .preset-color-input::-webkit-color-swatch,
-.preset-editor-modal input.preset-color-input[type="color"]::-webkit-color-swatch {
-  border: 2px solid var(--background-modifier-border) !important;
-  border-radius: 50% !important;
-  padding: 0 !important;
-}
-
-.preset-editor-modal .preset-color-input::-moz-color-swatch,
-.preset-editor-modal input.preset-color-input[type="color"]::-moz-color-swatch {
-  border: 2px solid var(--background-modifier-border) !important;
-  border-radius: 50% !important;
-}
-
-.preset-editor-modal .preset-color-input::-moz-focus-inner,
-.preset-editor-modal input.preset-color-input[type="color"]::-moz-focus-inner {
-  border: none !important;
-  padding: 0 !important;
+/* Dim the color preview when the input is disabled */
+.color-input-wrapper:has(input:disabled) .color-preview-swatch {
+  opacity: 0.5;
+  cursor: not-allowed !important;
 }
 
 .mode-tabs {
@@ -323,13 +271,6 @@
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-}
-
-.override-header input[type="color"] {
-  width: 2rem;
-  height: 1.5rem;
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 3px;
 }
 
 .preview-swatch {

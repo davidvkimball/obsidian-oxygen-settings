@@ -62,8 +62,16 @@ export class PresetManager {
       name: sanitizedName,
       author: author.trim(),
       version: '1.0.0',
-      light: { ...DEFAULT_COLOR_PALETTE },
-      dark: { ...DEFAULT_COLOR_PALETTE }
+      light: { 
+        base: { h: 210, s: 2, l: 96 },  // Light background
+        accent: { h: 200, s: 80, l: 50 },
+        colors: {}
+      },
+      dark: { 
+        base: { h: 210, s: 2, l: 13 },  // Dark background
+        accent: { h: 200, s: 80, l: 50 },
+        colors: {}
+      }
     };
   }
 

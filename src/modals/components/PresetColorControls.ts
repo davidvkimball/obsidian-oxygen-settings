@@ -4,7 +4,7 @@
  */
 
 import { HSLColor, ColorPalette } from '../../presets/CustomPreset';
-import { hslToHex, validateHex } from '../../utils/color-utils';
+import { hslToHex, hexToHSL, validateHex } from '../../utils/color-utils';
 import { getDefaultColorForKey } from '../../utils/preset-color-defaults';
 
 /**
@@ -23,13 +23,51 @@ export function createHSLControls(
   // Create a copy of the HSL object to avoid modifying the original
   const hslCopy = { ...hsl };
   
-  // Color preview
-  const preview = controls.createEl('div', { cls: 'color-preview' });
+  // Color preview (clickable) - wrapper with relative positioning
+  const previewWrapper = controls.createEl('div', { cls: 'color-preview-wrapper' });
+  previewWrapper.style.position = 'relative';
+  previewWrapper.style.display = 'inline-block';
+  
+  const preview = previewWrapper.createEl('div', { cls: 'color-preview' });
   preview.style.backgroundColor = hslToHex(hslCopy);
+  preview.style.cursor = 'pointer';
+  preview.title = 'Click to pick a color with hex input';
+  
+  // Color input positioned over the preview
+  const colorInput = previewWrapper.createEl('input', { type: 'color' });
+  colorInput.style.position = 'absolute';
+  colorInput.style.top = '0';
+  colorInput.style.left = '0';
+  colorInput.style.width = '100%';
+  colorInput.style.height = '100%';
+  colorInput.style.opacity = '0';
+  colorInput.style.cursor = 'pointer';
+  colorInput.value = hslToHex(hslCopy);
   
   // Update preview function
   const updatePreview = () => {
-    preview.style.backgroundColor = hslToHex(hslCopy);
+    const hexColor = hslToHex(hslCopy);
+    preview.style.backgroundColor = hexColor;
+    colorInput.value = hexColor;
+  };
+  
+  // When user picks a color with the color input, update HSL values
+  colorInput.onchange = () => {
+    const newHSL = hexToHSL(colorInput.value);
+    hslCopy.h = newHSL.h;
+    hslCopy.s = newHSL.s;
+    hslCopy.l = newHSL.l;
+    
+    // Update all slider values and labels
+    hueSlider.value = newHSL.h.toString();
+    hueValue.textContent = newHSL.h.toString();
+    satSlider.value = newHSL.s.toString();
+    satValue.textContent = newHSL.s.toString();
+    lightSlider.value = newHSL.l.toString();
+    lightValue.textContent = newHSL.l.toString();
+    
+    updatePreview();
+    onChange(hslCopy);
   };
   
   // Hue
@@ -102,23 +140,47 @@ export function createColorOverride(
   const toggle = header.createEl('input', { type: 'checkbox' });
   header.createEl('label', { text: label });
   
+  // Create color picker with same pattern as HSL controls
   const colorInputWrapper = header.createEl('div', { cls: 'color-input-wrapper' });
+  colorInputWrapper.style.position = 'relative';
+  
+  // Visible color preview
+  const colorPreview = colorInputWrapper.createEl('div', { cls: 'color-preview-swatch' });
+  colorPreview.style.width = '2rem';
+  colorPreview.style.height = '2rem';
+  colorPreview.style.borderRadius = '50%';
+  colorPreview.style.border = '2px solid var(--background-modifier-border)';
+  colorPreview.style.cursor = 'pointer';
+  
+  // Hidden color input positioned over the preview
   const colorInput = colorInputWrapper.createEl('input', { type: 'color' });
+  colorInput.style.position = 'absolute';
+  colorInput.style.top = '0';
+  colorInput.style.left = '0';
+  colorInput.style.width = '100%';
+  colorInput.style.height = '100%';
+  colorInput.style.opacity = '0';
+  colorInput.style.cursor = 'pointer';
   colorInput.disabled = true;
-  colorInput.addClass('preset-color-input');
   
   // Store the original color value when toggling off
   let originalColor: string | null = null;
   
+  // Function to update the color preview
+  const updateColorPreview = (color: string) => {
+    colorPreview.style.backgroundColor = color;
+    colorInput.value = color;
+  };
+  
   if (colors[key]) {
     toggle.checked = true;
     colorInput.disabled = false;
-    colorInput.value = colors[key];
+    updateColorPreview(colors[key]);
     originalColor = colors[key];
   } else {
     // Show default color preview even when disabled
     const defaultColor = getDefaultColorForKey(key, palette);
-    colorInput.value = defaultColor;
+    updateColorPreview(defaultColor);
     originalColor = defaultColor;
   }
   
@@ -130,7 +192,7 @@ export function createColorOverride(
       // Use stored originalColor, or default to current color, or calculate sensible default
       const restoredColor = originalColor || colors[key] || getDefaultColorForKey(key, palette);
       colors[key] = restoredColor;
-      colorInput.value = restoredColor;
+      updateColorPreview(restoredColor);
       originalColor = restoredColor;
       onUpdate();
     }
@@ -142,7 +204,7 @@ export function createColorOverride(
       // Use stored originalColor, or default to current color, or calculate sensible default
       const restoredColor = originalColor || colors[key] || getDefaultColorForKey(key, palette);
       colors[key] = restoredColor;
-      colorInput.value = restoredColor;
+      updateColorPreview(restoredColor);
       originalColor = restoredColor;
     } else {
       colorInput.disabled = true;
@@ -157,6 +219,7 @@ export function createColorOverride(
     if (validateHex(colorInput.value)) {
       colors[key] = colorInput.value;
       originalColor = colorInput.value;
+      updateColorPreview(colorInput.value);
       onUpdate();
     }
   };
@@ -166,6 +229,7 @@ export function createColorOverride(
     if (validateHex(colorInput.value)) {
       colors[key] = colorInput.value;
       originalColor = colorInput.value;
+      updateColorPreview(colorInput.value);
       onUpdate();
     }
   };

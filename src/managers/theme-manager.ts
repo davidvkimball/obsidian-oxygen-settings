@@ -99,6 +99,11 @@ export class ThemeManagerImpl {
    * Update sidebar theme for high contrast light mode
    */
   updateSidebarTheme(): void {
+    // Only update sidebar theme if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
+    
     const sidebarEl = document.getElementsByClassName('mod-left-split')[0];
     const ribbonEl = document.getElementsByClassName('side-dock-ribbon')[0];
     

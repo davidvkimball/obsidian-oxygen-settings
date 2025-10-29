@@ -18,6 +18,10 @@ export class CustomPresetCSS {
    * Initialize custom preset CSS (create style element and generate CSS)
    */
   initialize(): void {
+    // Only initialize if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
     this.createStyleElement();
     this.updateCSS();
   }
@@ -26,6 +30,11 @@ export class CustomPresetCSS {
    * Update custom preset CSS based on current settings
    */
   updateCSS(): void {
+    // Only update CSS if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
+    
     // Remove existing custom preset styles
     document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
     
@@ -51,17 +60,8 @@ export class CustomPresetCSS {
       css += PresetManager.generatePresetCSS(activeDarkPreset, 'dark') + '\n';
     }
     
-    // Add force override
-    css += `
-      :root {
-        --base-h: var(--base-h) !important;
-        --base-s: var(--base-s) !important;
-        --base-l: var(--base-l) !important;
-        --accent-h: var(--accent-h) !important;
-        --accent-s: var(--accent-s) !important;
-        --accent-l: var(--accent-l) !important;
-      }
-    `;
+    // Don't use !important - allows users to override accent color in Obsidian's native settings
+    // The preset CSS is scoped to body classes, so it will still apply when the preset is active
     
     styleEl.textContent = css;
     document.head.appendChild(styleEl);

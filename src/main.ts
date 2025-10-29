@@ -10,6 +10,7 @@ import { StyleManagerImpl } from './managers/style-manager';
 import { ThemeManagerImpl } from './managers/theme-manager';
 import { SettingsSyncManager } from './managers/settings-sync';
 import { registerAllCommands } from './commands';
+import { OXYGEN_THEME_NAME } from './constants';
 
 export default class MinimalTheme extends Plugin {
   settings: MinimalSettings;
@@ -30,8 +31,11 @@ export default class MinimalTheme extends Plugin {
     // Setup UI
     this.addSettingTab(new MinimalSettingsTab(this.app, this));
     
-    // Initialize styles and watchers
-    this.styleManager.initialize();
+    // Only initialize styles if Oxygen theme is active
+    if (this.isOxygenThemeActive()) {
+      this.styleManager.initialize();
+    }
+    
     this.settingsSyncManager.setupWatchers();
     
     // Initial sync from vault (without saving)
@@ -39,7 +43,9 @@ export default class MinimalTheme extends Plugin {
     
     // Setup sidebar theme update on layout ready
     this.app.workspace.onLayoutReady(() => {
-      this.themeManager.updateSidebarTheme();
+      if (this.isOxygenThemeActive()) {
+        this.themeManager.updateSidebarTheme();
+      }
     });
 
     // Register all commands
@@ -48,8 +54,31 @@ export default class MinimalTheme extends Plugin {
     // Defer custom preset CSS initialization to after load completes
     // This prevents blocking the main load process
     setTimeout(() => {
-      this.styleManager.initializeCustomPresets();
+      if (this.isOxygenThemeActive()) {
+        this.styleManager.initializeCustomPresets();
+      }
     }, 100);
+    
+    // Watch for theme changes and remove styles if switched away from Oxygen
+    // Track current theme state to avoid unnecessary cleanup/initialization
+    let wasOxygenActive = this.isOxygenThemeActive();
+    
+    this.registerEvent(
+      this.app.workspace.on('css-change', () => {
+        const isOxygenActive = this.isOxygenThemeActive();
+        
+        // Only act when theme actually changes (not on every css-change)
+        if (wasOxygenActive && !isOxygenActive) {
+          // Switched away from Oxygen - cleanup
+          this.styleManager.cleanup();
+        } else if (!wasOxygenActive && isOxygenActive) {
+          // Switched to Oxygen - initialize
+          this.styleManager.initialize();
+        }
+        
+        wasOxygenActive = isOxygenActive;
+      })
+    );
   }
 
   onunload() {
@@ -114,6 +143,16 @@ export default class MinimalTheme extends Plugin {
 
   setFontSize(): void {
     this.settingsSyncManager.setFontSize();
+  }
+  
+  /**
+   * Check if the Oxygen theme is currently active
+   * @returns true if Oxygen theme is active, false otherwise
+   */
+  isOxygenThemeActive(): boolean {
+    const app = this.app as any;
+    const cssTheme = app.vault.getConfig('cssTheme');
+    return cssTheme === OXYGEN_THEME_NAME;
   }
 }
 

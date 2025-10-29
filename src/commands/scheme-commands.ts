@@ -67,6 +67,11 @@ function updateDarkScheme(plugin: PluginContext): void {
 }
 
 function updateLightStyle(plugin: PluginContext): void {
+  // Only apply styles if Oxygen theme is active
+  if (!plugin.isOxygenThemeActive()) {
+    return;
+  }
+  
   document.body.removeClass(
     'theme-dark',
     'minimal-light',
@@ -85,6 +90,11 @@ function updateLightStyle(plugin: PluginContext): void {
 }
 
 function updateDarkStyle(plugin: PluginContext): void {
+  // Only apply styles if Oxygen theme is active
+  if (!plugin.isOxygenThemeActive()) {
+    return;
+  }
+  
   document.body.removeClass(
     'theme-light',
     'minimal-dark',

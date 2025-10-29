@@ -65,6 +65,10 @@ export class StyleManagerImpl {
    * Refresh all styles
    */
   refresh(): void {
+    // Only refresh styles if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
     this.updateStyle();
   }
   
@@ -79,6 +83,11 @@ export class StyleManagerImpl {
    * Update all styles based on current settings
    */
   updateStyle(): void {
+    // Only apply styles if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
+    
     this.removeStyle();
     this.removeSettings();
 
@@ -149,6 +158,11 @@ export class StyleManagerImpl {
    * Update light mode style
    */
   updateLightStyle(): void {
+    // Only apply styles if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
+    
     document.body.removeClass(
       'theme-dark',
       'minimal-light',
@@ -171,6 +185,11 @@ export class StyleManagerImpl {
    * Update dark mode style
    */
   updateDarkStyle(): void {
+    // Only apply styles if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
+    
     document.body.removeClass(
       'theme-light',
       'minimal-dark',
@@ -192,6 +211,11 @@ export class StyleManagerImpl {
    * Update light color scheme
    */
   updateLightScheme(): void {
+    // Only apply styles if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
+    
     this.removeLightScheme();
     this.removeDarkScheme();
     
@@ -207,6 +231,11 @@ export class StyleManagerImpl {
    * Update dark color scheme
    */
   updateDarkScheme(): void {
+    // Only apply styles if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
+    
     this.removeDarkScheme();
     this.removeLightScheme();
     
@@ -304,6 +333,11 @@ export class StyleManagerImpl {
    * Load CSS rules
    */
   private loadRules(): void {
+    // Only load CSS rules if Oxygen theme is active
+    if (!this.plugin.isOxygenThemeActive()) {
+      return;
+    }
+    
     const css = document.createElement('style');
     css.id = 'minimal-theme';
     css.setAttribute(CSS_CLASSES.THEME_OVERRIDE, 'true');

@@ -50,13 +50,9 @@ export class PresetImportModal extends Modal {
       .setDesc('Paste the complete JSON preset data here')
       .addTextArea(text => {
         this.textArea = text.inputEl;
+        this.textArea.addClass('preset-json-input');
         text.setPlaceholder('Paste JSON preset data here...')
           .onChange(value => this.parseJSON(value));
-        
-        // Style the textarea
-        this.textArea.style.height = '200px';
-        this.textArea.style.fontFamily = 'monospace';
-        this.textArea.style.fontSize = '0.9rem';
       });
 
     // Preview section
@@ -69,8 +65,7 @@ export class PresetImportModal extends Modal {
     });
 
     // Error display
-    const errorSection = contentEl.createEl('div', { cls: 'modal-section error-section' });
-    errorSection.style.display = 'none';
+    const errorSection = contentEl.createEl('div', { cls: 'modal-section error-section hidden' });
     errorSection.createEl('div', { cls: 'error-message' });
 
     // Footer buttons
@@ -85,9 +80,6 @@ export class PresetImportModal extends Modal {
     });
     this.importButton.disabled = true;
     this.importButton.onclick = () => this.importPreset();
-
-    // Add CSS styles
-    this.addStyles();
   }
 
   private parseJSON(jsonString: string) {
@@ -97,7 +89,7 @@ export class PresetImportModal extends Modal {
     // Clear previous state
     this.parsedPreset = null;
     this.importButton.disabled = true;
-    errorSection.style.display = 'none';
+    errorSection.addClass('hidden');
     this.previewContainer.empty();
 
     if (!jsonString.trim()) {
@@ -125,7 +117,7 @@ export class PresetImportModal extends Modal {
     } catch (error) {
       // Show error
       errorMessage.textContent = error instanceof Error ? error.message : 'Invalid JSON format';
-      errorSection.style.display = 'block';
+      errorSection.removeClass('hidden');
       
       this.previewContainer.createEl('p', { 
         text: 'Fix the JSON errors above to see a preview',
@@ -159,7 +151,7 @@ export class PresetImportModal extends Modal {
     idRow.createEl('span', { text: preset.id, cls: 'preset-id' });
 
     // Color preview section
-    const preview = this.previewContainer.createEl('div', { cls: 'color-preview' });
+    const preview = this.previewContainer.createEl('div', { cls: 'color-preview-section' });
     preview.createEl('h4', { text: 'Color Preview' });
 
     // Mode toggle
@@ -212,7 +204,7 @@ export class PresetImportModal extends Modal {
     };
 
     // Color details
-    const details = this.previewContainer.createEl('div', { cls: 'color-details' });
+    const details = this.previewContainer.createEl('div', { cls: 'color-details-section' });
     details.createEl('h4', { text: 'Color Values' });
 
     const lightDetails = details.createEl('div', { cls: 'mode-details' });
@@ -264,172 +256,6 @@ export class PresetImportModal extends Modal {
     }
   }
 
-  private addStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-      .preset-import-modal .modal-content {
-        max-height: 80vh;
-        overflow-y: auto;
-      }
-      
-      .modal-section {
-        margin-bottom: 1.5rem;
-      }
-      
-      .preview-container {
-        border: 1px solid var(--background-modifier-border);
-        border-radius: 6px;
-        padding: 1rem;
-        background: var(--background-primary);
-        min-height: 200px;
-      }
-      
-      .preview-placeholder,
-      .preview-error {
-        color: var(--text-muted);
-        font-style: italic;
-        text-align: center;
-        margin: 2rem 0;
-      }
-      
-      .preview-error {
-        color: var(--text-error);
-      }
-      
-      .error-section {
-        background: var(--background-modifier-error);
-        border: 1px solid var(--text-error);
-        border-radius: 6px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-      }
-      
-      .error-message {
-        color: var(--text-error);
-        font-weight: 500;
-      }
-      
-      .preset-info {
-        margin-bottom: 1rem;
-      }
-      
-      .info-row {
-        margin-bottom: 0.5rem;
-      }
-      
-      .preset-id {
-        font-family: monospace;
-        background: var(--background-secondary);
-        padding: 0.2rem 0.4rem;
-        border-radius: 3px;
-        font-size: 0.9rem;
-      }
-      
-      .color-preview {
-        margin-bottom: 1rem;
-      }
-      
-      .mode-toggle {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-        border-bottom: 1px solid var(--background-modifier-border);
-      }
-      
-      .mode-btn {
-        background: none;
-        border: none;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        transition: color 0.2s ease;
-      }
-      
-      .mode-btn:hover {
-        color: var(--text-normal);
-      }
-      
-      .mode-btn.active {
-        color: var(--text-normal);
-        border-bottom-color: var(--text-accent);
-        font-weight: 500;
-      }
-      
-      .swatch-container {
-        margin-top: 0.5rem;
-      }
-      
-      .mode-swatches {
-        display: none;
-        gap: 1rem;
-        margin-top: 0.5rem;
-      }
-      
-      .mode-swatches.active {
-        display: flex;
-      }
-      
-      .color-swatch {
-        width: 3rem;
-        height: 3rem;
-        border-radius: 6px;
-        border: 1px solid var(--background-modifier-border);
-        cursor: pointer;
-        transition: transform 0.2s ease;
-      }
-      
-      .color-swatch:hover {
-        transform: scale(1.05);
-      }
-      
-      .color-details {
-        margin-top: 1rem;
-      }
-      
-      .mode-details {
-        margin-bottom: 1rem;
-      }
-      
-      .mode-details h5 {
-        margin: 0 0 0.5rem 0;
-        color: var(--text-normal);
-      }
-      
-      .color-detail {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.5rem;
-        font-family: monospace;
-        font-size: 0.9rem;
-      }
-      
-      .detail-swatch {
-        width: 1.5rem;
-        height: 1.5rem;
-        border-radius: 3px;
-        border: 1px solid var(--background-modifier-border);
-        flex-shrink: 0;
-      }
-      
-      .color-detail span:first-child {
-        color: var(--text-muted);
-        min-width: 3rem;
-      }
-      
-      .overrides-info {
-        margin-top: 1rem;
-        padding: 0.5rem;
-        background: var(--background-secondary);
-        border-radius: 3px;
-        font-size: 0.9rem;
-        color: var(--text-muted);
-      }
-    `;
-    document.head.appendChild(style);
-  }
 
   onClose() {
     const { contentEl } = this;

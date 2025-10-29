@@ -1,0 +1,990 @@
+import { Plugin } from 'obsidian';
+import { MinimalSettings, MinimalSettingsTab, DEFAULT_SETTINGS } from './settings';
+import { StyleManagerImpl } from './managers/style-manager';
+import { ThemeManagerImpl } from './managers/theme-manager';
+import { SettingsSyncManager } from './managers/settings-sync';
+import { registerAllCommands } from './commands';
+
+export default class MinimalTheme extends Plugin {
+  settings: MinimalSettings;
+  
+  // Managers
+  styleManager: StyleManagerImpl;
+  themeManager: ThemeManagerImpl;
+  settingsSyncManager: SettingsSyncManager;
+
+  async onload() {
+    await this.loadSettings();
+    
+    // Initialize managers
+    this.styleManager = new StyleManagerImpl(this);
+    this.themeManager = new ThemeManagerImpl(this);
+    this.settingsSyncManager = new SettingsSyncManager(this);
+    
+    // Setup
+    this.addSettingTab(new MinimalSettingsTab(this.app, this));
+    this.styleManager.initialize();
+    this.settingsSyncManager.setupWatchers();
+
+    // Initial settings sync
+    this.settingsSyncManager.syncFromVault();
+    
+    // Setup sidebar theme update on layout ready
+    const app = this.app as any;
+    app.workspace.onLayoutReady(() => {
+      this.themeManager.updateSidebarTheme();
+    });
+
+    // Register all commands (delegated to command modules)
+    registerAllCommands(this);
+
+    this.addCommand({
+      id: 'toggle-minimal-light-default',
+      name: 'Use light mode (default)',
+      callback: () => {
+        this.settings.lightStyle = 'minimal-light';
+        this.saveData(this.settings);
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-light-white',
+      name: 'Use light mode (all white)',
+      callback: () => {
+        this.settings.lightStyle = 'minimal-light-white';
+        this.saveData(this.settings);
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-light-tonal',
+      name: 'Use light mode (low contrast)',
+      callback: () => {
+        this.settings.lightStyle = 'minimal-light-tonal';
+        this.saveData(this.settings);
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-light-contrast',
+      name: 'Use light mode (high contrast)',
+      callback: () => {
+        this.settings.lightStyle = 'minimal-light-contrast';
+        this.saveData(this.settings);
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-dark-default',
+      name: 'Use dark mode (default)',
+      callback: () => {
+        this.settings.darkStyle = 'minimal-dark';
+        this.saveData(this.settings);
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-dark-tonal',
+      name: 'Use dark mode (low contrast)',
+      callback: () => {
+        this.settings.darkStyle = 'minimal-dark-tonal';
+        this.saveData(this.settings);
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-dark-black',
+      name: 'Use dark mode (true black)',
+      callback: () => {
+        this.settings.darkStyle = 'minimal-dark-black';
+        this.saveData(this.settings);
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-atom-light',
+      name: 'Switch light color scheme to Atom (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-atom-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-ayu-light',
+      name: 'Switch light color scheme to Ayu (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-ayu-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-catppuccin-light',
+      name: 'Switch light color scheme to Catppuccin (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-catppuccin-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-oxygen-light',
+      name: 'Switch light color scheme to Oxygen (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-oxygen-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-gruvbox-light',
+      name: 'Switch light color scheme to Gruvbox (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-gruvbox-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-eink-light',
+      name: 'Switch light color scheme to E-ink (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-eink-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-everforest-light',
+      name: 'Switch light color scheme to Everforest (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-everforest-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-flexoki-light',
+      name: 'Switch light color scheme to Flexoki (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-flexoki-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-macos-light',
+      name: 'Switch light color scheme to macOS (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-macos-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-notion-light',
+      name: 'Switch light color scheme to Sky (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-notion-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-nord-light',
+      name: 'Switch light color scheme to Nord (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-nord-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-rose-pine-light',
+      name: 'Switch light color scheme to Rosé Pine (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-rose-pine-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-solarized-light',
+      name: 'Switch light color scheme to Solarized (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-solarized-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-things-light',
+      name: 'Switch light color scheme to Things (light)',
+      callback: () => {
+        this.settings.lightScheme = 'minimal-things-light';
+        this.saveData(this.settings);
+        this.updateLightScheme();
+        this.updateLightStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-atom-dark',
+      name: 'Switch dark color scheme to Atom (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-atom-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-ayu-dark',
+      name: 'Switch dark color scheme to Ayu (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-ayu-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-catppuccin-dark',
+      name: 'Switch dark color scheme to Catppuccin (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-catppuccin-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-dracula-dark',
+      name: 'Switch dark color scheme to Dracula (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-dracula-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-oxygen-dark',
+      name: 'Switch dark color scheme to Oxygen (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-oxygen-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-eink-dark',
+      name: 'Switch dark color scheme to E-ink (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-eink-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-everforest-dark',
+      name: 'Switch dark color scheme to Everforest (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-everforest-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-flexoki-dark',
+      name: 'Switch dark color scheme to Flexoki (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-flexoki-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-gruvbox-dark',
+      name: 'Switch dark color scheme to Gruvbox (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-gruvbox-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-macos-dark',
+      name: 'Switch dark color scheme to macOS (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-macos-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-nord-dark',
+      name: 'Switch dark color scheme to Nord (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-nord-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-notion-dark',
+      name: 'Switch dark color scheme to Sky (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-notion-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-rose-pine-dark',
+      name: 'Switch dark color scheme to Rosé Pine (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-rose-pine-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-solarized-dark',
+      name: 'Switch dark color scheme to Solarized (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-solarized-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-things-dark',
+      name: 'Switch dark color scheme to Things (dark)',
+      callback: () => {
+        this.settings.darkScheme = 'minimal-things-dark';
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+        this.updateDarkStyle();
+      }
+    });
+
+    this.addCommand({
+      id: 'toggle-minimal-dev-block-width',
+      name: 'Dev — Show block widths',
+      callback: () => {
+        this.settings.devBlockWidth = !this.settings.devBlockWidth;
+        this.saveData(this.settings);
+        this.refresh();
+      }
+    });
+
+    // Custom Preset Commands
+    this.addCommand({
+      id: 'create-custom-preset',
+      name: 'Create custom color preset',
+      callback: () => {
+        const modal = new PresetEditorModal(this.app, this, null, (preset) => {
+          this.settings.customPresets.push(preset);
+          this.saveData(this.settings);
+        });
+        modal.open();
+      }
+    });
+
+    this.addCommand({
+      id: 'import-custom-preset',
+      name: 'Import custom color preset',
+      callback: () => {
+        const modal = new PresetImportModal(this.app, this, (preset) => {
+          this.settings.customPresets.push(preset);
+          this.saveData(this.settings);
+        });
+        modal.open();
+      }
+    });
+
+    this.addCommand({
+      id: 'cycle-custom-presets-light',
+      name: 'Cycle through custom presets (light mode)',
+      callback: () => {
+        if (this.settings.customPresets.length === 0) return;
+        
+        const currentIndex = this.settings.customPresets.findIndex(p => 
+          this.settings.lightScheme === `minimal-custom-${p.id}`
+        );
+        const nextIndex = (currentIndex + 1) % this.settings.customPresets.length;
+        const nextPreset = this.settings.customPresets[nextIndex];
+        
+        this.settings.lightScheme = `minimal-custom-${nextPreset.id}`;
+        this.saveData(this.settings);
+        this.updateLightScheme();
+      }
+    });
+
+    this.addCommand({
+      id: 'cycle-custom-presets-dark',
+      name: 'Cycle through custom presets (dark mode)',
+      callback: () => {
+        if (this.settings.customPresets.length === 0) return;
+        
+        const currentIndex = this.settings.customPresets.findIndex(p => 
+          this.settings.darkScheme === `minimal-custom-${p.id}`
+        );
+        const nextIndex = (currentIndex + 1) % this.settings.customPresets.length;
+        const nextPreset = this.settings.customPresets[nextIndex];
+        
+        this.settings.darkScheme = `minimal-custom-${nextPreset.id}`;
+        this.saveData(this.settings);
+        this.updateDarkScheme();
+      }
+    });
+
+    this.refresh()
+  }
+
+  onunload() {
+    const sidebarEl = document.getElementsByClassName('mod-left-split')[0];
+    if (sidebarEl) {
+      sidebarEl.removeClass('theme-dark');
+    }
+    const ribbonEl = document.getElementsByClassName('side-dock-ribbon')[0];
+    if (ribbonEl) {
+      ribbonEl.removeClass('theme-dark');
+    }
+
+    this.unloadRules();
+    this.removeStyle();
+    this.removeSettings();
+    this.removeLightScheme();
+    this.removeDarkScheme();
+    
+    // Remove injected custom preset styles
+    document.querySelectorAll('style[data-custom-preset]').forEach(el => el.remove());
+  }
+
+  async loadSettings() {
+    this.settings = Object.assign(DEFAULT_SETTINGS, await this.loadData());
+    
+    // Migration for renamed default schemes
+    if (this.settings.lightScheme === 'minimal-default-light') {
+      this.settings.lightScheme = 'minimal-minimal-light';
+    }
+    if (this.settings.darkScheme === 'minimal-default-dark') {
+      this.settings.darkScheme = 'minimal-minimal-dark';
+    }
+    
+    // Ensure custom presets array exists (for existing users)
+    if (!this.settings.customPresets) {
+      this.settings.customPresets = [];
+    }
+    if (this.settings.enableCustomPresets === undefined) {
+      this.settings.enableCustomPresets = true;
+    }
+  }
+
+  async saveSettings() {
+    await this.saveData(this.settings);
+  }
+
+  /**
+   * Create a separate style element specifically for custom presets
+   */
+  createCustomPresetStyleElement() {
+    // Remove existing custom preset style element
+    const existing = document.getElementById('minimal-custom-presets');
+    if (existing) {
+      existing.remove();
+    }
+    
+    // Create new style element
+    const styleEl = document.createElement('style');
+    styleEl.id = 'minimal-custom-presets';
+    styleEl.setAttribute('data-custom-presets', 'true');
+    
+    // Append to the very end of head, after all other stylesheets
+    document.head.appendChild(styleEl);
+  }
+
+  /**
+   * Setup a watcher to reapply CSS when the document changes
+   */
+  setupCSSWatcher() {
+    // Watch for changes to style elements
+    const observer = new MutationObserver((mutations) => {
+      let shouldUpdate = false;
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          // Check if any style elements were added
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName === 'STYLE') {
+              shouldUpdate = true;
+            }
+          });
+        }
+      });
+      
+      if (shouldUpdate) {
+        setTimeout(() => {
+          this.updateCustomPresetCSS();
+        }, 50);
+      }
+    });
+    
+    observer.observe(document.head, {
+      childList: true,
+      subtree: true
+    });
+    
+    // Store observer for cleanup
+    (this as any).cssObserver = observer;
+  }
+
+  /**
+   * Update custom preset CSS using inline styles for maximum specificity
+   */
+  updateCustomPresetCSS() {
+    // Remove existing custom preset styles
+    document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
+    
+    // Create new style element
+    const styleEl = document.createElement('style');
+    styleEl.id = 'minimal-custom-presets';
+    styleEl.setAttribute('data-custom-presets', 'true');
+    
+    let css = '';
+    
+    // Generate CSS for both light and dark modes, but only apply the active one
+    const activeLightPreset = this.settings.customPresets.find(p => 
+      this.settings.lightScheme === `minimal-custom-${p.id}`
+    );
+    const activeDarkPreset = this.settings.customPresets.find(p => 
+      this.settings.darkScheme === `minimal-custom-${p.id}`
+    );
+    
+    // Always generate both light and dark CSS to avoid theme switching issues
+    if (activeLightPreset) {
+      css += PresetManager.generatePresetCSS(activeLightPreset, 'light') + '\n';
+    }
+    if (activeDarkPreset) {
+      css += PresetManager.generatePresetCSS(activeDarkPreset, 'dark') + '\n';
+    }
+    
+    // Add additional CSS to ensure it overrides everything
+    css += `
+      /* Force override of main theme variables */
+      :root {
+        --base-h: var(--base-h) !important;
+        --base-s: var(--base-s) !important;
+        --base-l: var(--base-l) !important;
+        --accent-h: var(--accent-h) !important;
+        --accent-s: var(--accent-s) !important;
+        --accent-l: var(--accent-l) !important;
+      }
+    `;
+    
+    styleEl.textContent = css;
+    
+    // Append to the very end of head
+    document.head.appendChild(styleEl);
+    
+    // Gentle style recalculation without visual disruption
+    setTimeout(() => {
+      // Just trigger a reflow without changing display
+      document.body.offsetHeight;
+    }, 50);
+  }
+
+
+  // refresh function for when we change settings
+  refresh() {
+    // re-load the style
+    this.updateStyle()
+  }
+
+  // add the styling elements we need
+  loadRules() {
+    // add a css block for our settings-dependent styles
+    const css = document.createElement('style');
+    css.id = 'minimal-theme';
+    css.setAttribute('data-theme-override', 'true');
+    // Append to the very end of head to ensure it loads after main theme CSS
+    document.getElementsByTagName("head")[0].appendChild(css);
+
+    // add the main class
+    document.body.classList.add('minimal-theme');
+
+    // update the style with the settings-dependent styles
+    this.updateStyle();
+    
+    // Create a separate style element specifically for custom presets that loads after everything else
+    this.createCustomPresetStyleElement();
+    
+    // Ensure our CSS is applied after main theme CSS by adding a small delay
+    setTimeout(() => {
+      this.updateStyle();
+      this.updateCustomPresetCSS();
+    }, 100);
+    
+    // Watch for changes to the document and reapply our CSS
+    this.setupCSSWatcher();
+  }
+  unloadRules() {
+    const styleElement = document.getElementById('minimal-theme');
+    if (styleElement) {
+      styleElement.parentNode?.removeChild(styleElement);
+    }
+    
+    const customPresetElement = document.getElementById('minimal-custom-presets');
+    if (customPresetElement) {
+      customPresetElement.parentNode?.removeChild(customPresetElement);
+    }
+    
+    // Clean up CSS observer
+    if ((this as any).cssObserver) {
+      (this as any).cssObserver.disconnect();
+    }
+    
+    document.body.classList.remove('minimal-theme');
+  }
+
+  setFontSize() {
+    // @ts-ignore
+    this.app.vault.setConfig('baseFontSize', this.settings.textNormal);
+    // @ts-ignore
+    this.app.updateFontSize();
+  }
+
+  // update the styles (at the start, or as the result of a settings change)
+  updateStyle() {
+    this.removeStyle();
+    this.removeSettings();
+
+    // Add style classes
+    document.body.addClass(
+      this.settings.lightStyle,
+      this.settings.darkStyle
+    );
+
+    // Update schemes using proper methods (handles custom presets)
+    // Apply the appropriate scheme based on current theme mode
+    try {
+      if (document.body.classList.contains('theme-light')) {
+        this.updateLightScheme();
+      } else if (document.body.classList.contains('theme-dark')) {
+        this.updateDarkScheme();
+      } else {
+        // If no theme class is present, default to light theme
+        document.body.addClass('theme-light');
+        this.updateLightScheme();
+      }
+    } catch (error) {
+      console.error('Error updating schemes:', error);
+    }
+
+    document.body.classList.toggle('borders-none', !this.settings.bordersToggle);
+    document.body.classList.toggle('colorful-headings', this.settings.colorfulHeadings);
+    document.body.classList.toggle('colorful-frame', this.settings.colorfulFrame);
+    document.body.classList.toggle('colorful-active', this.settings.colorfulActiveStates);
+    document.body.classList.toggle('minimal-focus-mode', this.settings.focusMode);
+    document.body.classList.toggle('links-int-on', this.settings.underlineInternal);
+    document.body.classList.toggle('links-ext-on', this.settings.underlineExternal);
+    document.body.classList.toggle('full-width-media', this.settings.fullWidthMedia);
+    document.body.classList.toggle('img-grid', this.settings.imgGrid);
+    document.body.classList.toggle('minimal-dev-block-width', this.settings.devBlockWidth);
+    document.body.classList.toggle('minimal-status-off', !this.settings.minimalStatus);
+    document.body.classList.toggle('full-file-names', !this.settings.trimNames);
+    document.body.classList.toggle('labeled-nav', this.settings.labeledNav);
+    document.body.classList.toggle('minimal-folding', this.settings.folding);
+
+    document.body.addClass(
+      this.settings.chartWidth,
+      this.settings.tableWidth,
+      this.settings.imgWidth,
+      this.settings.iframeWidth,
+      this.settings.mapWidth
+    );
+
+    // get the custom css element
+    const el = document.getElementById('minimal-theme');
+    if (!el) throw "minimal-theme element not found!";
+    else {
+      // Build the base CSS (without custom presets)
+      let css = 'body.minimal-theme{'
+        + '--font-ui-small:' + this.settings.textSmall + 'px;'
+        + '--line-height:' + this.settings.lineHeight + ';'
+        + '--line-width:' + this.settings.lineWidth + 'rem;'
+        + '--line-width-wide:' + this.settings.lineWidthWide + 'rem;'
+        + '--max-width:' + this.settings.maxWidth + '%;'
+        + '--font-editor-override:' + this.settings.editorFont + ';'
+        + '}\n';
+      
+      // set the base css
+      el.innerText = css;
+      
+      // Update custom preset CSS after all classes are applied
+      this.updateCustomPresetCSS();
+    }
+  }
+
+  updateDarkStyle() {
+    document.body.removeClass(
+      'theme-light',
+      'minimal-dark',
+      'minimal-dark-tonal',
+      'minimal-dark-black'
+    );
+    document.body.addClass(
+      'theme-dark',
+      this.settings.darkStyle
+    );
+    // @ts-ignore
+    if (this.app.vault.getConfig('theme') !== 'system') {
+      // @ts-ignore
+      this.app.setTheme('obsidian');
+      // @ts-ignore
+      this.app.vault.setConfig('theme', 'obsidian');
+    }
+    this.app.workspace.trigger('css-change');
+  }
+
+  updateLightStyle() {
+    document.body.removeClass(
+      'theme-dark',
+      'minimal-light',
+      'minimal-light-tonal',
+      'minimal-light-contrast',
+      'minimal-light-white'
+    );
+    document.body.addClass(
+      'theme-light',
+      this.settings.lightStyle
+    );
+    // @ts-ignore
+    if (this.app.vault.getConfig('theme') !== 'system') {
+      // @ts-ignore
+      this.app.setTheme('moonstone');
+      // @ts-ignore
+      this.app.vault.setConfig('theme', 'moonstone');
+    }
+    this.app.workspace.trigger('css-change');
+  }
+
+  updateDarkScheme() {
+    this.removeDarkScheme();
+    this.removeLightScheme(); // Also remove light scheme to prevent conflicts
+    
+    // Ensure we're in dark theme mode
+    if (!document.body.classList.contains('theme-dark')) {
+      document.body.removeClass('theme-light');
+      document.body.addClass('theme-dark');
+    }
+    
+    // Add the scheme class
+    document.body.addClass(this.settings.darkScheme);
+  }
+
+  updateLightScheme() {
+    this.removeLightScheme();
+    this.removeDarkScheme(); // Also remove dark scheme to prevent conflicts
+    
+    // Ensure we're in light theme mode
+    if (!document.body.classList.contains('theme-light')) {
+      document.body.removeClass('theme-dark');
+      document.body.addClass('theme-light');
+    }
+    
+    // Add the scheme class
+    document.body.addClass(this.settings.lightScheme);
+  }
+
+  updateTheme() {
+    // @ts-ignore
+    if (this.app.vault.getConfig('theme') === 'system') {
+        if (document.body.classList.contains('theme-light')) {
+          document.body.removeClass('theme-light');
+          document.body.addClass('theme-dark');
+        } else {
+          document.body.removeClass('theme-dark');
+          document.body.addClass('theme-light');
+        }
+    } else {
+        if (document.body.classList.contains('theme-light')) {
+          document.body.removeClass('theme-light');
+          document.body.addClass('theme-dark');
+        } else {
+          document.body.removeClass('theme-dark');
+          document.body.addClass('theme-light');
+        }
+
+      // @ts-ignore
+      const currentTheme = this.app.vault.getConfig('theme');
+      const newTheme = currentTheme === 'moonstone' ? 'obsidian' : 'moonstone';
+
+      // @ts-ignore
+      this.app.setTheme(newTheme);
+      // @ts-ignore
+      this.app.vault.setConfig('theme', newTheme);
+    }
+    this.app.workspace.trigger('css-change');
+  }
+
+  removeSettings() {
+    document.body.removeClass(
+      'borders-none',
+      'colorful-headings',
+      'colorful-frame',
+      'colorful-active',
+      'minimal-focus-mode',
+      'links-int-on',
+      'links-ext-on',
+      'full-width-media',
+      'img-grid',
+      'minimal-dev-block-width',
+      'minimal-status-off',
+      'full-file-names',
+      'labeled-nav',
+      'minimal-folding'
+    );
+    document.body.removeClass(
+      'table-wide',
+      'table-max',
+      'table-100',
+      'table-default-width',
+      'iframe-wide',
+      'iframe-max',
+      'iframe-100',
+      'iframe-default-width',
+      'img-wide',
+      'img-max',
+      'img-100',
+      'img-default-width',
+      'chart-wide',
+      'chart-max',
+      'chart-100',
+      'chart-default-width',
+      'map-wide',
+      'map-max',
+      'map-100',
+      'map-default-width'
+      );
+  }
+  removeStyle() {
+    document.body.removeClass(
+      'minimal-light',
+      'minimal-light-tonal',
+      'minimal-light-contrast',
+      'minimal-light-white',
+      'minimal-dark',
+      'minimal-dark-tonal',
+      'minimal-dark-black');
+  }
+  removeDarkScheme() {
+    document.body.removeClass(
+      'minimal-atom-dark',
+      'minimal-ayu-dark',
+      'minimal-catppuccin-dark',
+      'minimal-oxygen-dark',
+      'minimal-minimal-dark',
+      'minimal-dracula-dark',
+      'minimal-eink-dark',
+      'minimal-everforest-dark',
+      'minimal-flexoki-dark',
+      'minimal-gruvbox-dark',
+      'minimal-macos-dark',
+      'minimal-nord-dark',
+      'minimal-notion-dark',
+      'minimal-rose-pine-dark',
+      'minimal-solarized-dark',
+      'minimal-things-dark'
+    );
+    
+    // Remove custom preset classes
+    this.settings.customPresets.forEach(preset => {
+      document.body.removeClass(`minimal-custom-${preset.id}`);
+    });
+  }
+  removeLightScheme() {
+    document.body.removeClass(
+      'minimal-atom-light',
+      'minimal-ayu-light',
+      'minimal-catppuccin-light',
+      'minimal-oxygen-light',
+      'minimal-minimal-light',
+      'minimal-eink-light',
+      'minimal-everforest-light',
+      'minimal-flexoki-light',
+      'minimal-gruvbox-light',
+      'minimal-macos-light',
+      'minimal-nord-light',
+      'minimal-notion-light',
+      'minimal-rose-pine-light',
+      'minimal-solarized-light',
+      'minimal-things-light'
+    );
+    
+    // Remove custom preset classes
+    this.settings.customPresets.forEach(preset => {
+      document.body.removeClass(`minimal-custom-${preset.id}`);
+    });
+  }
+
+}

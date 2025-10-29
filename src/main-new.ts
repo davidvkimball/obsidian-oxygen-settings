@@ -33,23 +33,16 @@ export default class MinimalTheme extends Plugin {
     // Initialize styles and watchers
     this.styleManager.initialize();
     this.settingsSyncManager.setupWatchers();
-    
-    // Initial sync from vault (without saving)
-    this.settingsSyncManager.syncFromVault(true);
+    this.settingsSyncManager.syncFromVault();
     
     // Setup sidebar theme update on layout ready
-    this.app.workspace.onLayoutReady(() => {
+    const app = this.app as any;
+    app.workspace.onLayoutReady(() => {
       this.themeManager.updateSidebarTheme();
     });
 
     // Register all commands
     registerAllCommands(this);
-    
-    // Defer custom preset CSS initialization to after load completes
-    // This prevents blocking the main load process
-    setTimeout(() => {
-      this.styleManager.initializeCustomPresets();
-    }, 100);
   }
 
   onunload() {

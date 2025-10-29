@@ -1,0 +1,480 @@
+/* ========================================
+   Oxygen Settings Plugin Styles
+   ======================================== */
+
+/* ========================================
+   Preset Editor Modal Styles
+   ======================================== */
+
+.preset-editor-modal .modal-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-section {
+  margin-bottom: 1.5rem;
+}
+
+.mode-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 1rem;
+}
+
+.mode-tab {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.mode-tab:hover {
+  color: var(--text-normal);
+}
+
+.mode-tab.active {
+  color: var(--text-normal);
+  border-bottom-color: var(--text-accent);
+  font-weight: 500;
+}
+
+.mode-content {
+  display: none;
+}
+
+.mode-content.active {
+  display: block;
+}
+
+.color-section {
+  margin-bottom: 1.5rem;
+}
+
+.color-group {
+  margin-bottom: 1rem;
+}
+
+.color-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.hsl-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hsl-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hsl-control label {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.hsl-control input[type="range"] {
+  width: 100%;
+}
+
+.hsl-control span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-width: 2rem;
+  text-align: center;
+}
+
+.preset-editor-modal .color-preview {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 3px;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.color-preview-section {
+  margin-bottom: 1.5rem;
+}
+
+.color-preview-section h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.color-details-section {
+  margin-top: 1rem;
+}
+
+.color-details-section h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: default;
+  padding: 0.5rem 0;
+}
+
+.collapse-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: default;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  height: auto;
+  box-shadow: none !important;
+  outline: none;
+  font-family: inherit;
+  --icon-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collapse-toggle:hover {
+  color: var(--text-normal);
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.collapse-toggle:focus {
+  outline: none;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.collapse-toggle svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+.collapsible-content {
+  transition: max-height 0.3s ease;
+  overflow: hidden;
+  max-height: 0;
+}
+
+.collapsible-content:not(.collapsed) {
+  max-height: 400px;
+}
+
+.color-override {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.override-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.override-header input[type="color"] {
+  width: 2rem;
+  height: 1.5rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 3px;
+}
+
+.preview-swatch {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 1rem;
+  background: var(--background-primary);
+}
+
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.preview-row:last-child {
+  margin-bottom: 0;
+}
+
+.preview-label {
+  font-weight: 500;
+  min-width: 5rem;
+}
+
+.preview-colors {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.preview-color {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 3px;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.modal-footer button {
+  min-width: 80px;
+}
+
+/* ========================================
+   Preset Import Modal Styles
+   ======================================== */
+
+.preset-import-modal .modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.preset-json-input {
+  height: 200px !important;
+  font-family: monospace !important;
+  font-size: 0.9rem !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.preview-container {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 1rem;
+  background: var(--background-primary);
+  min-height: 200px;
+}
+
+.preview-placeholder,
+.preview-error {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.preview-error {
+  color: var(--text-error);
+}
+
+.error-section {
+  background: var(--background-modifier-error);
+  border: 1px solid var(--text-error);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: var(--text-error);
+  font-weight: 500;
+}
+
+.preset-info {
+  margin-bottom: 1rem;
+}
+
+.info-row {
+  margin-bottom: 0.5rem;
+}
+
+.preset-id {
+  font-family: monospace;
+  background: var(--background-secondary);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.mode-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.mode-btn:hover {
+  color: var(--text-normal);
+}
+
+.mode-btn.active {
+  color: var(--text-normal);
+  border-bottom-color: var(--text-accent);
+  font-weight: 500;
+}
+
+.swatch-container {
+  margin-top: 0.5rem;
+}
+
+.mode-swatches {
+  display: none;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.mode-swatches.active {
+  display: flex;
+}
+
+.color-swatch {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 6px;
+  border: 1px solid var(--background-modifier-border);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.05);
+}
+
+
+.mode-details {
+  margin-bottom: 1rem;
+}
+
+.mode-details h5 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-normal);
+}
+
+.color-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.detail-swatch {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 3px;
+  border: 1px solid var(--background-modifier-border);
+  flex-shrink: 0;
+}
+
+.color-detail span:first-of-type {
+  color: var(--text-muted);
+  min-width: 3rem;
+}
+
+.overrides-info {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: var(--background-secondary);
+  border-radius: 3px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   Settings Tab Styles
+   ======================================== */
+
+.custom-preset-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  background: var(--background-primary);
+  transition: background-color 0.2s ease;
+}
+
+.custom-preset-item:hover {
+  background: var(--background-secondary);
+}
+
+.preset-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.preset-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.preset-name {
+  font-weight: 500;
+  color: var(--text-normal);
+  font-size: 0.9rem;
+}
+
+.preset-author {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.custom-preset-item .setting-item {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.custom-preset-item .setting-item-info {
+  display: none;
+}
+
+.custom-preset-item .setting-item-control {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.custom-preset-item .clickable-icon {
+  padding: 0.25rem;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.custom-preset-item .clickable-icon:hover {
+  background: var(--background-modifier-hover);
+}
+

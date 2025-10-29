@@ -1,68 +1,25 @@
-Fork of the [Minimal Theme Settings](https://github.com/kepano/obsidian-minimal-settings) plugin. Full Minimal documentation at [minimal.guide](https://minimal.guide/)
+# Oxygen Theme Settings
 
-## Overview
+Settings plugin for [Oxygen Theme](https://github.com/davidvkimball/obsidian-oxygen). Forked from [Minimal Theme Settings](https://github.com/kepano/obsidian-minimal-settings).
 
-This plugin accompanies [Oxygen Theme](https://github.com/davidvkimball/obsidian-oxygen), allowing you to customize the theme from the Obsidian Settings panel. This plugin is not required to use Oxygen Theme, but highly recommended.
+## What makes Oxygen different
 
+**Create your own color presets** - The key difference from Minimal Theme Settings is the ability to create, edit, and manage custom color schemes directly in the plugin settings. Build your own presets with custom accent colors, backgrounds, and interface colors without needing external tools. Although it still works with the [Style Settings](https://github.com/mgmeyers/obsidian-style-settings) plugin.
 
-## Usage
+## Features
 
-- Requires Oxygen Theme
-- Works with [Hider Plugin](https://github.com/kepano/obsidian-hider) to simplify the Obsidian UI by removing the menu ribbon, tooltips, title bar, scrollbars, etc.
+**Custom color presets** - Create and manage your own color schemes with a built-in preset editor.
 
+**Built-in color schemes** - Includes the 14 preset color schemes from Minimal: Atom, Ayu, Catppuccin, Dracula, Everforest, Flexoki, Gruvbox, macOS, Nord, Rosé Pine, Solarized, and more.
 
-## Settings
+**Background styles** - Toggle between default, low contrast, high contrast (light mode), and true black (dark mode) backgrounds via hotkeys.
 
-### Color scheme
+**Customization** - Control fonts, sizes, line width, link styles, focus mode, icons, image grids, and width settings for tables, images, and iframes.
 
-Switch between preset color schemes or create your own using Style Settings plugin.
+**Hotkeys** - Quick toggles for light/dark mode, cycling color schemes, adjusting font size, and toggling interface elements.
 
-- Atom
-- Ayu
-- Catppuccin
-- Dracula
-- E-ink (beta)
-- Everforest
-- Flexoki
-- Gruvbox
-- macOS
-- Nord
-- Rosé Pine
-- Solarized
-- Sky
-- Things
+## Requirements
 
-
-### Background styles
-
-Several alternate light/dark mode background are availably. These options can be toggled via hotkeys
-
-- **Default** uses a slighty darker background for the sidebar
-- **Low contrast** uses the same background for sidebar and main panel
-- **High contrast (light mode only)** uses dark sidebar and light main panel
-- **True black (dark mode only)** uses pure black sidebar and main panel
-
-### Customization
-
-- Fonts, font sizes, and line width settings
-- Underline links
-- Focus mode
-- Custom icons
-- Image grids
-- Width settings for tables, images and iframes
-
-
-## Hotkeys
-
-Hotkeys can be customized to perform the following actions:
-
-- Toggle light/dark mode
-- Cycle between light mode styles
-- Cycle between dark mode styles
-- Switch between color schemes
-- Increase/decrease font size
-- Toggle image grids
-- Toggle sidebar borders
-- Cycle image width options
-- Cycle table width options
-- Cycle iframe width options
+- [Oxygen theme](https://github.com/davidvkimball/obsidian-oxygen)
+- Optional: [Hider plugin](https://github.com/kepano/obsidian-hider) for additional UI simplification
+- Optional: [Style Settings plugin](https://github.com/mgmeyers/obsidian-style-settings) for more specific tweaks if desired

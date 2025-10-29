@@ -22,6 +22,7 @@ export default class MinimalTheme extends Plugin {
   
   // Cache theme state to avoid repeated vault config calls (performance optimization)
   private _isOxygenActive: boolean = false;
+  private _isInitialized: boolean = false;
 
   async onload() {
     await this.loadSettings();
@@ -38,8 +39,10 @@ export default class MinimalTheme extends Plugin {
     this._isOxygenActive = this.checkOxygenTheme();
     
     // Only initialize styles if Oxygen theme is active
+    // Note: initialize() calls updateStyle() which also updates custom preset CSS
     if (this._isOxygenActive) {
       this.styleManager.initialize();
+      this._isInitialized = true;
     }
     
     this.settingsSyncManager.setupWatchers();
@@ -57,14 +60,6 @@ export default class MinimalTheme extends Plugin {
     // Register all commands
     registerAllCommands(this);
     
-    // Defer custom preset CSS initialization to after load completes
-    // This prevents blocking the main load process
-    setTimeout(() => {
-      if (this._isOxygenActive) {
-        this.styleManager.initializeCustomPresets();
-      }
-    }, 100);
-    
     // Watch for theme changes with debouncing for performance
     // css-change fires very frequently, so we debounce and cache the theme state
     let debounceTimer: number;
@@ -76,16 +71,20 @@ export default class MinimalTheme extends Plugin {
         debounceTimer = window.setTimeout(() => {
           const newThemeState = this.checkOxygenTheme();
           
-          // Only act when theme actually changes
+          // Only act when theme actually changes (not from our own CSS updates)
           if (this._isOxygenActive && !newThemeState) {
             // Switched away from Oxygen - cleanup
             this._isOxygenActive = false;
+            this._isInitialized = false;
             this.styleManager.cleanup();
-          } else if (!this._isOxygenActive && newThemeState) {
-            // Switched to Oxygen - initialize
+          } else if (!this._isOxygenActive && newThemeState && !this._isInitialized) {
+            // Switched to Oxygen and not yet initialized - initialize
             this._isOxygenActive = true;
+            this._isInitialized = true;
             this.styleManager.initialize();
           }
+          // If already initialized and Oxygen is still active, do nothing
+          // This prevents infinite loops from our own CSS updates
         }, 100); // 100ms debounce
       })
     );

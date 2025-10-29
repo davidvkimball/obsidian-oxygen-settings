@@ -55,8 +55,8 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
         .addOption('minimal-solarized-light','Solarized')
         .addOption('minimal-things-light','Things');
 
-      // Add custom presets if any exist
-      if (plugin.settings.customPresets.length > 0) {
+      // Add custom presets if enabled and any exist
+      if (plugin.settings.enableCustomPresets && plugin.settings.customPresets.length > 0) {
         dropdown.addOption('', '────── Custom Presets ──────');
         
         plugin.settings.customPresets
@@ -120,8 +120,8 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
         .addOption('minimal-solarized-dark','Solarized')
         .addOption('minimal-things-dark','Things');
 
-      // Add custom presets if any exist
-      if (plugin.settings.customPresets.length > 0) {
+      // Add custom presets if enabled and any exist
+      if (plugin.settings.enableCustomPresets && plugin.settings.customPresets.length > 0) {
         dropdown.addOption('', '────── Custom Presets ──────');
         
         plugin.settings.customPresets

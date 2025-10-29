@@ -24,9 +24,30 @@ export function buildCustomPresetSettings(
     .setDesc('Allow creation and use of custom color presets')
     .addToggle(toggle => toggle
       .setValue(plugin.settings.enableCustomPresets)
-      .onChange((value) => {
+      .onChange(async (value) => {
         plugin.settings.enableCustomPresets = value;
-        plugin.saveData(plugin.settings);
+        
+        // If disabling, reset any active custom preset schemes to default
+        if (!value) {
+          let needsUpdate = false;
+          
+          if (plugin.settings.lightScheme.startsWith('minimal-custom-')) {
+            plugin.settings.lightScheme = 'minimal-oxygen-light';
+            needsUpdate = true;
+          }
+          
+          if (plugin.settings.darkScheme.startsWith('minimal-custom-')) {
+            plugin.settings.darkScheme = 'minimal-oxygen-dark';
+            needsUpdate = true;
+          }
+          
+          if (needsUpdate) {
+            plugin.updateStyle();
+            plugin.updateCustomPresetCSS();
+          }
+        }
+        
+        await plugin.saveData(plugin.settings);
         refreshCallback(); // Refresh the settings tab
       }));
 
@@ -135,6 +156,14 @@ function openPresetEditor(
     }
     
     plugin.saveData(plugin.settings);
+    
+    // Update styles if this preset is currently active
+    const presetSchemeId = `minimal-custom-${updatedPreset.id}`;
+    if (plugin.settings.lightScheme === presetSchemeId || plugin.settings.darkScheme === presetSchemeId) {
+      plugin.updateStyle();
+      plugin.updateCustomPresetCSS();
+    }
+    
     refreshCallback(); // Refresh the settings tab
   });
   modal.open();

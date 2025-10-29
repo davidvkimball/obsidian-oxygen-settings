@@ -44,6 +44,7 @@ export interface ColorPalette {
   base: HSLColor;
   accent: HSLColor;
   colors?: ColorOverrides;
+  frameLightnessOffset?: number; // Optional override for colorful-frame feature (default: -25 for dark, +30 for light)
 }
 
 export interface CustomColorPreset {

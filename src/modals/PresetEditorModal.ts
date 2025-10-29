@@ -140,6 +140,49 @@ export class PresetEditorModal extends Modal {
       this.updatePreview();
     });
 
+    // Colorful frame lightness override (optional)
+    const frameSection = requiredSection.createEl('div', { cls: 'color-group' });
+    const frameLabel = frameSection.createEl('label', { text: 'Colorful Frame Lightness Override (Optional)' });
+    frameLabel.style.fontSize = '0.9em';
+    const frameDesc = frameSection.createEl('div', { cls: 'setting-item-description' });
+    frameDesc.textContent = mode === 'dark' 
+      ? 'Offset from accent lightness for colorful frame. Default: -25 (darkens by 25%). Leave empty for default.'
+      : 'Offset from accent lightness for colorful frame. Default: +30 (brightens by 30%). Leave empty for default.';
+    frameDesc.style.fontSize = '0.85em';
+    frameDesc.style.marginBottom = '8px';
+    
+    const frameInput = frameSection.createEl('input', { type: 'number' });
+    frameInput.style.width = '80px';
+    frameInput.placeholder = mode === 'dark' ? '-25' : '+30';
+    frameInput.min = '-100';
+    frameInput.max = '100';
+    frameInput.step = '5';
+    if (palette.frameLightnessOffset !== undefined) {
+      frameInput.value = palette.frameLightnessOffset.toString();
+    }
+    
+    frameInput.oninput = () => {
+      const value = frameInput.value.trim();
+      if (value === '') {
+        // Clear override - use theme default
+        if (mode === 'light') {
+          delete this.preset.light.frameLightnessOffset;
+        } else {
+          delete this.preset.dark.frameLightnessOffset;
+        }
+      } else {
+        const offset = parseInt(value);
+        if (!isNaN(offset)) {
+          if (mode === 'light') {
+            this.preset.light.frameLightnessOffset = offset;
+          } else {
+            this.preset.dark.frameLightnessOffset = offset;
+          }
+        }
+      }
+      this.updatePreview();
+    };
+
     // Advanced overrides (collapsible)
     const advancedSection = container.createEl('div', { cls: 'color-section' });
     const advancedHeader = advancedSection.createEl('div', { cls: 'collapsible-header' });
@@ -215,6 +258,20 @@ export class PresetEditorModal extends Modal {
 
   private updatePreview() {
     this.previewSwatch.empty();
+    
+    // Live preview: temporarily update the plugin's preset data to show changes in real-time
+    const presetIndex = this.plugin.settings.customPresets.findIndex(p => p.id === this.preset.id);
+    if (presetIndex !== -1) {
+      // Temporarily update the preset in settings
+      this.plugin.settings.customPresets[presetIndex] = this.preset;
+      
+      // Apply changes if this preset is currently active
+      const presetSchemeId = `minimal-custom-${this.preset.id}`;
+      if (this.plugin.settings.lightScheme === presetSchemeId || this.plugin.settings.darkScheme === presetSchemeId) {
+        this.plugin.updateStyle();
+        this.plugin.updateCustomPresetCSS();
+      }
+    }
     
     // Get colors for both modes
     const lightPalette = this.preset.light;

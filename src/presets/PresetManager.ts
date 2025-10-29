@@ -161,12 +161,14 @@ export class PresetManager {
         light: {
           base: parsed.light.base,
           accent: parsed.light.accent,
-          colors: parsed.light.colors || {}
+          colors: parsed.light.colors || {},
+          frameLightnessOffset: parsed.light.frameLightnessOffset
         },
         dark: {
           base: parsed.dark.base,
           accent: parsed.dark.accent,
-          colors: parsed.dark.colors || {}
+          colors: parsed.dark.colors || {},
+          frameLightnessOffset: parsed.dark.frameLightnessOffset
         }
       };
 

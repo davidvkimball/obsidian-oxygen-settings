@@ -9,6 +9,7 @@ import { CSS_CLASSES, CSS_REFLOW_DELAY } from '../constants';
 
 export class CustomPresetCSS {
   private plugin: PluginContext;
+  private isUpdating: boolean = false;
   
   constructor(plugin: PluginContext) {
     this.plugin = plugin;
@@ -30,10 +31,18 @@ export class CustomPresetCSS {
    * Update custom preset CSS based on current settings
    */
   updateCSS(): void {
+    // Prevent re-entrant updates (fixes infinite loop)
+    if (this.isUpdating) {
+      return;
+    }
+    
     // Only update CSS if Oxygen theme is active
     if (!this.plugin.isOxygenThemeActive()) {
       return;
     }
+    
+    // Set flag to prevent re-entrant calls
+    this.isUpdating = true;
     
     // Remove existing custom preset styles
     document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
@@ -60,11 +69,23 @@ export class CustomPresetCSS {
       css += PresetManager.generatePresetCSS(activeDarkPreset, 'dark') + '\n';
     }
     
+    if (!css) {
+      this.isUpdating = false;
+      return;
+    }
+    
     // Don't use !important - allows users to override accent color in Obsidian's native settings
     // The preset CSS is scoped to body classes, so it will still apply when the preset is active
     
     styleEl.textContent = css;
+    
+    // Append at the END of head to ensure it overrides theme CSS
     document.head.appendChild(styleEl);
+    
+    // Clear the updating flag after a short delay to allow CSS to settle
+    setTimeout(() => {
+      this.isUpdating = false;
+    }, 150);
     
     // Trigger reflow
     setTimeout(() => {

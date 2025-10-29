@@ -156,6 +156,32 @@ export class PresetCSSGenerator {
     
     // Text on accent (for proper contrast on accent-colored backgrounds)
     css += `  --text-on-accent: ${textOnAccent};\n`;
+    css += `\n`;
+    
+    // === EXTENDED COLOR PALETTE ===
+    // Generate extended palette based on accent color for colorful headings/frames
+    // Uses fixed hues with the preset's saturation and adjusted lightness
+    const extendedS = accentS;
+    const extendedL = isLightBase ? 55 : 65; // Slightly different for light vs dark
+    
+    css += `  --color-red: hsl(0, ${extendedS}%, ${extendedL}%);\n`;
+    css += `  --color-orange: hsl(25, ${extendedS}%, ${extendedL}%);\n`;
+    css += `  --color-yellow: hsl(50, ${extendedS}%, ${extendedL}%);\n`;
+    css += `  --color-green: hsl(130, ${extendedS}%, ${extendedL}%);\n`;
+    css += `  --color-cyan: hsl(180, ${extendedS}%, ${extendedL}%);\n`;
+    css += `  --color-blue: hsl(220, ${extendedS}%, ${extendedL}%);\n`;
+    css += `  --color-purple: hsl(280, ${extendedS}%, ${extendedL}%);\n`;
+    css += `  --color-pink: hsl(330, ${extendedS}%, ${extendedL}%);\n`;
+    css += `\n`;
+    
+    // === COLORFUL FRAME OVERRIDE ===
+    // Optional override for colorful-frame lightness
+    // Default Oxygen behavior: dark mode -25%, light mode +30%
+    if (palette.frameLightnessOffset !== undefined) {
+      const frameL = accentL + palette.frameLightnessOffset;
+      css += `  --frame-background-l: ${frameL}%;\n`;
+      css += `\n`;
+    }
     
     // Optional color overrides (if user provided specific colors)
     if (palette.colors) {

@@ -28,10 +28,8 @@ export class StyleManagerImpl {
    */
   initialize(): void {
     this.loadRules();
-    // Defer CSS watcher setup to avoid blocking load
-    setTimeout(() => {
-      this.setupCSSWatcher();
-    }, 150);
+    // CSS watcher removed - it was causing infinite loops
+    // Custom preset CSS updates are handled by settings UI and theme switches
   }
   
   /**
@@ -91,11 +89,13 @@ export class StyleManagerImpl {
     this.removeStyle();
     this.removeSettings();
 
-    // Add style classes
-    document.body.addClass(
-      this.plugin.settings.lightStyle,
-      this.plugin.settings.darkStyle
-    );
+    // Add style classes (only if not empty)
+    if (this.plugin.settings.lightStyle && this.plugin.settings.lightStyle.trim()) {
+      document.body.addClass(this.plugin.settings.lightStyle);
+    }
+    if (this.plugin.settings.darkStyle && this.plugin.settings.darkStyle.trim()) {
+      document.body.addClass(this.plugin.settings.darkStyle);
+    }
 
     // Update schemes based on current theme mode
     try {
@@ -224,7 +224,10 @@ export class StyleManagerImpl {
       document.body.addClass('theme-light');
     }
     
-    document.body.addClass(this.plugin.settings.lightScheme);
+    // Only add class if scheme is not empty
+    if (this.plugin.settings.lightScheme && this.plugin.settings.lightScheme.trim()) {
+      document.body.addClass(this.plugin.settings.lightScheme);
+    }
   }
 
   /**
@@ -244,7 +247,10 @@ export class StyleManagerImpl {
       document.body.addClass('theme-dark');
     }
     
-    document.body.addClass(this.plugin.settings.darkScheme);
+    // Only add class if scheme is not empty
+    if (this.plugin.settings.darkScheme && this.plugin.settings.darkScheme.trim()) {
+      document.body.addClass(this.plugin.settings.darkScheme);
+    }
   }
 
 
@@ -365,29 +371,8 @@ export class StyleManagerImpl {
    * Setup CSS watcher for re-applying custom presets
    */
   private setupCSSWatcher(): void {
-    this.cssObserver = new MutationObserver((mutations) => {
-      let shouldUpdate = false;
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === Node.ELEMENT_NODE && (node as Element).tagName === 'STYLE') {
-              shouldUpdate = true;
-            }
-          });
-        }
-      });
-      
-      if (shouldUpdate) {
-        setTimeout(() => {
-          this.customPresetCSS.updateCSS();
-        }, CSS_UPDATE_DELAY);
-      }
-    });
-    
-    this.cssObserver.observe(document.head, {
-      childList: true,
-      subtree: true
-    });
+    // CSS watcher disabled - was causing infinite loops
+    // Custom preset CSS is now only updated when explicitly called
   }
 }
 

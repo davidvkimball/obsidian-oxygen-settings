@@ -13,15 +13,16 @@ import {
 
 export class PresetManager {
   /**
-   * Generate CSS for a custom preset using Obsidian native variables
+   * Generate CSS for a custom preset using Oxygen custom variables
+   * This allows Style Settings to override Obsidian native variables
    */
   static generatePresetCSS(preset: CustomColorPreset, mode: 'light' | 'dark'): string {
     const palette = mode === 'light' ? preset.light : preset.dark;
     const themeClass = mode === 'light' ? 'theme-light' : 'theme-dark';
     const className = `minimal-custom-${preset.id}`;
     
-    // Use more specific selector to avoid conflicts
-    let css = `body.${themeClass}.${className} {\n`;
+    // Use simpler selector - modifies Oxygen custom variables, not Obsidian native
+    let css = `.${themeClass}.${className} {\n`;
     
     // Calculate all derived colors based on the theme's color system
     const baseH = palette.base.h;
@@ -76,84 +77,50 @@ export class PresetManager {
     const accentIsLight = accentL > 50;
     const textOnAccent = accentIsLight ? 'black' : 'white';
     
-    // Direct Obsidian native variable assignments (no !important needed)
-    css += `  --background-primary: ${bg1};\n`;
-    css += `  --background-secondary: ${bg2};\n`;
-    css += `  --background-secondary-alt: ${bg3};\n`;
-    css += `  --background-modifier-border: ${ui1};\n`;
-    css += `  --background-modifier-border-hover: ${ui2};\n`;
-    css += `  --background-modifier-border-focus: ${ui3};\n`;
-    css += `  --text-normal: ${tx1};\n`;
-    css += `  --text-muted: ${tx2};\n`;
-    css += `  --text-faint: ${tx3};\n`;
-    css += `  --text-accent: ${ax1};\n`;
-    css += `  --text-accent-hover: ${ax2};\n`;
-    css += `  --interactive-accent: ${ax3};\n`;
-    css += `  --text-on-accent: ${textOnAccent};\n`;
-    css += `  --text-highlight-bg: ${hl1};\n`;
-    css += `  --text-highlight-bg-active: ${hl2};\n`;
+    // === BASE HSL VALUES (Required for colorful-frame and colorful-headings) ===
+    css += `  --base-h: ${baseH};\n`;
+    css += `  --base-s: ${baseS}%;\n`;
+    css += `  --base-l: ${baseL}%;\n`;
+    css += `\n`;
+    css += `  --accent-h: ${accentH};\n`;
+    css += `  --accent-s: ${accentS}%;\n`;
+    css += `  --accent-l: ${accentL}%;\n`;
+    css += `\n`;
     
-    // Additional Obsidian native variables for enhanced compatibility
-    css += `  --interactive-normal: ${bg2};\n`;
-    css += `  --interactive-hover: ${bg3};\n`;
-    css += `  --scrollbar-bg: transparent;\n`;
-    css += `  --scrollbar-thumb-bg: ${ui1};\n`;
-    css += `  --scrollbar-active-thumb-bg: ${ui3};\n`;
-    css += `  --divider-color: ${ui1};\n`;
-    css += `  --frame-divider-color: ${ui1};\n`;
-    css += `  --tab-outline-color: ${ui1};\n`;
+    // === OXYGEN CUSTOM VARIABLES (Core theme colors) ===
+    // Backgrounds
+    css += `  --bg1: ${bg1};\n`;
+    css += `  --bg2: ${bg2};\n`;
+    css += `  --bg-tab: ${bg2};\n`;
+    css += `  --bg3: ${bg3};\n`;
+    css += `\n`;
     
-    // Obsidian-specific color mappings for enhanced theme compatibility
-    css += `  --background-modifier-accent: ${ax3};\n`;
-    css += `  --mobile-sidebar-background: ${bg1};\n`;
-    css += `  --background-modifier-form-field-highlighted: ${bg1};\n`;
-    css += `  --background-modifier-form-field: ${bg1};\n`;
-    css += `  --background-modifier-hover: ${bg3};\n`;
-    css += `  --background-modifier-active-hover: ${bg3};\n`;
-    css += `  --background-primary-alt: ${bg2};\n`;
-    css += `  --background-table-rows: ${bg2};\n`;
-    css += `  --checkbox-color: ${ax3};\n`;
-    css += `  --code-normal: ${tx1};\n`;
-    css += `  --icon-color-active: ${tx1};\n`;
-    css += `  --icon-color-focused: ${tx1};\n`;
-    css += `  --icon-color-hover: ${tx2};\n`;
-    css += `  --icon-color: ${tx2};\n`;
-    css += `  --interactive-accent-hover: ${ax1};\n`;
-    css += `  --list-marker-color: ${tx3};\n`;
-    css += `  --nav-item-background-active: ${bg3};\n`;
-    css += `  --nav-item-background-hover: ${bg3};\n`;
-    css += `  --nav-item-color: ${tx2};\n`;
-    css += `  --nav-item-color-active: ${tx1};\n`;
-    css += `  --nav-item-color-hover: ${tx1};\n`;
-    css += `  --nav-item-color-selected: ${tx1};\n`;
-    css += `  --nav-collapse-icon-color: ${tx2};\n`;
-    css += `  --nav-collapse-icon-color-collapsed: ${tx2};\n`;
-    css += `  --nav-indentation-guide-color: ${ui1};\n`;
-    css += `  --prompt-border-color: ${ui3};\n`;
-    css += `  --quote-opening-modifier: ${ui2};\n`;
-    css += `  --ribbon-background: ${bg2};\n`;
-    css += `  --search-result-background: ${bg1};\n`;
-    css += `  --tab-text-color-focused-active: ${tx1};\n`;
-    css += `  --text-blockquote: ${tx2};\n`;
-    css += `  --text-bold: ${tx1};\n`;
-    css += `  --text-code: ${tx4};\n`;
-    css += `  --text-selection: ${hl1};\n`;
-    css += `  --text-title-h1: ${tx1};\n`;
-    css += `  --text-title-h2: ${tx1};\n`;
-    css += `  --text-title-h3: ${tx1};\n`;
-    css += `  --text-title-h4: ${tx1};\n`;
-    css += `  --text-title-h5: ${tx1};\n`;
-    css += `  --text-title-h6: ${tx1};\n`;
+    // UI Elements
+    css += `  --ui1: ${ui1};\n`;
+    css += `  --ui2: ${ui2};\n`;
+    css += `  --ui3: ${ui3};\n`;
+    css += `\n`;
     
-    // Button and interactive element colors
-    css += `  --button-background: ${ax3};\n`;
-    css += `  --button-background-hover: ${ax2};\n`;
-    css += `  --button-text: ${textOnAccent};\n`;
+    // Text Colors
+    css += `  --tx1: ${tx1};\n`;
+    css += `  --tx2: ${tx2};\n`;
+    css += `  --tx3: ${tx3};\n`;
+    css += `  --tx4: ${tx4};\n`;
+    css += `\n`;
     
-    // Right sidebar specific overrides
-    css += `  .mod-right-split {\n`;
-    css += `    --background-secondary: ${bg1};\n`;
-    css += `  }\n`;
+    // Accent Colors
+    css += `  --ax1: ${ax1};\n`;
+    css += `  --ax2: ${ax2};\n`;
+    css += `  --ax3: ${ax3};\n`;
+    css += `\n`;
+    
+    // Highlights
+    css += `  --hl1: ${hl1};\n`;
+    css += `  --hl2: ${hl2};\n`;
+    css += `\n`;
+    
+    // Special
+    css += `  --sp1: ${sp1};\n`;
     
     // Optional color overrides (if user provided specific colors)
     if (palette.colors) {
@@ -171,52 +138,19 @@ export class PresetManager {
           // Map custom overrides to appropriate Obsidian variables
           switch (colorKey) {
             case 'bg1':
-              css += `  --background-primary: ${color} !important;\n`;
-              break;
             case 'bg2':
-              css += `  --background-secondary: ${color} !important;\n`;
-              break;
             case 'bg3':
-              css += `  --background-secondary-alt: ${color} !important;\n`;
-              break;
             case 'ui1':
-              css += `  --background-modifier-border: ${color} !important;\n`;
-              css += `  --divider-color: ${color} !important;\n`;
-              css += `  --frame-divider-color: ${color} !important;\n`;
-              css += `  --tab-outline-color: ${color} !important;\n`;
-              break;
             case 'ui2':
-              css += `  --background-modifier-border-hover: ${color} !important;\n`;
-              break;
             case 'ui3':
-              css += `  --background-modifier-border-focus: ${color} !important;\n`;
-              break;
             case 'tx1':
-              css += `  --text-normal: ${color} !important;\n`;
-              css += `  --text-bold: ${color} !important;\n`;
-              css += `  --text-title-h1: ${color} !important;\n`;
-              css += `  --text-title-h2: ${color} !important;\n`;
-              css += `  --text-title-h3: ${color} !important;\n`;
-              css += `  --text-title-h4: ${color} !important;\n`;
-              css += `  --text-title-h5: ${color} !important;\n`;
-              css += `  --text-title-h6: ${color} !important;\n`;
-              break;
             case 'tx2':
-              css += `  --text-muted: ${color} !important;\n`;
-              css += `  --text-blockquote: ${color} !important;\n`;
-              break;
             case 'tx3':
-              css += `  --text-faint: ${color} !important;\n`;
-              break;
             case 'tx4':
-              css += `  --text-code: ${color} !important;\n`;
-              break;
             case 'hl1':
-              css += `  --text-highlight-bg: ${color} !important;\n`;
-              css += `  --text-selection: ${color} !important;\n`;
-              break;
             case 'hl2':
-              css += `  --text-highlight-bg-active: ${color} !important;\n`;
+              // Override Oxygen custom variables directly (no !important)
+              css += `  --${colorKey}: ${color};\n`;
               break;
             // For accent colors, we need to determine which ax variable this should map to
             // This is a simplified mapping - in practice, you might want more sophisticated logic

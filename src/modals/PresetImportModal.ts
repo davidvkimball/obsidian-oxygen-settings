@@ -158,29 +158,58 @@ export class PresetImportModal extends Modal {
     idRow.createEl('strong', { text: 'ID: ' });
     idRow.createEl('span', { text: preset.id, cls: 'preset-id' });
 
-    // Color preview
+    // Color preview section
     const preview = this.previewContainer.createEl('div', { cls: 'color-preview' });
     preview.createEl('h4', { text: 'Color Preview' });
 
+    // Mode toggle
+    const modeToggle = preview.createEl('div', { cls: 'mode-toggle' });
+    const lightModeBtn = modeToggle.createEl('button', { 
+      text: 'Light Mode', 
+      cls: 'mode-btn active' 
+    });
+    const darkModeBtn = modeToggle.createEl('button', { 
+      text: 'Dark Mode', 
+      cls: 'mode-btn' 
+    });
+
+    // Color swatches container
     const swatchContainer = preview.createEl('div', { cls: 'swatch-container' });
     
-    // Light mode preview
-    const lightPreview = swatchContainer.createEl('div', { cls: 'mode-preview' });
-    lightPreview.createEl('div', { text: 'Light Mode', cls: 'mode-label' });
-    const lightSwatch = generateColorSwatch(preset);
-    lightSwatch.style.background = `linear-gradient(45deg, 
-      hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%) 0%, 
-      hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%) 100%)`;
-    lightPreview.appendChild(lightSwatch);
+    // Light mode swatches
+    const lightSwatches = swatchContainer.createEl('div', { cls: 'mode-swatches active' });
+    const lightBaseSwatchPreview = lightSwatches.createEl('div', { cls: 'color-swatch' });
+    lightBaseSwatchPreview.style.backgroundColor = `hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%)`;
+    lightBaseSwatchPreview.title = `Base: hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%)`;
+    
+    const lightAccentSwatchPreview = lightSwatches.createEl('div', { cls: 'color-swatch' });
+    lightAccentSwatchPreview.style.backgroundColor = `hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)`;
+    lightAccentSwatchPreview.title = `Accent: hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)`;
 
-    // Dark mode preview
-    const darkPreview = swatchContainer.createEl('div', { cls: 'mode-preview' });
-    darkPreview.createEl('div', { text: 'Dark Mode', cls: 'mode-label' });
-    const darkSwatch = generateColorSwatch(preset);
-    darkSwatch.style.background = `linear-gradient(45deg, 
-      hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%) 0%, 
-      hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%) 100%)`;
-    darkPreview.appendChild(darkSwatch);
+    // Dark mode swatches
+    const darkSwatches = swatchContainer.createEl('div', { cls: 'mode-swatches' });
+    const darkBaseSwatchPreview = darkSwatches.createEl('div', { cls: 'color-swatch' });
+    darkBaseSwatchPreview.style.backgroundColor = `hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%)`;
+    darkBaseSwatchPreview.title = `Base: hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%)`;
+    
+    const darkAccentSwatchPreview = darkSwatches.createEl('div', { cls: 'color-swatch' });
+    darkAccentSwatchPreview.style.backgroundColor = `hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%)`;
+    darkAccentSwatchPreview.title = `Accent: hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%)`;
+
+    // Mode toggle functionality
+    lightModeBtn.onclick = () => {
+      lightModeBtn.classList.add('active');
+      darkModeBtn.classList.remove('active');
+      lightSwatches.classList.add('active');
+      darkSwatches.classList.remove('active');
+    };
+
+    darkModeBtn.onclick = () => {
+      darkModeBtn.classList.add('active');
+      lightModeBtn.classList.remove('active');
+      darkSwatches.classList.add('active');
+      lightSwatches.classList.remove('active');
+    };
 
     // Color details
     const details = this.previewContainer.createEl('div', { cls: 'color-details' });
@@ -190,10 +219,14 @@ export class PresetImportModal extends Modal {
     lightDetails.createEl('h5', { text: 'Light Mode' });
     
     const lightBase = lightDetails.createEl('div', { cls: 'color-detail' });
+    const lightBaseSwatchDetail = lightBase.createEl('div', { cls: 'detail-swatch' });
+    lightBaseSwatchDetail.style.backgroundColor = `hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%)`;
     lightBase.createEl('span', { text: 'Base: ' });
     lightBase.createEl('span', { text: `hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%)` });
     
     const lightAccent = lightDetails.createEl('div', { cls: 'color-detail' });
+    const lightAccentSwatchDetail = lightAccent.createEl('div', { cls: 'detail-swatch' });
+    lightAccentSwatchDetail.style.backgroundColor = `hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)`;
     lightAccent.createEl('span', { text: 'Accent: ' });
     lightAccent.createEl('span', { text: `hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)` });
 
@@ -201,10 +234,14 @@ export class PresetImportModal extends Modal {
     darkDetails.createEl('h5', { text: 'Dark Mode' });
     
     const darkBase = darkDetails.createEl('div', { cls: 'color-detail' });
+    const darkBaseSwatchDetail = darkBase.createEl('div', { cls: 'detail-swatch' });
+    darkBaseSwatchDetail.style.backgroundColor = `hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%)`;
     darkBase.createEl('span', { text: 'Base: ' });
     darkBase.createEl('span', { text: `hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%)` });
     
     const darkAccent = darkDetails.createEl('div', { cls: 'color-detail' });
+    const darkAccentSwatchDetail = darkAccent.createEl('div', { cls: 'detail-swatch' });
+    darkAccentSwatchDetail.style.backgroundColor = `hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%)`;
     darkAccent.createEl('span', { text: 'Accent: ' });
     darkAccent.createEl('span', { text: `hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%)` });
 
@@ -292,22 +329,59 @@ export class PresetImportModal extends Modal {
         margin-bottom: 1rem;
       }
       
-      .swatch-container {
+      .mode-toggle {
         display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--background-modifier-border);
+      }
+      
+      .mode-btn {
+        background: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+      }
+      
+      .mode-btn:hover {
+        color: var(--text-normal);
+      }
+      
+      .mode-btn.active {
+        color: var(--text-normal);
+        border-bottom-color: var(--text-accent);
+        font-weight: 500;
+      }
+      
+      .swatch-container {
+        margin-top: 0.5rem;
+      }
+      
+      .mode-swatches {
+        display: none;
         gap: 1rem;
         margin-top: 0.5rem;
       }
       
-      .mode-preview {
+      .mode-swatches.active {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
       }
       
-      .mode-label {
-        font-size: 0.9rem;
-        color: var(--text-muted);
+      .color-swatch {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 6px;
+        border: 1px solid var(--background-modifier-border);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      
+      .color-swatch:hover {
+        transform: scale(1.05);
       }
       
       .color-details {
@@ -324,14 +398,25 @@ export class PresetImportModal extends Modal {
       }
       
       .color-detail {
-        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
         font-family: monospace;
         font-size: 0.9rem;
       }
       
+      .detail-swatch {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 3px;
+        border: 1px solid var(--background-modifier-border);
+        flex-shrink: 0;
+      }
+      
       .color-detail span:first-child {
         color: var(--text-muted);
-        margin-right: 0.5rem;
+        min-width: 3rem;
       }
       
       .overrides-info {

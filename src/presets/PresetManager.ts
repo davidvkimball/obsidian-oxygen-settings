@@ -13,7 +13,7 @@ import {
 
 export class PresetManager {
   /**
-   * Generate CSS for a custom preset
+   * Generate CSS for a custom preset using Obsidian native variables
    */
   static generatePresetCSS(preset: CustomColorPreset, mode: 'light' | 'dark'): string {
     const palette = mode === 'light' ? preset.light : preset.dark;
@@ -22,16 +22,6 @@ export class PresetManager {
     
     // Use more specific selector to avoid conflicts
     let css = `body.${themeClass}.${className} {\n`;
-    
-    // Required base HSL variables
-    css += `  --base-h: ${palette.base.h} !important;\n`;
-    css += `  --base-s: ${palette.base.s}% !important;\n`;
-    css += `  --base-l: ${palette.base.l}% !important;\n`;
-    
-    // Required accent HSL variables
-    css += `  --accent-h: ${palette.accent.h} !important;\n`;
-    css += `  --accent-s: ${palette.accent.s}% !important;\n`;
-    css += `  --accent-l: ${palette.accent.l}% !important;\n`;
     
     // Calculate all derived colors based on the theme's color system
     const baseH = palette.base.h;
@@ -45,20 +35,19 @@ export class PresetManager {
     const isLightMode = mode === 'light';
     const isLightBase = baseL > 50;
     
-    // Background colors - simple calculation
-    css += `  --bg1: hsl(${baseH}, ${baseS}%, ${baseL}%) !important;\n`;
-    css += `  --bg2: hsl(${baseH}, ${baseS}%, ${isLightBase ? Math.max(0, baseL - 5) : Math.min(100, baseL + 5)}%) !important;\n`;
-    css += `  --bg-tab: hsl(${baseH}, ${baseS}%, ${baseL}%) !important;\n`;
-    css += `  --bg3: hsl(${baseH}, ${baseS}%, ${isLightBase ? Math.max(0, baseL - 10) : Math.min(100, baseL + 10)}%) !important;\n`;
+    // Calculate color values
+    const bg1 = `hsl(${baseH}, ${baseS}%, ${baseL}%)`;
+    const bg2 = `hsl(${baseH}, ${baseS}%, ${isLightBase ? Math.max(0, baseL - 5) : Math.min(100, baseL + 5)}%)`;
+    const bg3 = `hsl(${baseH}, ${baseS}%, ${isLightBase ? Math.max(0, baseL - 10) : Math.min(100, baseL + 10)}%)`;
     
     // UI colors (borders, dividers, etc.) - darker for light mode, lighter for dark mode
     const ui1L = isLightBase ? Math.max(0, baseL - 15) : Math.min(100, baseL + 15);
     const ui2L = isLightBase ? Math.max(0, baseL - 10) : Math.min(100, baseL + 10);
     const ui3L = isLightBase ? Math.max(0, baseL - 5) : Math.min(100, baseL + 5);
     
-    css += `  --ui1: hsl(${baseH}, ${baseS}%, ${ui1L}%) !important;\n`;
-    css += `  --ui2: hsl(${baseH}, ${baseS}%, ${ui2L}%) !important;\n`;
-    css += `  --ui3: hsl(${baseH}, ${baseS}%, ${ui3L}%) !important;\n`;
+    const ui1 = `hsl(${baseH}, ${baseS}%, ${ui1L}%)`;
+    const ui2 = `hsl(${baseH}, ${baseS}%, ${ui2L}%)`;
+    const ui3 = `hsl(${baseH}, ${baseS}%, ${ui3L}%)`;
     
     // Text colors - ensure proper contrast
     const tx1L = isLightBase ? 15 : 85;  // Very dark text for light bg, very light text for dark bg
@@ -66,107 +55,105 @@ export class PresetManager {
     const tx3L = isLightBase ? 35 : 65;
     const tx4L = isLightBase ? 30 : 70;
     
-    css += `  --tx1: hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx1L}%) !important;\n`;
-    css += `  --tx2: hsl(${baseH}, ${Math.max(0, baseS - 20)}%, ${tx2L}%) !important;\n`;
-    css += `  --tx3: hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx3L}%) !important;\n`;
-    css += `  --tx4: hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx4L}%) !important;\n`;
+    const tx1 = `hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx1L}%)`;
+    const tx2 = `hsl(${baseH}, ${Math.max(0, baseS - 20)}%, ${tx2L}%)`;
+    const tx3 = `hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx3L}%)`;
+    const tx4 = `hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx4L}%)`;
     
     // Accent colors
-    css += `  --ax1: hsl(${accentH}, ${accentS}%, ${accentL}%) !important;\n`;
-    css += `  --ax2: hsl(${accentH}, ${accentS}%, ${Math.max(0, Math.min(100, accentL + 8))}%) !important;\n`;
-    css += `  --ax3: hsl(${accentH}, ${accentS}%, ${Math.max(0, Math.min(100, accentL - 5))}%) !important;\n`;
+    const ax1 = `hsl(${accentH}, ${accentS}%, ${accentL}%)`;
+    const ax2 = `hsl(${accentH}, ${accentS}%, ${Math.max(0, Math.min(100, accentL + 8))}%)`;
+    const ax3 = `hsl(${accentH}, ${accentS}%, ${Math.max(0, Math.min(100, accentL - 5))}%)`;
     
     // Highlight colors
-    css += `  --hl1: hsla(${accentH}, 50%, 40%, 30%) !important;\n`;
-    css += `  --hl2: rgba(255, 177, 80, 0.3) !important;\n`;
+    const hl1 = `hsla(${accentH}, 50%, 40%, 30%)`;
+    const hl2 = `rgba(255, 177, 80, 0.3)`;
     
     // Special colors
-    css += `  --sp1: ${isLightMode ? 'white' : 'black'} !important;\n`;
+    const sp1 = isLightMode ? 'white' : 'black';
     
-    // Obsidian-specific color mappings
-    css += `  --background-modifier-accent: var(--ax3) !important;\n`;
-    css += `  --background-modifier-border-focus: var(--ui3) !important;\n`;
-    css += `  --background-modifier-border-hover: var(--ui2) !important;\n`;
-    css += `  --background-modifier-border: var(--ui1) !important;\n`;
-    css += `  --mobile-sidebar-background: var(--bg1) !important;\n`;
-    css += `  --background-modifier-form-field-highlighted: var(--bg1) !important;\n`;
-    css += `  --background-modifier-form-field: var(--bg1) !important;\n`;
-    css += `  --background-modifier-success: var(--color-green) !important;\n`;
-    css += `  --background-modifier-hover: var(--bg3) !important;\n`;
-    css += `  --background-modifier-active-hover: var(--bg3) !important;\n`;
-    css += `  --background-primary: var(--bg1) !important;\n`;
-    css += `  --background-primary-alt: var(--bg2) !important;\n`;
-    css += `  --background-secondary: var(--bg2) !important;\n`;
-    css += `  --background-secondary-alt: var(--bg1) !important;\n`;
-    css += `  --background-table-rows: var(--bg2) !important;\n`;
-    css += `  --checkbox-color: var(--ax3) !important;\n`;
-    css += `  --code-normal: var(--tx1) !important;\n`;
-    css += `  --divider-color: var(--ui1) !important;\n`;
-    css += `  --frame-divider-color: var(--ui1) !important;\n`;
-    css += `  --icon-color-active: var(--tx1) !important;\n`;
-    css += `  --icon-color-focused: var(--tx1) !important;\n`;
-    css += `  --icon-color-hover: var(--tx2) !important;\n`;
-    css += `  --icon-color: var(--tx2) !important;\n`;
-    css += `  --icon-hex: var(--mono0) !important;\n`;
-    css += `  --interactive-accent-hover: var(--ax1) !important;\n`;
-    css += `  --interactive-accent: var(--ax3) !important;\n`;
-    css += `  --interactive-hover: var(--ui1) !important;\n`;
-    css += `  --list-marker-color: var(--tx3) !important;\n`;
-    css += `  --nav-item-background-active: var(--bg3) !important;\n`;
-    css += `  --nav-item-background-hover: var(--bg3) !important;\n`;
-    css += `  --nav-item-color: var(--tx2) !important;\n`;
-    css += `  --nav-item-color-active: var(--tx1) !important;\n`;
-    css += `  --nav-item-color-hover: var(--tx1) !important;\n`;
-    css += `  --nav-item-color-selected: var(--tx1) !important;\n`;
-    css += `  --nav-collapse-icon-color: var(--tx2) !important;\n`;
-    css += `  --nav-collapse-icon-color-collapsed: var(--tx2) !important;\n`;
-    css += `  --nav-indentation-guide-color: var(--ui1) !important;\n`;
-    css += `  --prompt-border-color: var(--ui3) !important;\n`;
-    css += `  --quote-opening-modifier: var(--ui2) !important;\n`;
-    css += `  --ribbon-background: var(--bg2) !important;\n`;
-    css += `  --scrollbar-active-thumb-bg: var(--ui3) !important;\n`;
-    css += `  --scrollbar-bg: transparent !important;\n`;
-    css += `  --scrollbar-thumb-bg: var(--ui1) !important;\n`;
-    css += `  --search-result-background: var(--bg1) !important;\n`;
-    css += `  --tab-text-color-focused-active: var(--tx1) !important;\n`;
-    css += `  --tab-outline-color: var(--ui1) !important;\n`;
-    css += `  --text-accent-hover: var(--ax2) !important;\n`;
-    css += `  --text-accent: var(--ax1) !important;\n`;
-    css += `  --text-blockquote: var(--tx2) !important;\n`;
-    css += `  --text-bold: var(--tx1) !important;\n`;
-    css += `  --text-code: var(--tx4) !important;\n`;
-    css += `  --text-faint: var(--tx3) !important;\n`;
-    css += `  --text-muted: var(--tx2) !important;\n`;
-    css += `  --text-normal: var(--tx1) !important;\n`;
-    css += `  --text-selection: var(--hl1) !important;\n`;
-    css += `  --text-title-h1: var(--tx1) !important;\n`;
-    css += `  --text-title-h2: var(--tx1) !important;\n`;
-    css += `  --text-title-h3: var(--tx1) !important;\n`;
-    css += `  --text-title-h4: var(--tx1) !important;\n`;
-    css += `  --text-title-h5: var(--tx1) !important;\n`;
-    css += `  --text-title-h6: var(--tx1) !important;\n`;
-    
-    // Specific UI element fixes - calculate proper contrast for accent color
+    // Calculate proper contrast for accent color
     const accentIsLight = accentL > 50;
-    css += `  --text-on-accent: ${accentIsLight ? 'black' : 'white'} !important;\n`;
-    css += `  --interactive-accent-hover: var(--ax1) !important;\n`;
-    css += `  --interactive-accent: var(--ax3) !important;\n`;
+    const textOnAccent = accentIsLight ? 'black' : 'white';
     
-    // Hover effects for settings and other UI elements
-    css += `  --background-modifier-hover: var(--bg3) !important;\n`;
-    css += `  --background-modifier-active-hover: var(--bg3) !important;\n`;
-    css += `  --nav-item-background-hover: var(--bg3) !important;\n`;
-    css += `  --nav-item-background-active: var(--bg3) !important;\n`;
+    // Direct Obsidian native variable assignments (no !important needed)
+    css += `  --background-primary: ${bg1};\n`;
+    css += `  --background-secondary: ${bg2};\n`;
+    css += `  --background-secondary-alt: ${bg3};\n`;
+    css += `  --background-modifier-border: ${ui1};\n`;
+    css += `  --background-modifier-border-hover: ${ui2};\n`;
+    css += `  --background-modifier-border-focus: ${ui3};\n`;
+    css += `  --text-normal: ${tx1};\n`;
+    css += `  --text-muted: ${tx2};\n`;
+    css += `  --text-faint: ${tx3};\n`;
+    css += `  --text-accent: ${ax1};\n`;
+    css += `  --text-accent-hover: ${ax2};\n`;
+    css += `  --interactive-accent: ${ax3};\n`;
+    css += `  --text-on-accent: ${textOnAccent};\n`;
+    css += `  --text-highlight-bg: ${hl1};\n`;
+    css += `  --text-highlight-bg-active: ${hl2};\n`;
+    
+    // Additional Obsidian native variables for enhanced compatibility
+    css += `  --interactive-normal: ${bg2};\n`;
+    css += `  --interactive-hover: ${bg3};\n`;
+    css += `  --scrollbar-bg: transparent;\n`;
+    css += `  --scrollbar-thumb-bg: ${ui1};\n`;
+    css += `  --scrollbar-active-thumb-bg: ${ui3};\n`;
+    css += `  --divider-color: ${ui1};\n`;
+    css += `  --frame-divider-color: ${ui1};\n`;
+    css += `  --tab-outline-color: ${ui1};\n`;
+    
+    // Obsidian-specific color mappings for enhanced theme compatibility
+    css += `  --background-modifier-accent: ${ax3};\n`;
+    css += `  --mobile-sidebar-background: ${bg1};\n`;
+    css += `  --background-modifier-form-field-highlighted: ${bg1};\n`;
+    css += `  --background-modifier-form-field: ${bg1};\n`;
+    css += `  --background-modifier-hover: ${bg3};\n`;
+    css += `  --background-modifier-active-hover: ${bg3};\n`;
+    css += `  --background-primary-alt: ${bg2};\n`;
+    css += `  --background-table-rows: ${bg2};\n`;
+    css += `  --checkbox-color: ${ax3};\n`;
+    css += `  --code-normal: ${tx1};\n`;
+    css += `  --icon-color-active: ${tx1};\n`;
+    css += `  --icon-color-focused: ${tx1};\n`;
+    css += `  --icon-color-hover: ${tx2};\n`;
+    css += `  --icon-color: ${tx2};\n`;
+    css += `  --interactive-accent-hover: ${ax1};\n`;
+    css += `  --list-marker-color: ${tx3};\n`;
+    css += `  --nav-item-background-active: ${bg3};\n`;
+    css += `  --nav-item-background-hover: ${bg3};\n`;
+    css += `  --nav-item-color: ${tx2};\n`;
+    css += `  --nav-item-color-active: ${tx1};\n`;
+    css += `  --nav-item-color-hover: ${tx1};\n`;
+    css += `  --nav-item-color-selected: ${tx1};\n`;
+    css += `  --nav-collapse-icon-color: ${tx2};\n`;
+    css += `  --nav-collapse-icon-color-collapsed: ${tx2};\n`;
+    css += `  --nav-indentation-guide-color: ${ui1};\n`;
+    css += `  --prompt-border-color: ${ui3};\n`;
+    css += `  --quote-opening-modifier: ${ui2};\n`;
+    css += `  --ribbon-background: ${bg2};\n`;
+    css += `  --search-result-background: ${bg1};\n`;
+    css += `  --tab-text-color-focused-active: ${tx1};\n`;
+    css += `  --text-blockquote: ${tx2};\n`;
+    css += `  --text-bold: ${tx1};\n`;
+    css += `  --text-code: ${tx4};\n`;
+    css += `  --text-selection: ${hl1};\n`;
+    css += `  --text-title-h1: ${tx1};\n`;
+    css += `  --text-title-h2: ${tx1};\n`;
+    css += `  --text-title-h3: ${tx1};\n`;
+    css += `  --text-title-h4: ${tx1};\n`;
+    css += `  --text-title-h5: ${tx1};\n`;
+    css += `  --text-title-h6: ${tx1};\n`;
+    
+    // Button and interactive element colors
+    css += `  --button-background: ${ax3};\n`;
+    css += `  --button-background-hover: ${ax2};\n`;
+    css += `  --button-text: ${textOnAccent};\n`;
     
     // Right sidebar specific overrides
     css += `  .mod-right-split {\n`;
-    css += `    --background-secondary: var(--bg1) !important;\n`;
+    css += `    --background-secondary: ${bg1};\n`;
     css += `  }\n`;
-    
-    // Button and interactive element colors
-    css += `  --button-background: var(--ax3) !important;\n`;
-    css += `  --button-background-hover: var(--ax2) !important;\n`;
-    css += `  --button-text: var(--text-on-accent) !important;\n`;
     
     // Optional color overrides (if user provided specific colors)
     if (palette.colors) {
@@ -181,13 +168,68 @@ export class PresetManager {
       overrides.forEach(colorKey => {
         const color = palette.colors?.[colorKey as keyof typeof palette.colors];
         if (color) {
-          css += `  --${colorKey}: ${color} !important;\n`;
+          // Map custom overrides to appropriate Obsidian variables
+          switch (colorKey) {
+            case 'bg1':
+              css += `  --background-primary: ${color} !important;\n`;
+              break;
+            case 'bg2':
+              css += `  --background-secondary: ${color} !important;\n`;
+              break;
+            case 'bg3':
+              css += `  --background-secondary-alt: ${color} !important;\n`;
+              break;
+            case 'ui1':
+              css += `  --background-modifier-border: ${color} !important;\n`;
+              css += `  --divider-color: ${color} !important;\n`;
+              css += `  --frame-divider-color: ${color} !important;\n`;
+              css += `  --tab-outline-color: ${color} !important;\n`;
+              break;
+            case 'ui2':
+              css += `  --background-modifier-border-hover: ${color} !important;\n`;
+              break;
+            case 'ui3':
+              css += `  --background-modifier-border-focus: ${color} !important;\n`;
+              break;
+            case 'tx1':
+              css += `  --text-normal: ${color} !important;\n`;
+              css += `  --text-bold: ${color} !important;\n`;
+              css += `  --text-title-h1: ${color} !important;\n`;
+              css += `  --text-title-h2: ${color} !important;\n`;
+              css += `  --text-title-h3: ${color} !important;\n`;
+              css += `  --text-title-h4: ${color} !important;\n`;
+              css += `  --text-title-h5: ${color} !important;\n`;
+              css += `  --text-title-h6: ${color} !important;\n`;
+              break;
+            case 'tx2':
+              css += `  --text-muted: ${color} !important;\n`;
+              css += `  --text-blockquote: ${color} !important;\n`;
+              break;
+            case 'tx3':
+              css += `  --text-faint: ${color} !important;\n`;
+              break;
+            case 'tx4':
+              css += `  --text-code: ${color} !important;\n`;
+              break;
+            case 'hl1':
+              css += `  --text-highlight-bg: ${color} !important;\n`;
+              css += `  --text-selection: ${color} !important;\n`;
+              break;
+            case 'hl2':
+              css += `  --text-highlight-bg-active: ${color} !important;\n`;
+              break;
+            // For accent colors, we need to determine which ax variable this should map to
+            // This is a simplified mapping - in practice, you might want more sophisticated logic
+            default:
+              // For syntax colors and other custom colors, we can add them as custom properties
+              css += `  --color-${colorKey}: ${color};\n`;
+              break;
+          }
         }
       });
     }
     
     css += '}\n';
-    
     
     return css;
   }

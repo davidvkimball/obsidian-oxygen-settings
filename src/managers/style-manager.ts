@@ -140,7 +140,7 @@ export class StyleManagerImpl {
     // Update custom CSS variables
     const el = document.getElementById('minimal-theme');
     if (el) {
-      const css = 'body.minimal-theme{'
+      let css = 'body.minimal-theme{'
         + '--font-ui-small:' + this.plugin.settings.textSmall + 'px;'
         + '--line-height:' + this.plugin.settings.lineHeight + ';'
         + '--line-width:' + this.plugin.settings.lineWidth + 'rem;'
@@ -148,6 +148,14 @@ export class StyleManagerImpl {
         + '--max-width:' + this.plugin.settings.maxWidth + '%;'
         + '--font-editor-override:' + this.plugin.settings.editorFont + ';'
         + '}\n';
+      
+      // Override title bar hover behavior when disabled
+      if (!this.plugin.settings.hideTitleBarOnHover) {
+        css += '.view-header-title-container{'
+          + 'opacity: 1 !important;'
+          + 'transition: opacity 0.1s ease-in-out;'
+          + '}\n';
+      }
       
       el.innerText = css;
       this.customPresetCSS.updateCSS();

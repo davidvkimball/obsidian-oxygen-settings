@@ -29,6 +29,7 @@ export interface MinimalSettings {
   chartWidth: string;
   mapWidth: string;
   fullWidthMedia: boolean;
+  hideTitleBarOnHover: boolean;
   minimalStatus: boolean;
   textNormal: number;
   textSmall: number;
@@ -65,6 +66,7 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   trimNames: true,
   labeledNav: false,
   fullWidthMedia: true,
+  hideTitleBarOnHover: true,
   bordersToggle: true,
   minimalStatus: true,
   focusMode: false,

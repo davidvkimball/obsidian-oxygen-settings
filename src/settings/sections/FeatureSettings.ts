@@ -142,5 +142,15 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
         plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
+
+  new Setting(containerEl)
+    .setName('Auto-hide title bar')
+    .setDesc('Hide title bar until hover. Turn off to always show.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideTitleBarOnHover)
+      .onChange((value) => {
+        plugin.settings.hideTitleBarOnHover = value;
+        plugin.saveData(plugin.settings);
+        plugin.refresh();
+      }));
 }
 

@@ -171,21 +171,29 @@ export class PresetImportModal extends Modal {
     // Light mode swatches
     const lightSwatches = swatchContainer.createEl('div', { cls: 'mode-swatches active' });
     const lightBaseSwatchPreview = lightSwatches.createEl('div', { cls: 'color-swatch' });
-    lightBaseSwatchPreview.style.backgroundColor = `hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%)`;
+    const lightBaseHSL = `${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%`;
+    lightBaseSwatchPreview.setAttribute('data-hsl', lightBaseHSL);
+    lightBaseSwatchPreview.style.setProperty('--swatch-hsl', lightBaseHSL);
     lightBaseSwatchPreview.title = `Base: hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%)`;
     
     const lightAccentSwatchPreview = lightSwatches.createEl('div', { cls: 'color-swatch' });
-    lightAccentSwatchPreview.style.backgroundColor = `hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)`;
+    const lightAccentHSL = `${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%`;
+    lightAccentSwatchPreview.setAttribute('data-hsl', lightAccentHSL);
+    lightAccentSwatchPreview.style.setProperty('--swatch-hsl', lightAccentHSL);
     lightAccentSwatchPreview.title = `Accent: hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)`;
 
     // Dark mode swatches
     const darkSwatches = swatchContainer.createEl('div', { cls: 'mode-swatches' });
     const darkBaseSwatchPreview = darkSwatches.createEl('div', { cls: 'color-swatch' });
-    darkBaseSwatchPreview.style.backgroundColor = `hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%)`;
+    const darkBaseHSL = `${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%`;
+    darkBaseSwatchPreview.setAttribute('data-hsl', darkBaseHSL);
+    darkBaseSwatchPreview.style.setProperty('--swatch-hsl', darkBaseHSL);
     darkBaseSwatchPreview.title = `Base: hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%)`;
     
     const darkAccentSwatchPreview = darkSwatches.createEl('div', { cls: 'color-swatch' });
-    darkAccentSwatchPreview.style.backgroundColor = `hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%)`;
+    const darkAccentHSL = `${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%`;
+    darkAccentSwatchPreview.setAttribute('data-hsl', darkAccentHSL);
+    darkAccentSwatchPreview.style.setProperty('--swatch-hsl', darkAccentHSL);
     darkAccentSwatchPreview.title = `Accent: hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%)`;
 
     // Mode toggle functionality
@@ -212,13 +220,17 @@ export class PresetImportModal extends Modal {
     
     const lightBase = lightDetails.createEl('div', { cls: 'color-detail' });
     const lightBaseSwatchDetail = lightBase.createEl('div', { cls: 'detail-swatch' });
-    lightBaseSwatchDetail.style.backgroundColor = `hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%)`;
+    const lightBaseHSLDetail = `${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%`;
+    lightBaseSwatchDetail.setAttribute('data-hsl', lightBaseHSLDetail);
+    lightBaseSwatchDetail.style.setProperty('--detail-hsl', lightBaseHSLDetail);
     lightBase.createEl('span', { text: 'Base: ' });
     lightBase.createEl('span', { text: `hsl(${preset.light.base.h}, ${preset.light.base.s}%, ${preset.light.base.l}%)` });
     
     const lightAccent = lightDetails.createEl('div', { cls: 'color-detail' });
     const lightAccentSwatchDetail = lightAccent.createEl('div', { cls: 'detail-swatch' });
-    lightAccentSwatchDetail.style.backgroundColor = `hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)`;
+    const lightAccentHSLDetail = `${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%`;
+    lightAccentSwatchDetail.setAttribute('data-hsl', lightAccentHSLDetail);
+    lightAccentSwatchDetail.style.setProperty('--detail-hsl', lightAccentHSLDetail);
     lightAccent.createEl('span', { text: 'Accent: ' });
     lightAccent.createEl('span', { text: `hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)` });
 
@@ -227,13 +239,17 @@ export class PresetImportModal extends Modal {
     
     const darkBase = darkDetails.createEl('div', { cls: 'color-detail' });
     const darkBaseSwatchDetail = darkBase.createEl('div', { cls: 'detail-swatch' });
-    darkBaseSwatchDetail.style.backgroundColor = `hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%)`;
+    const darkBaseHSLDetail = `${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%`;
+    darkBaseSwatchDetail.setAttribute('data-hsl', darkBaseHSLDetail);
+    darkBaseSwatchDetail.style.setProperty('--detail-hsl', darkBaseHSLDetail);
     darkBase.createEl('span', { text: 'Base: ' });
     darkBase.createEl('span', { text: `hsl(${preset.dark.base.h}, ${preset.dark.base.s}%, ${preset.dark.base.l}%)` });
     
     const darkAccent = darkDetails.createEl('div', { cls: 'color-detail' });
     const darkAccentSwatchDetail = darkAccent.createEl('div', { cls: 'detail-swatch' });
-    darkAccentSwatchDetail.style.backgroundColor = `hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%)`;
+    const darkAccentHSLDetail = `${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%`;
+    darkAccentSwatchDetail.setAttribute('data-hsl', darkAccentHSLDetail);
+    darkAccentSwatchDetail.style.setProperty('--detail-hsl', darkAccentHSLDetail);
     darkAccent.createEl('span', { text: 'Accent: ' });
     darkAccent.createEl('span', { text: `hsl(${preset.dark.accent.h}, ${preset.dark.accent.s}%, ${preset.dark.accent.l}%)` });
 

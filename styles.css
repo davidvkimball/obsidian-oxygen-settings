@@ -556,3 +556,124 @@
   background: var(--background-modifier-hover);
 }
 
+/* ========================================
+   Inline Style Replacements
+   ======================================== */
+
+/* Preset Editor Modal - Form Input Styles */
+.frame-label {
+  font-size: 0.9em;
+}
+
+.frame-description {
+  font-size: 0.85em;
+  margin-bottom: 8px;
+}
+
+.frame-input {
+  width: 80px;
+}
+
+/* Collapsible Sections */
+.collapsible-content-item {
+  display: none !important;
+}
+
+.collapsible-content-item.expanded {
+  display: flex !important;
+}
+
+/* Preview Color Swatches - use CSS custom properties for dynamic colors */
+.preview-color {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 3px;
+  border: 1px solid var(--background-modifier-border);
+  background-color: var(--preview-color);
+}
+
+/* Color Preview Wrapper */
+.color-preview-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.color-preview {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 3px;
+  border: 1px solid var(--background-modifier-border);
+  cursor: pointer;
+  background-color: var(--preview-color);
+}
+
+/* HSL Color Input Overlay */
+.hsl-color-input-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Color Input Wrapper */
+.color-input-wrapper {
+  position: relative;
+}
+
+.color-preview-swatch {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 2px solid var(--background-modifier-border);
+  cursor: pointer;
+  background-color: var(--preview-color);
+}
+
+/* Custom Preset ID Display */
+.preset-id-display {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+/* Confirmation Modal Button Container */
+.modal-button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal-button-container .mod-cta.confirm-button {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+/* Color Swatch with Dynamic Background */
+.color-swatch {
+  background-color: hsl(var(--swatch-hsl));
+}
+
+/* Detail Swatch */
+.detail-swatch {
+  background-color: hsl(var(--detail-hsl));
+}
+
+/* Custom Preset Swatch */
+.custom-preset-swatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  border: 1px solid var(--background-modifier-border);
+  margin-right: 8px;
+  vertical-align: middle;
+  background: linear-gradient(45deg, 
+    var(--swatch-gradient-start) 0%, 
+    var(--swatch-gradient-mid) 50%, 
+    var(--swatch-gradient-end) 100%);
+}
+

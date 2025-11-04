@@ -99,19 +99,12 @@ export function validateHSL(hsl: HSLColor): boolean {
 export function generateColorSwatch(preset: CustomColorPreset): HTMLElement {
   const swatch = document.createElement('div');
   swatch.className = 'custom-preset-swatch';
-  swatch.style.cssText = `
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border-radius: 3px;
-    border: 1px solid var(--background-modifier-border);
-    margin-right: 8px;
-    background: linear-gradient(45deg, 
-      ${hslToHex(preset.light.base)} 0%, 
-      ${hslToHex(preset.light.accent)} 50%, 
-      ${hslToHex(preset.dark.base)} 100%);
-    vertical-align: middle;
-  `;
+  const lightBaseHex = hslToHex(preset.light.base);
+  const lightAccentHex = hslToHex(preset.light.accent);
+  const darkBaseHex = hslToHex(preset.dark.base);
+  swatch.style.setProperty('--swatch-gradient-start', lightBaseHex);
+  swatch.style.setProperty('--swatch-gradient-mid', lightAccentHex);
+  swatch.style.setProperty('--swatch-gradient-end', darkBaseHex);
   return swatch;
 }
 

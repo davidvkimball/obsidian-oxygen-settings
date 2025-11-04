@@ -142,17 +142,13 @@ export class PresetEditorModal extends Modal {
 
     // Colorful frame lightness override (optional)
     const frameSection = requiredSection.createEl('div', { cls: 'color-group' });
-    const frameLabel = frameSection.createEl('label', { text: 'Colorful Frame Lightness Override (Optional)' });
-    frameLabel.style.fontSize = '0.9em';
-    const frameDesc = frameSection.createEl('div', { cls: 'setting-item-description' });
+    const frameLabel = frameSection.createEl('label', { text: 'Colorful Frame Lightness Override (Optional)', cls: 'frame-label' });
+    const frameDesc = frameSection.createEl('div', { cls: 'setting-item-description frame-description' });
     frameDesc.textContent = mode === 'dark' 
       ? 'Offset from accent lightness for colorful frame. Default: -25 (darkens by 25%). Leave empty for default.'
       : 'Offset from accent lightness for colorful frame. Default: +30 (brightens by 30%). Leave empty for default.';
-    frameDesc.style.fontSize = '0.85em';
-    frameDesc.style.marginBottom = '8px';
     
-    const frameInput = frameSection.createEl('input', { type: 'number' });
-    frameInput.style.width = '80px';
+    const frameInput = frameSection.createEl('input', { type: 'number', cls: 'frame-input' });
     frameInput.placeholder = mode === 'dark' ? '-25' : '+30';
     frameInput.min = '-100';
     frameInput.max = '100';
@@ -212,13 +208,19 @@ export class PresetEditorModal extends Modal {
         () => this.updatePreview()
       );
       advancedItems.push(item);
-      item.style.display = 'none'; // Hide by default
+      item.addClass('collapsible-content-item'); // Hide by default
     });
     
     // Toggle visibility
     advancedToggle.onclick = () => {
-      const isCollapsed = advancedItems[0].style.display === 'none';
-      advancedItems.forEach(item => item.style.display = isCollapsed ? 'flex' : 'none');
+      const isCollapsed = !advancedItems[0].classList.contains('expanded');
+      advancedItems.forEach(item => {
+        if (isCollapsed) {
+          item.addClass('expanded');
+        } else {
+          item.removeClass('expanded');
+        }
+      });
       setIcon(advancedToggle, isCollapsed ? 'chevron-up' : 'chevron-down');
     };
 
@@ -245,13 +247,19 @@ export class PresetEditorModal extends Modal {
         () => this.updatePreview()
       );
       syntaxItems.push(item);
-      item.style.display = 'none'; // Hide by default
+      item.addClass('collapsible-content-item'); // Hide by default
     });
     
     // Toggle visibility
     syntaxToggle.onclick = () => {
-      const isCollapsed = syntaxItems[0].style.display === 'none';
-      syntaxItems.forEach(item => item.style.display = isCollapsed ? 'flex' : 'none');
+      const isCollapsed = !syntaxItems[0].classList.contains('expanded');
+      syntaxItems.forEach(item => {
+        if (isCollapsed) {
+          item.addClass('expanded');
+        } else {
+          item.removeClass('expanded');
+        }
+      });
       setIcon(syntaxToggle, isCollapsed ? 'chevron-up' : 'chevron-down');
     };
   }
@@ -287,18 +295,22 @@ export class PresetEditorModal extends Modal {
     lightRow.createEl('div', { text: 'Light Mode', cls: 'preview-label' });
     const lightColors = lightRow.createEl('div', { cls: 'preview-colors' });
     const lightBaseColor = lightColors.createEl('div', { cls: 'preview-color' });
-    lightBaseColor.style.background = lightBaseHex;
+    lightBaseColor.setAttribute('data-color', lightBaseHex);
+    lightBaseColor.style.setProperty('--preview-color', lightBaseHex);
     const lightAccentColor = lightColors.createEl('div', { cls: 'preview-color' });
-    lightAccentColor.style.background = lightAccentHex;
+    lightAccentColor.setAttribute('data-color', lightAccentHex);
+    lightAccentColor.style.setProperty('--preview-color', lightAccentHex);
     
     // Create Dark Mode section
     const darkRow = this.previewSwatch.createEl('div', { cls: 'preview-row' });
     darkRow.createEl('div', { text: 'Dark Mode', cls: 'preview-label' });
     const darkColors = darkRow.createEl('div', { cls: 'preview-colors' });
     const darkBaseColor = darkColors.createEl('div', { cls: 'preview-color' });
-    darkBaseColor.style.background = darkBaseHex;
+    darkBaseColor.setAttribute('data-color', darkBaseHex);
+    darkBaseColor.style.setProperty('--preview-color', darkBaseHex);
     const darkAccentColor = darkColors.createEl('div', { cls: 'preview-color' });
-    darkAccentColor.style.background = darkAccentHex;
+    darkAccentColor.setAttribute('data-color', darkAccentHex);
+    darkAccentColor.style.setProperty('--preview-color', darkAccentHex);
   }
 
   private savePreset() {

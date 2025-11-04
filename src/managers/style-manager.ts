@@ -12,6 +12,7 @@ import {
   CSS_UPDATE_DELAY,
   CSS_REFLOW_DELAY 
 } from '../constants';
+import { setTheme, getVaultConfig, setVaultConfig } from '../types/obsidian-extensions';
 
 export class StyleManagerImpl {
   private plugin: PluginContext;
@@ -180,11 +181,10 @@ export class StyleManagerImpl {
     );
     document.body.addClass('theme-light', this.plugin.settings.lightStyle);
     
-    const app = this.plugin.app as any; // Obsidian internal API
-    const theme = app.vault.getConfig('theme');
+    const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== 'system') {
-      app.setTheme('moonstone');
-      app.vault.setConfig('theme', 'moonstone');
+      setTheme(this.plugin.app, 'moonstone');
+      setVaultConfig(this.plugin.app, 'theme', 'moonstone');
     }
     this.plugin.app.workspace.trigger('css-change');
   }
@@ -206,11 +206,10 @@ export class StyleManagerImpl {
     );
     document.body.addClass('theme-dark', this.plugin.settings.darkStyle);
     
-    const app = this.plugin.app as any; // Obsidian internal API
-    const theme = app.vault.getConfig('theme');
+    const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== 'system') {
-      app.setTheme('obsidian');
-      app.vault.setConfig('theme', 'obsidian');
+      setTheme(this.plugin.app, 'obsidian');
+      setVaultConfig(this.plugin.app, 'theme', 'obsidian');
     }
     this.plugin.app.workspace.trigger('css-change');
   }

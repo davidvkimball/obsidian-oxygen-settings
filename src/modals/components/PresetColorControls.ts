@@ -25,29 +25,19 @@ export function createHSLControls(
   
   // Color preview (clickable) - wrapper with relative positioning
   const previewWrapper = controls.createEl('div', { cls: 'color-preview-wrapper' });
-  previewWrapper.style.position = 'relative';
-  previewWrapper.style.display = 'inline-block';
-  
+
   const preview = previewWrapper.createEl('div', { cls: 'color-preview' });
-  preview.style.backgroundColor = hslToHex(hslCopy);
-  preview.style.cursor = 'pointer';
+  preview.style.setProperty('--preview-color', hslToHex(hslCopy));
   preview.title = 'Click to pick a color with hex input';
   
   // Color input positioned over the preview
-  const colorInput = previewWrapper.createEl('input', { type: 'color' });
-  colorInput.style.position = 'absolute';
-  colorInput.style.top = '0';
-  colorInput.style.left = '0';
-  colorInput.style.width = '100%';
-  colorInput.style.height = '100%';
-  colorInput.style.opacity = '0';
-  colorInput.style.cursor = 'pointer';
+  const colorInput = previewWrapper.createEl('input', { type: 'color', cls: 'hsl-color-input-overlay' });
   colorInput.value = hslToHex(hslCopy);
   
   // Update preview function
   const updatePreview = () => {
     const hexColor = hslToHex(hslCopy);
-    preview.style.backgroundColor = hexColor;
+    preview.style.setProperty('--preview-color', hexColor);
     colorInput.value = hexColor;
   };
   
@@ -142,25 +132,12 @@ export function createColorOverride(
   
   // Create color picker with same pattern as HSL controls
   const colorInputWrapper = header.createEl('div', { cls: 'color-input-wrapper' });
-  colorInputWrapper.style.position = 'relative';
   
   // Visible color preview
   const colorPreview = colorInputWrapper.createEl('div', { cls: 'color-preview-swatch' });
-  colorPreview.style.width = '2rem';
-  colorPreview.style.height = '2rem';
-  colorPreview.style.borderRadius = '50%';
-  colorPreview.style.border = '2px solid var(--background-modifier-border)';
-  colorPreview.style.cursor = 'pointer';
   
   // Hidden color input positioned over the preview
-  const colorInput = colorInputWrapper.createEl('input', { type: 'color' });
-  colorInput.style.position = 'absolute';
-  colorInput.style.top = '0';
-  colorInput.style.left = '0';
-  colorInput.style.width = '100%';
-  colorInput.style.height = '100%';
-  colorInput.style.opacity = '0';
-  colorInput.style.cursor = 'pointer';
+  const colorInput = colorInputWrapper.createEl('input', { type: 'color', cls: 'hsl-color-input-overlay' });
   colorInput.disabled = true;
   
   // Store the original color value when toggling off
@@ -168,7 +145,7 @@ export function createColorOverride(
   
   // Function to update the color preview
   const updateColorPreview = (color: string) => {
-    colorPreview.style.backgroundColor = color;
+    colorPreview.style.setProperty('--preview-color', color);
     colorInput.value = color;
   };
   

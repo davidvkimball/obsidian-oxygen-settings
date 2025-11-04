@@ -33,10 +33,6 @@ export class ConfirmationModal extends Modal {
 
     // Buttons container
     const buttonContainer = contentEl.createDiv('modal-button-container');
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.gap = '10px';
-    buttonContainer.style.justifyContent = 'flex-end';
-    buttonContainer.style.marginTop = '20px';
 
     // Cancel button
     const cancelButton = buttonContainer.createEl('button', {
@@ -51,10 +47,8 @@ export class ConfirmationModal extends Modal {
     // Confirm button
     const confirmButton = buttonContainer.createEl('button', {
       text: this.confirmText,
-      cls: 'mod-cta'
+      cls: 'mod-cta confirm-button'
     });
-    confirmButton.style.backgroundColor = 'var(--interactive-accent)';
-    confirmButton.style.color = 'var(--text-on-accent)';
     confirmButton.addEventListener('click', () => {
       this.close();
       this.resolve(true);

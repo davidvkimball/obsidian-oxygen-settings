@@ -5,6 +5,7 @@
 
 import { PluginContext, ThemeMode } from '../types';
 import { OBSIDIAN_THEMES } from '../constants';
+import { getVaultConfig, setTheme, setVaultConfig } from '../types/obsidian-extensions';
 
 export class ThemeManagerImpl {
   private plugin: PluginContext;
@@ -17,10 +18,7 @@ export class ThemeManagerImpl {
    * Toggle between light and dark themes
    */
   updateTheme(): void {
-    // Obsidian internal API
-    const app = this.plugin.app as any; // TODO: Type definition for vault config
-    
-    const currentTheme = app.vault.getConfig('theme');
+    const currentTheme = getVaultConfig(this.plugin.app, 'theme');
     if (currentTheme === OBSIDIAN_THEMES.SYSTEM) {
       // System theme mode - just toggle class
       if (document.body.classList.contains('theme-light')) {
@@ -40,13 +38,13 @@ export class ThemeManagerImpl {
         document.body.addClass('theme-light');
       }
 
-      const theme = app.vault.getConfig('theme');
+      const theme = getVaultConfig(this.plugin.app, 'theme');
       const newTheme = theme === OBSIDIAN_THEMES.LIGHT 
         ? OBSIDIAN_THEMES.DARK 
         : OBSIDIAN_THEMES.LIGHT;
 
-      app.setTheme(newTheme);
-      app.vault.setConfig('theme', newTheme);
+      setTheme(this.plugin.app, newTheme);
+      setVaultConfig(this.plugin.app, 'theme', newTheme);
     }
     
     this.plugin.app.workspace.trigger('css-change');
@@ -59,12 +57,10 @@ export class ThemeManagerImpl {
     document.body.removeClass('theme-dark');
     document.body.addClass('theme-light');
     
-    // Obsidian internal API
-    const app = this.plugin.app as any; // TODO: Type definition
-    const theme = app.vault.getConfig('theme');
+    const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== OBSIDIAN_THEMES.SYSTEM) {
-      app.setTheme(OBSIDIAN_THEMES.LIGHT);
-      app.vault.setConfig('theme', OBSIDIAN_THEMES.LIGHT);
+      setTheme(this.plugin.app, OBSIDIAN_THEMES.LIGHT);
+      setVaultConfig(this.plugin.app, 'theme', OBSIDIAN_THEMES.LIGHT);
     }
     
     this.plugin.app.workspace.trigger('css-change');
@@ -77,12 +73,10 @@ export class ThemeManagerImpl {
     document.body.removeClass('theme-light');
     document.body.addClass('theme-dark');
     
-    // Obsidian internal API
-    const app = this.plugin.app as any; // TODO: Type definition
-    const theme = app.vault.getConfig('theme');
+    const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== OBSIDIAN_THEMES.SYSTEM) {
-      app.setTheme(OBSIDIAN_THEMES.DARK);
-      app.vault.setConfig('theme', OBSIDIAN_THEMES.DARK);
+      setTheme(this.plugin.app, OBSIDIAN_THEMES.DARK);
+      setVaultConfig(this.plugin.app, 'theme', OBSIDIAN_THEMES.DARK);
     }
     
     this.plugin.app.workspace.trigger('css-change');

@@ -4,6 +4,7 @@
 
 import { PluginContext } from '../types';
 import { COMMAND_IDS, LIGHT_STYLES, DARK_STYLES } from '../constants';
+import { setTheme, getVaultConfig, setVaultConfig } from '../types/obsidian-extensions';
 
 export function registerStyleCommands(plugin: PluginContext): void {
   // Cycle dark styles
@@ -120,10 +121,10 @@ function updateLightStyle(plugin: PluginContext): void {
   );
   document.body.addClass('theme-light', plugin.settings.lightStyle);
   
-  const app = plugin.app as any;
-  if (app.vault.getConfig('theme') !== 'system') {
-    app.setTheme('moonstone');
-    app.vault.setConfig('theme', 'moonstone');
+  const theme = getVaultConfig(plugin.app, 'theme');
+  if (theme !== 'system') {
+    setTheme(plugin.app, 'moonstone');
+    setVaultConfig(plugin.app, 'theme', 'moonstone');
   }
   plugin.app.workspace.trigger('css-change');
 }
@@ -142,10 +143,10 @@ function updateDarkStyle(plugin: PluginContext): void {
   );
   document.body.addClass('theme-dark', plugin.settings.darkStyle);
   
-  const app = plugin.app as any;
-  if (app.vault.getConfig('theme') !== 'system') {
-    app.setTheme('obsidian');
-    app.vault.setConfig('theme', 'obsidian');
+  const theme = getVaultConfig(plugin.app, 'theme');
+  if (theme !== 'system') {
+    setTheme(plugin.app, 'obsidian');
+    setVaultConfig(plugin.app, 'theme', 'obsidian');
   }
   plugin.app.workspace.trigger('css-change');
 }

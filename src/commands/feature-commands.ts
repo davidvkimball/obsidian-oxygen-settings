@@ -4,6 +4,7 @@
 
 import { PluginContext } from '../types';
 import { COMMAND_IDS } from '../constants';
+import { getVaultConfig, setTheme, setVaultConfig } from '../types/obsidian-extensions';
 
 export function registerFeatureCommands(plugin: PluginContext): void {
   plugin.addCommand({
@@ -88,9 +89,9 @@ function updateTheme(plugin: PluginContext): void {
     return;
   }
   
-  const app = plugin.app as any;
+  const theme = getVaultConfig(plugin.app, 'theme');
   
-  if (app.vault.getConfig('theme') === 'system') {
+  if (theme === 'system') {
     if (document.body.classList.contains('theme-light')) {
       document.body.removeClass('theme-light');
       document.body.addClass('theme-dark');
@@ -107,10 +108,10 @@ function updateTheme(plugin: PluginContext): void {
       document.body.addClass('theme-light');
     }
 
-    const currentTheme = app.vault.getConfig('theme');
+    const currentTheme = getVaultConfig(plugin.app, 'theme');
     const newTheme = currentTheme === 'moonstone' ? 'obsidian' : 'moonstone';
-    app.setTheme(newTheme);
-    app.vault.setConfig('theme', newTheme);
+    setTheme(plugin.app, newTheme);
+    setVaultConfig(plugin.app, 'theme', newTheme);
   }
   plugin.app.workspace.trigger('css-change');
 }

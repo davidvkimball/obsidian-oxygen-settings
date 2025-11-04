@@ -114,10 +114,7 @@ function addPresetListItem(
     details.createEl('div', { text: `by ${preset.author}`, cls: 'preset-author' });
   }
   
-  const idSpan = details.createEl('div', { text: preset.id, cls: 'preset-id' });
-  idSpan.style.fontSize = '0.8rem';
-  idSpan.style.color = 'var(--text-muted)';
-  idSpan.style.fontFamily = 'monospace';
+  const idSpan = details.createEl('div', { text: preset.id, cls: 'preset-id preset-id-display' });
 
   // Action buttons using proper Obsidian API
   new Setting(presetItem)

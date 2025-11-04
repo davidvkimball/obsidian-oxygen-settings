@@ -5,6 +5,7 @@
 
 import { PluginContext } from '../types';
 import { VAULT_CONFIG } from '../constants';
+import { getVaultConfig, setVaultConfig, onVaultConfigChanged, updateFontSize } from '../types/obsidian-extensions';
 
 export class SettingsSyncManager {
   private plugin: PluginContext;
@@ -17,12 +18,9 @@ export class SettingsSyncManager {
    * Setup event watchers for vault config changes
    */
   setupWatchers(): void {
-    // Obsidian internal API - vault events
-    const app = this.plugin.app as any; // TODO: Type definition for vault.on
-    
     // Watch for vault config changes
     this.plugin.registerEvent(
-      app.vault.on('config-changed', () => {
+      onVaultConfigChanged(this.plugin.app, () => {
         this.syncFromVault();
       })
     );
@@ -40,23 +38,20 @@ export class SettingsSyncManager {
    * @param skipSave - If true, don't save settings (used during initial load)
    */
   syncFromVault(skipSave: boolean = false): void {
-    // Obsidian internal API
-    const app = this.plugin.app as any; // TODO: Type definition for vault.getConfig
-    
     // Font size
-    const fontSize = app.vault.getConfig(VAULT_CONFIG.BASE_FONT_SIZE);
+    const fontSize = getVaultConfig(this.plugin.app, VAULT_CONFIG.BASE_FONT_SIZE);
     if (typeof fontSize === 'number') {
       this.plugin.settings.textNormal = fontSize;
     }
 
     // Folding
-    this.plugin.settings.folding = !!app.vault.getConfig(VAULT_CONFIG.FOLD_HEADING);
+    this.plugin.settings.folding = !!getVaultConfig(this.plugin.app, VAULT_CONFIG.FOLD_HEADING);
 
     // Line numbers
-    this.plugin.settings.lineNumbers = !!app.vault.getConfig(VAULT_CONFIG.SHOW_LINE_NUMBER);
+    this.plugin.settings.lineNumbers = !!getVaultConfig(this.plugin.app, VAULT_CONFIG.SHOW_LINE_NUMBER);
 
     // Readable line length
-    this.plugin.settings.readableLineLength = !!app.vault.getConfig(VAULT_CONFIG.READABLE_LINE_LENGTH);
+    this.plugin.settings.readableLineLength = !!getVaultConfig(this.plugin.app, VAULT_CONFIG.READABLE_LINE_LENGTH);
 
     // Update body classes
     const bodyClassList = document.body.classList;
@@ -75,10 +70,8 @@ export class SettingsSyncManager {
    * Sync font size to Obsidian vault config
    */
   setFontSize(): void {
-    // Obsidian internal API
-    const app = this.plugin.app as any; // TODO: Type definition for vault.setConfig
-    app.vault.setConfig(VAULT_CONFIG.BASE_FONT_SIZE, this.plugin.settings.textNormal);
-    app.updateFontSize();
+    setVaultConfig(this.plugin.app, VAULT_CONFIG.BASE_FONT_SIZE, this.plugin.settings.textNormal);
+    updateFontSize(this.plugin.app);
   }
 
   /**

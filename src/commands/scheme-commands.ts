@@ -5,15 +5,15 @@
 
 import { PluginContext } from '../types';
 import { LIGHT_SCHEMES, DARK_SCHEMES, SCHEME_DISPLAY_NAMES } from '../constants';
+import { setTheme, getVaultConfig, setVaultConfig } from '../types/obsidian-extensions';
 
 export function registerSchemeCommands(plugin: PluginContext): void {
   // Register light scheme commands
   LIGHT_SCHEMES.forEach(scheme => {
     const schemeName = SCHEME_DISPLAY_NAMES[scheme] || scheme;
-    const commandId = `toggle-${scheme}`;
     
     plugin.addCommand({
-      id: commandId,
+      id: `toggle-${scheme}`,
       name: `Switch light color scheme to ${schemeName} (light)`,
       callback: () => {
         plugin.settings.lightScheme = scheme;
@@ -27,10 +27,9 @@ export function registerSchemeCommands(plugin: PluginContext): void {
   // Register dark scheme commands
   DARK_SCHEMES.forEach(scheme => {
     const schemeName = SCHEME_DISPLAY_NAMES[scheme] || scheme;
-    const commandId = `toggle-${scheme}`;
     
     plugin.addCommand({
-      id: commandId,
+      id: `toggle-${scheme}`,
       name: `Switch dark color scheme to ${schemeName} (dark)`,
       callback: () => {
         plugin.settings.darkScheme = scheme;
@@ -81,10 +80,10 @@ function updateLightStyle(plugin: PluginContext): void {
   );
   document.body.addClass('theme-light', plugin.settings.lightStyle);
   
-  const app = plugin.app as any;
-  if (app.vault.getConfig('theme') !== 'system') {
-    app.setTheme('moonstone');
-    app.vault.setConfig('theme', 'moonstone');
+  const theme = getVaultConfig(plugin.app, 'theme');
+  if (theme !== 'system') {
+    setTheme(plugin.app, 'moonstone');
+    setVaultConfig(plugin.app, 'theme', 'moonstone');
   }
   plugin.app.workspace.trigger('css-change');
 }
@@ -103,10 +102,10 @@ function updateDarkStyle(plugin: PluginContext): void {
   );
   document.body.addClass('theme-dark', plugin.settings.darkStyle);
   
-  const app = plugin.app as any;
-  if (app.vault.getConfig('theme') !== 'system') {
-    app.setTheme('obsidian');
-    app.vault.setConfig('theme', 'obsidian');
+  const theme = getVaultConfig(plugin.app, 'theme');
+  if (theme !== 'system') {
+    setTheme(plugin.app, 'obsidian');
+    setVaultConfig(plugin.app, 'theme', 'obsidian');
   }
   plugin.app.workspace.trigger('css-change');
 }

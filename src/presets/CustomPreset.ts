@@ -38,6 +38,9 @@ export interface ColorOverrides {
   blue?: string;
   purple?: string;
   pink?: string;
+  
+  // Index signature for dynamic access
+  [key: string]: string | undefined;
 }
 
 export interface ColorPalette {

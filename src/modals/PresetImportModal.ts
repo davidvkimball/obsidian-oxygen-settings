@@ -33,7 +33,7 @@ export class PresetImportModal extends Modal {
 
     // Header
     const header = contentEl.createEl('div', { cls: 'modal-header' });
-    header.createEl('h2', { text: 'Import Custom Preset' });
+    header.createEl('h2', { text: 'Import custom preset' });
 
     // Instructions
     const instructions = contentEl.createEl('div', { cls: 'modal-section' });
@@ -43,7 +43,7 @@ export class PresetImportModal extends Modal {
 
     // JSON input area
     const inputSection = contentEl.createEl('div', { cls: 'modal-section' });
-    inputSection.createEl('h3', { text: 'JSON Preset Data' });
+    inputSection.createEl('h3', { text: 'JSON preset data' });
 
     new Setting(inputSection)
       .setName('Preset JSON')
@@ -152,16 +152,16 @@ export class PresetImportModal extends Modal {
 
     // Color preview section
     const preview = this.previewContainer.createEl('div', { cls: 'color-preview-section' });
-    preview.createEl('h4', { text: 'Color Preview' });
+    preview.createEl('h4', { text: 'Color preview' });
 
     // Mode toggle
     const modeToggle = preview.createEl('div', { cls: 'mode-toggle' });
     const lightModeBtn = modeToggle.createEl('button', { 
-      text: 'Light Mode', 
+      text: 'Light mode', 
       cls: 'mode-btn active' 
     });
     const darkModeBtn = modeToggle.createEl('button', { 
-      text: 'Dark Mode', 
+      text: 'Dark mode', 
       cls: 'mode-btn' 
     });
 
@@ -213,10 +213,10 @@ export class PresetImportModal extends Modal {
 
     // Color details
     const details = this.previewContainer.createEl('div', { cls: 'color-details-section' });
-    details.createEl('h4', { text: 'Color Values' });
+    details.createEl('h4', { text: 'Color values' });
 
     const lightDetails = details.createEl('div', { cls: 'mode-details' });
-    lightDetails.createEl('h5', { text: 'Light Mode' });
+    lightDetails.createEl('h5', { text: 'Light mode' });
     
     const lightBase = lightDetails.createEl('div', { cls: 'color-detail' });
     const lightBaseSwatchDetail = lightBase.createEl('div', { cls: 'detail-swatch' });
@@ -235,7 +235,7 @@ export class PresetImportModal extends Modal {
     lightAccent.createEl('span', { text: `hsl(${preset.light.accent.h}, ${preset.light.accent.s}%, ${preset.light.accent.l}%)` });
 
     const darkDetails = details.createEl('div', { cls: 'mode-details' });
-    darkDetails.createEl('h5', { text: 'Dark Mode' });
+    darkDetails.createEl('h5', { text: 'Dark mode' });
     
     const darkBase = darkDetails.createEl('div', { cls: 'color-detail' });
     const darkBaseSwatchDetail = darkBase.createEl('div', { cls: 'detail-swatch' });

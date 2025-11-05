@@ -11,7 +11,6 @@ import { ThemeManagerImpl } from './managers/theme-manager';
 import { SettingsSyncManager } from './managers/settings-sync';
 import { registerAllCommands } from './commands';
 import { OXYGEN_THEME_NAME } from './constants';
-import { getVaultConfig } from './types/obsidian-extensions';
 
 export default class MinimalTheme extends Plugin {
   settings: MinimalSettings;
@@ -168,7 +167,8 @@ export default class MinimalTheme extends Plugin {
    * @private
    */
   private checkOxygenTheme(): boolean {
-    const cssTheme = getVaultConfig(this.app, 'cssTheme');
+    const app = this.app as any;
+    const cssTheme = app.vault.getConfig('cssTheme');
     return cssTheme === OXYGEN_THEME_NAME;
   }
 }

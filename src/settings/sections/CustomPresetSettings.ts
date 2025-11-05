@@ -114,7 +114,7 @@ function addPresetListItem(
     details.createEl('div', { text: `by ${preset.author}`, cls: 'preset-author' });
   }
   
-  const idSpan = details.createEl('div', { text: preset.id, cls: 'preset-id preset-id-display' });
+  details.createEl('div', { text: preset.id, cls: 'preset-id preset-id-display' });
 
   // Action buttons using proper Obsidian API
   new Setting(presetItem)
@@ -152,7 +152,7 @@ function openPresetEditor(
       plugin.settings.customPresets.push(updatedPreset);
     }
     
-    plugin.saveData(plugin.settings);
+    void plugin.saveData(plugin.settings);
     
     // Update styles if this preset is currently active
     const presetSchemeId = `minimal-custom-${updatedPreset.id}`;
@@ -173,7 +173,7 @@ function openPresetImporter(
 ): void {
   const modal = new PresetImportModal(app, plugin, (importedPreset) => {
     plugin.settings.customPresets.push(importedPreset);
-    plugin.saveData(plugin.settings);
+    void plugin.saveData(plugin.settings);
     refreshCallback(); // Refresh the settings tab
   });
   modal.open();
@@ -210,7 +210,7 @@ async function deletePreset(
     // Show warning modal
     const confirmed = await ConfirmationModal.show(
       app,
-      'Delete Active Preset',
+      'Delete active preset',
       'This preset is currently active. Deleting it will switch to the default scheme. Continue?',
       'Delete'
     );

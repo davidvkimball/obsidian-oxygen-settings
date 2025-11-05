@@ -8,9 +8,7 @@ import { CustomPresetCSS } from './custom-preset-css';
 import { 
   CSS_CLASSES, 
   LIGHT_SCHEMES, 
-  DARK_SCHEMES,
-  CSS_UPDATE_DELAY,
-  CSS_REFLOW_DELAY 
+  DARK_SCHEMES
 } from '../constants';
 import { setTheme, getVaultConfig, setVaultConfig } from '../types/obsidian-extensions';
 
@@ -138,29 +136,26 @@ export class StyleManagerImpl {
       this.plugin.settings.mapWidth
     );
 
-    // Update custom CSS variables
-    const el = document.getElementById('minimal-theme');
-    if (el) {
-      let css = 'body.minimal-theme{'
-        + '--font-ui-small:' + this.plugin.settings.textSmall + 'px;'
-        + '--line-height:' + this.plugin.settings.lineHeight + ';'
-        + '--line-width:' + this.plugin.settings.lineWidth + 'rem;'
-        + '--line-width-wide:' + this.plugin.settings.lineWidthWide + 'rem;'
-        + '--max-width:' + this.plugin.settings.maxWidth + '%;'
-        + '--font-editor-override:' + this.plugin.settings.editorFont + ';'
-        + '}\n';
-      
-      // Override title bar hover behavior when disabled
-      if (!this.plugin.settings.hideTitleBarOnHover) {
-        css += '.view-header-title-container{'
-          + 'opacity: 1 !important;'
-          + 'transition: opacity 0.1s ease-in-out;'
-          + '}\n';
-      }
-      
-      el.innerText = css;
-      this.customPresetCSS.updateCSS();
+    // Update custom CSS variables on body element (instead of style element)
+    document.body.style.setProperty('--font-ui-small', `${this.plugin.settings.textSmall}px`);
+    document.body.style.setProperty('--line-height', String(this.plugin.settings.lineHeight));
+    document.body.style.setProperty('--line-width', `${this.plugin.settings.lineWidth}rem`);
+    document.body.style.setProperty('--line-width-wide', `${this.plugin.settings.lineWidthWide}rem`);
+    document.body.style.setProperty('--max-width', `${this.plugin.settings.maxWidth}%`);
+    document.body.style.setProperty('--font-editor-override', this.plugin.settings.editorFont);
+    
+    // Title bar hover behavior - use CSS custom property to control visibility
+    // When hideTitleBarOnHover is false (always show), set a custom property
+    // The CSS will use this to override the theme's default behavior
+    if (!this.plugin.settings.hideTitleBarOnHover) {
+      document.body.style.setProperty('--title-bar-always-visible', '1');
+      document.body.classList.add('always-show-title-bar');
+    } else {
+      document.body.style.removeProperty('--title-bar-always-visible');
+      document.body.classList.remove('always-show-title-bar');
     }
+    
+    this.customPresetCSS.updateCSS();
   }
 
   /**
@@ -344,17 +339,13 @@ export class StyleManagerImpl {
 
   /**
    * Load CSS rules
+   * Uses CSS custom properties on body instead of creating style elements
    */
   private loadRules(): void {
     // Only load CSS rules if Oxygen theme is active
     if (!this.plugin.isOxygenThemeActive()) {
       return;
     }
-    
-    const css = document.createElement('style');
-    css.id = 'minimal-theme';
-    css.setAttribute(CSS_CLASSES.THEME_OVERRIDE, 'true');
-    document.getElementsByTagName("head")[0].appendChild(css);
 
     document.body.classList.add(CSS_CLASSES.PLUGIN_THEME);
     
@@ -366,12 +357,16 @@ export class StyleManagerImpl {
    * Unload CSS rules
    */
   private unloadRules(): void {
-    const styleElement = document.getElementById('minimal-theme');
-    if (styleElement) {
-      styleElement.remove();
-    }
+    // Remove CSS custom properties
+    document.body.style.removeProperty('--font-ui-small');
+    document.body.style.removeProperty('--line-height');
+    document.body.style.removeProperty('--line-width');
+    document.body.style.removeProperty('--line-width-wide');
+    document.body.style.removeProperty('--max-width');
+    document.body.style.removeProperty('--font-editor-override');
     
     document.body.classList.remove(CSS_CLASSES.PLUGIN_THEME);
+    document.body.classList.remove('always-show-title-bar');
   }
 
   /**

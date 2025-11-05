@@ -62,7 +62,7 @@ export class SettingsSyncManager {
 
     // Save updated settings (skip during initial load to avoid unnecessary I/O)
     if (!skipSave) {
-      this.plugin.saveData(this.plugin.settings);
+      void this.plugin.saveData(this.plugin.settings);
     }
   }
 

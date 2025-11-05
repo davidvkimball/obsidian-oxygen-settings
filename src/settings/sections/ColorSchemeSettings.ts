@@ -70,7 +70,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
         .setValue(plugin.settings.lightScheme)
         .onChange((value) => {
           plugin.settings.lightScheme = value;
-          plugin.saveData(plugin.settings);
+          void plugin.saveData(plugin.settings);
           // Regenerate all CSS including custom presets
           plugin.updateStyle();
           plugin.updateCustomPresetCSS();
@@ -135,7 +135,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
         .setValue(plugin.settings.darkScheme)
         .onChange((value) => {
           plugin.settings.darkScheme = value;
-          plugin.saveData(plugin.settings);
+          void plugin.saveData(plugin.settings);
           // Regenerate all CSS including custom presets
           plugin.updateStyle();
           plugin.updateCustomPresetCSS();

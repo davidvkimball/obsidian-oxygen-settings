@@ -17,7 +17,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
       .setValue((plugin.settings.textNormal || '') + '')
       .onChange((value) => {
         plugin.settings.textNormal = parseFloat(value);
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.setFontSize();
       }));
 
@@ -28,7 +28,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
       .setValue((plugin.settings.textSmall || '') + '')
       .onChange((value) => {
         plugin.settings.textSmall = parseFloat(value);
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -39,7 +39,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
       .setValue((plugin.settings.lineHeight || '') + '')
       .onChange((value) => {
         plugin.settings.lineHeight = parseFloat(value);
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -50,7 +50,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
       .setValue((plugin.settings.lineWidth || '') + '')
       .onChange((value) => {
         plugin.settings.lineWidth = parseInt(value.trim());
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -61,7 +61,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
       .setValue((plugin.settings.lineWidthWide || '') + '')
       .onChange((value) => {
         plugin.settings.lineWidthWide = parseInt(value.trim());
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -72,7 +72,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
       .setValue((plugin.settings.maxWidth || '') + '')
       .onChange((value) => {
         plugin.settings.maxWidth = parseInt(value.trim());
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -83,7 +83,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
       .setValue((plugin.settings.editorFont || '') + '')
       .onChange((value) => {
         plugin.settings.editorFont = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 }

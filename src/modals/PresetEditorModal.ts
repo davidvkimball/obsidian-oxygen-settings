@@ -45,7 +45,7 @@ export class PresetEditorModal extends Modal {
 
     // Header
     const header = contentEl.createEl('div', { cls: 'modal-header' });
-    header.createEl('h2', { text: this.isEditing ? 'Edit Preset' : 'Create New Preset' });
+    header.createEl('h2', { text: this.isEditing ? 'Edit preset' : 'Create new preset' });
 
     // Basic info section
     const basicInfo = contentEl.createEl('div', { cls: 'modal-section' });
@@ -113,12 +113,12 @@ export class PresetEditorModal extends Modal {
 
     // Required colors section
     const requiredSection = container.createEl('div', { cls: 'color-section' });
-    const headerText = mode === 'light' ? 'Light Theme Colors' : 'Dark Theme Colors';
+    const headerText = mode === 'light' ? 'Light theme colors' : 'Dark theme colors';
     requiredSection.createEl('h3', { text: headerText });
 
     // Base color
     const baseSection = requiredSection.createEl('div', { cls: 'color-group' });
-    baseSection.createEl('label', { text: 'Base Color' });
+    baseSection.createEl('label', { text: 'Base color' });
     createHSLControls(baseSection, palette.base, (hsl) => {
       if (mode === 'light') {
         this.preset.light.base = hsl;
@@ -130,7 +130,7 @@ export class PresetEditorModal extends Modal {
 
     // Accent color
     const accentSection = requiredSection.createEl('div', { cls: 'color-group' });
-    accentSection.createEl('label', { text: 'Accent Color' });
+    accentSection.createEl('label', { text: 'Accent color' });
     createHSLControls(accentSection, palette.accent, (hsl) => {
       if (mode === 'light') {
         this.preset.light.accent = hsl;
@@ -142,7 +142,7 @@ export class PresetEditorModal extends Modal {
 
     // Colorful frame lightness override (optional)
     const frameSection = requiredSection.createEl('div', { cls: 'color-group' });
-    const frameLabel = frameSection.createEl('label', { text: 'Colorful Frame Lightness Override (Optional)', cls: 'frame-label' });
+    frameSection.createEl('label', { text: 'Colorful frame lightness override (optional)', cls: 'frame-label' });
     const frameDesc = frameSection.createEl('div', { cls: 'setting-item-description frame-description' });
     frameDesc.textContent = mode === 'dark' 
       ? 'Offset from accent lightness for colorful frame. Default: -25 (darkens by 25%). Leave empty for default.'
@@ -182,7 +182,7 @@ export class PresetEditorModal extends Modal {
     // Advanced overrides (collapsible)
     const advancedSection = container.createEl('div', { cls: 'color-section' });
     const advancedHeader = advancedSection.createEl('div', { cls: 'collapsible-header' });
-    advancedHeader.createEl('h4', { text: 'Advanced Overrides (Optional)' });
+    advancedHeader.createEl('h4', { text: 'Advanced overrides (optional)' });
     const advancedToggle = advancedHeader.createEl('button', { 
       cls: 'collapse-toggle' 
     });
@@ -197,13 +197,14 @@ export class PresetEditorModal extends Modal {
     const advancedItems: HTMLElement[] = [];
     const overrideKeys = ['bg1', 'bg2', 'bg3', 'ui1', 'ui2', 'ui3', 'tx1', 'tx2', 'tx3', 'tx4', 'hl1', 'hl2'];
     const overrideLabels = ['Background 1', 'Background 2', 'Background 3', 'UI 1', 'UI 2', 'UI 3', 'Text 1', 'Text 2', 'Text 3', 'Text 4', 'Highlight 1', 'Highlight 2'];
+    const colors = palette.colors; // TypeScript now knows this is defined
     
     overrideKeys.forEach((key, index) => {
       const item = createColorOverride(
         advancedSection, 
         overrideLabels[index], 
         key, 
-        palette.colors, 
+        colors, 
         palette,
         () => this.updatePreview()
       );
@@ -227,7 +228,7 @@ export class PresetEditorModal extends Modal {
     // Syntax colors (collapsible)
     const syntaxSection = container.createEl('div', { cls: 'color-section' });
     const syntaxHeader = syntaxSection.createEl('div', { cls: 'collapsible-header' });
-    syntaxHeader.createEl('h4', { text: 'Syntax Colors (Optional)' });
+    syntaxHeader.createEl('h4', { text: 'Syntax colors (optional)' });
     const syntaxToggle = syntaxHeader.createEl('button', { 
       cls: 'collapse-toggle' 
     });
@@ -242,7 +243,7 @@ export class PresetEditorModal extends Modal {
         syntaxSection, 
         color.charAt(0).toUpperCase() + color.slice(1), 
         color, 
-        palette.colors, 
+        colors, 
         palette,
         () => this.updatePreview()
       );
@@ -292,7 +293,7 @@ export class PresetEditorModal extends Modal {
     
     // Create Light Mode section
     const lightRow = this.previewSwatch.createEl('div', { cls: 'preview-row' });
-    lightRow.createEl('div', { text: 'Light Mode', cls: 'preview-label' });
+    lightRow.createEl('div', { text: 'Light mode', cls: 'preview-label' });
     const lightColors = lightRow.createEl('div', { cls: 'preview-colors' });
     const lightBaseColor = lightColors.createEl('div', { cls: 'preview-color' });
     lightBaseColor.setAttribute('data-color', lightBaseHex);
@@ -303,7 +304,7 @@ export class PresetEditorModal extends Modal {
     
     // Create Dark Mode section
     const darkRow = this.previewSwatch.createEl('div', { cls: 'preview-row' });
-    darkRow.createEl('div', { text: 'Dark Mode', cls: 'preview-label' });
+    darkRow.createEl('div', { text: 'Dark mode', cls: 'preview-label' });
     const darkColors = darkRow.createEl('div', { cls: 'preview-colors' });
     const darkBaseColor = darkColors.createEl('div', { cls: 'preview-color' });
     darkBaseColor.setAttribute('data-color', darkBaseHex);

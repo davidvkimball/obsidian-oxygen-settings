@@ -5,7 +5,7 @@
 
 import { PluginContext } from '../types';
 import { PresetManager } from '../presets/PresetManager';
-import { CSS_CLASSES, CSS_REFLOW_DELAY } from '../constants';
+import { CSS_CLASSES } from '../constants';
 
 export class CustomPresetCSS {
   private plugin: PluginContext;
@@ -16,14 +16,16 @@ export class CustomPresetCSS {
   }
   
   /**
-   * Initialize custom preset CSS (create style element and generate CSS)
+   * Initialize custom preset CSS
+   * Note: Custom presets require dynamic CSS rules with class selectors.
+   * This is necessary for preset-specific styling that can't be expressed
+   * with CSS variables alone.
    */
   initialize(): void {
     // Only initialize if Oxygen theme is active
     if (!this.plugin.isOxygenThemeActive()) {
       return;
     }
-    this.createStyleElement();
     this.updateCSS();
   }
   
@@ -47,7 +49,11 @@ export class CustomPresetCSS {
     // Remove existing custom preset styles
     document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
     
-    // Create new style element
+    // Create new style element for custom preset CSS rules
+    // Note: This is necessary because custom presets require dynamic CSS rules
+    // with class selectors (e.g., .theme-light.minimal-custom-xyz) that can't
+    // be expressed with CSS variables alone. The generated CSS is scoped to
+    // specific preset classes and contains complex calculated values.
     const styleEl = document.createElement('style');
     styleEl.id = CSS_CLASSES.CUSTOM_PRESETS_STYLE;
     styleEl.setAttribute('data-custom-presets', 'true');
@@ -89,24 +95,10 @@ export class CustomPresetCSS {
     
     // Trigger reflow
     setTimeout(() => {
-      document.body.offsetHeight;
-    }, CSS_REFLOW_DELAY);
+      void document.body.offsetHeight;
+    }, 100);
   }
   
-  /**
-   * Create custom preset style element
-   */
-  private createStyleElement(): void {
-    const existing = document.getElementById(CSS_CLASSES.CUSTOM_PRESETS_STYLE);
-    if (existing) {
-      existing.remove();
-    }
-    
-    const styleEl = document.createElement('style');
-    styleEl.id = CSS_CLASSES.CUSTOM_PRESETS_STYLE;
-    styleEl.setAttribute('data-custom-presets', 'true');
-    document.head.appendChild(styleEl);
-  }
   
   /**
    * Cleanup - remove all custom preset styles

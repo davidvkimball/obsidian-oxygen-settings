@@ -33,7 +33,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
     .addToggle(toggle => toggle.setValue(plugin.settings.imgGrid)
       .onChange((value) => {
         plugin.settings.imgGrid = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -48,7 +48,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
       .setValue(plugin.settings.chartWidth)
       .onChange((value) => {
         plugin.settings.chartWidth = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -64,7 +64,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
       .setValue(plugin.settings.iframeWidth)
       .onChange((value) => {
         plugin.settings.iframeWidth = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -80,7 +80,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
       .setValue(plugin.settings.imgWidth)
       .onChange((value) => {
         plugin.settings.imgWidth = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -96,7 +96,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
       .setValue(plugin.settings.mapWidth)
       .onChange((value) => {
         plugin.settings.mapWidth = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -112,7 +112,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
       .setValue(plugin.settings.tableWidth)
       .onChange((value) => {
         plugin.settings.tableWidth = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );

@@ -17,7 +17,7 @@ export function registerSchemeCommands(plugin: PluginContext): void {
       name: `Switch light color scheme to ${schemeName} (light)`,
       callback: () => {
         plugin.settings.lightScheme = scheme;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         updateLightScheme(plugin);
         updateLightStyle(plugin);
       }
@@ -33,7 +33,7 @@ export function registerSchemeCommands(plugin: PluginContext): void {
       name: `Switch dark color scheme to ${schemeName} (dark)`,
       callback: () => {
         plugin.settings.darkScheme = scheme;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         updateDarkScheme(plugin);
         updateDarkStyle(plugin);
       }

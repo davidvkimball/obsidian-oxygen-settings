@@ -12,7 +12,7 @@ export function registerFontCommands(plugin: PluginContext): void {
     name: 'Increase body font size',
     callback: () => {
       plugin.settings.textNormal += DEFAULTS.FONT_STEP;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       setFontSize(plugin);
     }
   });
@@ -22,7 +22,7 @@ export function registerFontCommands(plugin: PluginContext): void {
     name: 'Decrease body font size',
     callback: () => {
       plugin.settings.textNormal -= DEFAULTS.FONT_STEP;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       setFontSize(plugin);
     }
   });

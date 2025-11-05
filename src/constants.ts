@@ -198,9 +198,6 @@ export const OXYGEN_THEME_NAME = 'Oxygen';
 // Custom preset prefix
 export const CUSTOM_PRESET_PREFIX = 'minimal-custom-';
 
-// CSS update delay (ms)
-export const CSS_UPDATE_DELAY = 50;
-export const CSS_REFLOW_DELAY = 100;
 
 // Scheme display names for dropdowns
 export const SCHEME_DISPLAY_NAMES: Record<string, string> = {

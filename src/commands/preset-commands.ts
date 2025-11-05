@@ -14,7 +14,7 @@ export function registerPresetCommands(plugin: PluginContext): void {
     callback: () => {
       const modal = new PresetEditorModal(plugin.app, plugin, null, (preset) => {
         plugin.settings.customPresets.push(preset);
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
       });
       modal.open();
     }
@@ -26,7 +26,7 @@ export function registerPresetCommands(plugin: PluginContext): void {
     callback: () => {
       const modal = new PresetImportModal(plugin.app, plugin, (preset) => {
         plugin.settings.customPresets.push(preset);
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
       });
       modal.open();
     }
@@ -45,7 +45,7 @@ export function registerPresetCommands(plugin: PluginContext): void {
       const nextPreset = plugin.settings.customPresets[nextIndex];
       
       plugin.settings.lightScheme = `minimal-custom-${nextPreset.id}`;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateLightScheme(plugin);
     }
   });
@@ -63,23 +63,17 @@ export function registerPresetCommands(plugin: PluginContext): void {
       const nextPreset = plugin.settings.customPresets[nextIndex];
       
       plugin.settings.darkScheme = `minimal-custom-${nextPreset.id}`;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateDarkScheme(plugin);
     }
   });
 }
 
 function updateLightScheme(plugin: PluginContext): void {
-  // Delegate to style manager (will be properly implemented in refactor)
-  if ('updateLightScheme' in plugin) {
-    (plugin as any).updateLightScheme();
-  }
+  plugin.updateLightScheme();
 }
 
 function updateDarkScheme(plugin: PluginContext): void {
-  // Delegate to style manager (will be properly implemented in refactor)
-  if ('updateDarkScheme' in plugin) {
-    (plugin as any).updateDarkScheme();
-  }
+  plugin.updateDarkScheme();
 }
 

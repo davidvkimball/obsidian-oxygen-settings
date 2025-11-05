@@ -33,7 +33,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.labeledNav)
       .onChange((value) => {
         plugin.settings.labeledNav = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -43,7 +43,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.colorfulFrame)
       .onChange((value) => {
         plugin.settings.colorfulFrame = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -54,7 +54,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.colorfulActiveStates)
       .onChange((value) => {
         plugin.settings.colorfulActiveStates = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -65,7 +65,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.colorfulHeadings)
       .onChange((value) => {
         plugin.settings.colorfulHeadings = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -76,7 +76,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.minimalStatus)
       .onChange((value) => {
         plugin.settings.minimalStatus = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -86,7 +86,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.trimNames)
       .onChange((value) => {
         plugin.settings.trimNames = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -96,7 +96,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.bordersToggle)
       .onChange((value) => {
         plugin.settings.bordersToggle = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -106,7 +106,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.focusMode)
       .onChange((value) => {
         plugin.settings.focusMode = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -117,7 +117,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.underlineInternal)
       .onChange((value) => {
         plugin.settings.underlineInternal = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -128,7 +128,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.underlineExternal)
       .onChange((value) => {
         plugin.settings.underlineExternal = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
@@ -139,7 +139,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.fullWidthMedia)
       .onChange((value) => {
         plugin.settings.fullWidthMedia = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 
@@ -149,7 +149,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     .addToggle(toggle => toggle.setValue(plugin.settings.hideTitleBarOnHover)
       .onChange((value) => {
         plugin.settings.hideTitleBarOnHover = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
 }

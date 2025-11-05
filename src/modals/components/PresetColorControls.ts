@@ -3,7 +3,8 @@
  * HSL sliders and color override inputs
  */
 
-import { HSLColor, ColorPalette } from '../../presets/CustomPreset';
+import { HSLColor, ColorOverrides } from '../../presets/CustomPreset';
+import type { ColorPalette } from '../../presets/CustomPreset';
 import { hslToHex, hexToHSL, validateHex } from '../../utils/color-utils';
 import { getDefaultColorForKey } from '../../utils/preset-color-defaults';
 
@@ -120,7 +121,7 @@ export function createColorOverride(
   container: HTMLElement, 
   label: string, 
   key: string, 
-  colors: any, 
+  colors: ColorOverrides, 
   palette: ColorPalette,
   onUpdate: () => void
 ): HTMLElement {

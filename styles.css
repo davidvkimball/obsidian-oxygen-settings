@@ -557,6 +557,33 @@
 }
 
 /* ========================================
+   Title Bar Visibility
+   ======================================== */
+
+/* Default behavior: Hide title bar, show on hover (when hideTitleBarOnHover is true) */
+body.minimal-theme:not(.always-show-title-bar) .view-header-title-container {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+body.minimal-theme:not(.always-show-title-bar) .view-header:hover .view-header-title-container,
+body.minimal-theme:not(.always-show-title-bar) .view-header-title-container:hover {
+  opacity: 1;
+}
+
+/* Always show title bar when hideTitleBarOnHover is disabled */
+body.minimal-theme.always-show-title-bar .view-header-title-container {
+  opacity: 1 !important;
+  transition: opacity 0.1s ease-in-out;
+}
+
+/* Ensure hover states don't interfere when always show is enabled */
+body.minimal-theme.always-show-title-bar .view-header:hover .view-header-title-container,
+body.minimal-theme.always-show-title-bar .view-header-title-container:hover {
+  opacity: 1 !important;
+}
+
+/* ========================================
    Inline Style Replacements
    ======================================== */
 

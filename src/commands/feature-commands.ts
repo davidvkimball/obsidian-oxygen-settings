@@ -12,7 +12,7 @@ export function registerFeatureCommands(plugin: PluginContext): void {
     name: 'Toggle sidebar borders',
     callback: () => {
       plugin.settings.bordersToggle = !plugin.settings.bordersToggle;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       refresh(plugin);
     }
   });
@@ -22,7 +22,7 @@ export function registerFeatureCommands(plugin: PluginContext): void {
     name: 'Toggle colorful headings',
     callback: () => {
       plugin.settings.colorfulHeadings = !plugin.settings.colorfulHeadings;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       refresh(plugin);
     }
   });
@@ -32,7 +32,7 @@ export function registerFeatureCommands(plugin: PluginContext): void {
     name: 'Toggle focus mode',
     callback: () => {
       plugin.settings.focusMode = !plugin.settings.focusMode;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       refresh(plugin);
     }
   });
@@ -42,7 +42,7 @@ export function registerFeatureCommands(plugin: PluginContext): void {
     name: 'Toggle colorful window frame',
     callback: () => {
       plugin.settings.colorfulFrame = !plugin.settings.colorfulFrame;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       refresh(plugin);
     }
   });
@@ -52,7 +52,7 @@ export function registerFeatureCommands(plugin: PluginContext): void {
     name: 'Toggle image grids',
     callback: () => {
       plugin.settings.imgGrid = !plugin.settings.imgGrid;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       refresh(plugin);
     }
   });
@@ -70,17 +70,14 @@ export function registerFeatureCommands(plugin: PluginContext): void {
     name: 'Dev — Show block widths',
     callback: () => {
       plugin.settings.devBlockWidth = !plugin.settings.devBlockWidth;
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       refresh(plugin);
     }
   });
 }
 
 function refresh(plugin: PluginContext): void {
-  // Delegate to style manager (will be implemented)
-  if ('updateStyle' in plugin) {
-    (plugin as any).updateStyle();
-  }
+  plugin.updateStyle();
 }
 
 function updateTheme(plugin: PluginContext): void {

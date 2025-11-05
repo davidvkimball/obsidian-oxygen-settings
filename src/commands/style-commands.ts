@@ -12,10 +12,10 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.CYCLE_DARK_STYLE,
     name: 'Cycle between dark mode styles',
     callback: () => {
-      const currentIndex = DARK_STYLES.indexOf(plugin.settings.darkStyle as any);
+      const currentIndex = (DARK_STYLES as readonly string[]).indexOf(plugin.settings.darkStyle);
       const nextIndex = (currentIndex + 1) % DARK_STYLES.length;
       plugin.settings.darkStyle = DARK_STYLES[nextIndex];
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateDarkStyle(plugin);
     }
   });
@@ -25,10 +25,10 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.CYCLE_LIGHT_STYLE,
     name: 'Cycle between light mode styles',
     callback: () => {
-      const currentIndex = LIGHT_STYLES.indexOf(plugin.settings.lightStyle as any);
+      const currentIndex = (LIGHT_STYLES as readonly string[]).indexOf(plugin.settings.lightStyle);
       const nextIndex = (currentIndex + 1) % LIGHT_STYLES.length;
       plugin.settings.lightStyle = LIGHT_STYLES[nextIndex];
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateLightStyle(plugin);
     }
   });
@@ -39,7 +39,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use light mode (default)',
     callback: () => {
       plugin.settings.lightStyle = 'minimal-light';
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateLightStyle(plugin);
     }
   });
@@ -80,7 +80,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use dark mode (default)',
     callback: () => {
       plugin.settings.darkStyle = 'minimal-dark';
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateDarkStyle(plugin);
     }
   });

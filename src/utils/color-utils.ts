@@ -12,9 +12,9 @@ export function hexToHSL(hex: string): HSLColor {
   hex = hex.replace('#', '');
   
   // Parse hex values
-  const r = parseInt(hex.substr(0, 2), 16) / 255;
-  const g = parseInt(hex.substr(2, 2), 16) / 255;
-  const b = parseInt(hex.substr(4, 2), 16) / 255;
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
 
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
@@ -107,6 +107,8 @@ export function generateColorSwatch(preset: CustomColorPreset): HTMLElement {
   swatch.style.setProperty('--swatch-gradient-end', darkBaseHex);
   return swatch;
 }
+
+// Note: generateColorSwatch is used in CustomPresetSettings.ts
 
 /**
  * Sanitize preset name for display

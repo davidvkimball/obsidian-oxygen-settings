@@ -17,7 +17,6 @@ export function getDefaultColorForKey(key: string, palette: ColorPalette): strin
   const baseS = palette.base.s;
   const baseL = palette.base.l;
   const accentH = palette.accent.h;
-  const accentS = palette.accent.s;
   const accentL = palette.accent.l;
   
   const isLightBase = baseL > 50;
@@ -39,7 +38,7 @@ export function getDefaultColorForKey(key: string, palette: ColorPalette): strin
   }
   
   // Calculate derived colors based on theme and convert to hex
-  let h: number, s: number, l: number;
+  let s: number, l: number;
   
   switch(key) {
     case 'bg1':

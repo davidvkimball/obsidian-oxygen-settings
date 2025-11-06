@@ -17,7 +17,6 @@ export function getDefaultColorForKey(key: string, palette: ColorPalette): strin
   const baseS = palette.base.s;
   const baseL = palette.base.l;
   const accentH = palette.accent.h;
-  const accentL = palette.accent.l;
   
   const isLightBase = baseL > 50;
   

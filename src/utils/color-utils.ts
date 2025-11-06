@@ -3,6 +3,7 @@
  */
 
 import { HSLColor, CustomColorPreset } from '../presets/CustomPreset';
+import { setCssProps } from './css-props';
 
 /**
  * Convert hex color to HSL
@@ -102,9 +103,11 @@ export function generateColorSwatch(preset: CustomColorPreset): HTMLElement {
   const lightBaseHex = hslToHex(preset.light.base);
   const lightAccentHex = hslToHex(preset.light.accent);
   const darkBaseHex = hslToHex(preset.dark.base);
-  swatch.style.setProperty('--swatch-gradient-start', lightBaseHex);
-  swatch.style.setProperty('--swatch-gradient-mid', lightAccentHex);
-  swatch.style.setProperty('--swatch-gradient-end', darkBaseHex);
+  setCssProps(swatch, {
+    '--swatch-gradient-start': lightBaseHex,
+    '--swatch-gradient-mid': lightAccentHex,
+    '--swatch-gradient-end': darkBaseHex
+  });
   return swatch;
 }
 

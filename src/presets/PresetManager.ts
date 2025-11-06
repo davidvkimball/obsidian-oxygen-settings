@@ -2,7 +2,7 @@
  * Preset management and CRUD operations
  */
 
-import { CustomColorPreset, ColorPalette, DEFAULT_COLOR_PALETTE } from './CustomPreset';
+import { CustomColorPreset } from './CustomPreset';
 import { PresetCSSGenerator } from './preset-css-generator';
 import { 
   validatePresetId, 
@@ -140,7 +140,7 @@ export class PresetManager {
       }
 
       // Validate HSL ranges
-      const validateHSL = (hsl: any) => {
+      const validateHSL = (hsl: { h?: unknown; s?: unknown; l?: unknown }) => {
         return hsl && 
                typeof hsl.h === 'number' && hsl.h >= 0 && hsl.h <= 360 &&
                typeof hsl.s === 'number' && hsl.s >= 0 && hsl.s <= 100 &&

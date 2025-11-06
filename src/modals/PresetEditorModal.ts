@@ -4,10 +4,11 @@
  */
 
 import { Modal, Setting, App, setIcon } from 'obsidian';
-import { CustomColorPreset, ColorPalette, HSLColor } from '../presets/CustomPreset';
+import { CustomColorPreset } from '../presets/CustomPreset';
 import { PresetManager } from '../presets/PresetManager';
 import { hslToHex } from '../utils/color-utils';
 import { createHSLControls, createColorOverride } from './components/PresetColorControls';
+import { setCssProp } from '../utils/css-props';
 import MinimalTheme from '../main';
 
 export class PresetEditorModal extends Modal {
@@ -80,12 +81,12 @@ export class PresetEditorModal extends Modal {
     
     // Light mode section
     const lightSection = contentArea.createEl('div', { cls: 'mode-section' });
-    lightSection.createEl('h3', { text: 'Light Mode' });
+    lightSection.createEl('h3', { text: 'Light mode' });
     this.buildModeContent(lightSection, 'light');
     
     // Dark mode section
     const darkSection = contentArea.createEl('div', { cls: 'mode-section' });
-    darkSection.createEl('h3', { text: 'Dark Mode' });
+    darkSection.createEl('h3', { text: 'Dark mode' });
     this.buildModeContent(darkSection, 'dark');
 
     // Preview section
@@ -297,10 +298,10 @@ export class PresetEditorModal extends Modal {
     const lightColors = lightRow.createEl('div', { cls: 'preview-colors' });
     const lightBaseColor = lightColors.createEl('div', { cls: 'preview-color' });
     lightBaseColor.setAttribute('data-color', lightBaseHex);
-    lightBaseColor.style.setProperty('--preview-color', lightBaseHex);
+    setCssProp(lightBaseColor, '--preview-color', lightBaseHex);
     const lightAccentColor = lightColors.createEl('div', { cls: 'preview-color' });
     lightAccentColor.setAttribute('data-color', lightAccentHex);
-    lightAccentColor.style.setProperty('--preview-color', lightAccentHex);
+    setCssProp(lightAccentColor, '--preview-color', lightAccentHex);
     
     // Create Dark Mode section
     const darkRow = this.previewSwatch.createEl('div', { cls: 'preview-row' });
@@ -308,10 +309,10 @@ export class PresetEditorModal extends Modal {
     const darkColors = darkRow.createEl('div', { cls: 'preview-colors' });
     const darkBaseColor = darkColors.createEl('div', { cls: 'preview-color' });
     darkBaseColor.setAttribute('data-color', darkBaseHex);
-    darkBaseColor.style.setProperty('--preview-color', darkBaseHex);
+    setCssProp(darkBaseColor, '--preview-color', darkBaseHex);
     const darkAccentColor = darkColors.createEl('div', { cls: 'preview-color' });
     darkAccentColor.setAttribute('data-color', darkAccentHex);
-    darkAccentColor.style.setProperty('--preview-color', darkAccentHex);
+    setCssProp(darkAccentColor, '--preview-color', darkAccentHex);
   }
 
   private savePreset() {

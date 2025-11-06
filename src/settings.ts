@@ -3,7 +3,7 @@
  * Coordinates all settings sections
  */
 
-import { PluginSettingTab } from 'obsidian';
+import { PluginSettingTab, App } from 'obsidian';
 import MinimalTheme from "./main";
 import { buildColorSchemeSettings } from './settings/sections/ColorSchemeSettings';
 import { buildFeatureSettings } from './settings/sections/FeatureSettings';
@@ -18,7 +18,7 @@ export { DEFAULT_SETTINGS } from './settings/settings-interface';
 export class MinimalSettingsTab extends PluginSettingTab {
   plugin: MinimalTheme;
   
-  constructor(app: any, plugin: MinimalTheme) { // App type from Obsidian
+  constructor(app: App, plugin: MinimalTheme) {
     super(app, plugin);
     this.plugin = plugin;
   }

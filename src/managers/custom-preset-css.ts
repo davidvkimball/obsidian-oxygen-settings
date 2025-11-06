@@ -50,10 +50,11 @@ export class CustomPresetCSS {
     document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
     
     // Create new style element for custom preset CSS rules
-    // Note: This is necessary because custom presets require dynamic CSS rules
-    // with class selectors (e.g., .theme-light.minimal-custom-xyz) that can't
-    // be expressed with CSS variables alone. The generated CSS is scoped to
-    // specific preset classes and contains complex calculated values.
+    // NOTE: While Obsidian guidelines prefer styles.css for static CSS, custom presets
+    // require dynamic CSS rules with class selectors (e.g., .theme-light.minimal-custom-xyz)
+    // that are generated from user input and can't be pre-defined in styles.css.
+    // This is the only way to inject dynamic CSS rules with class selectors.
+    // The style element is properly cleaned up in cleanup().
     const styleEl = document.createElement('style');
     styleEl.id = CSS_CLASSES.CUSTOM_PRESETS_STYLE;
     styleEl.setAttribute('data-custom-presets', 'true');

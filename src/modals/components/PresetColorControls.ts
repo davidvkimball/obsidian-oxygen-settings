@@ -4,9 +4,9 @@
  */
 
 import { HSLColor, ColorOverrides } from '../../presets/CustomPreset';
-import type { ColorPalette } from '../../presets/CustomPreset';
 import { hslToHex, hexToHSL, validateHex } from '../../utils/color-utils';
 import { getDefaultColorForKey } from '../../utils/preset-color-defaults';
+import { setCssProp } from '../../utils/css-props';
 
 /**
  * Create HSL color controls (H, S, L sliders with live preview)
@@ -28,7 +28,7 @@ export function createHSLControls(
   const previewWrapper = controls.createEl('div', { cls: 'color-preview-wrapper' });
 
   const preview = previewWrapper.createEl('div', { cls: 'color-preview' });
-  preview.style.setProperty('--preview-color', hslToHex(hslCopy));
+  setCssProp(preview, '--preview-color', hslToHex(hslCopy));
   preview.title = 'Click to pick a color with hex input';
   
   // Color input positioned over the preview
@@ -38,7 +38,7 @@ export function createHSLControls(
   // Update preview function
   const updatePreview = () => {
     const hexColor = hslToHex(hslCopy);
-    preview.style.setProperty('--preview-color', hexColor);
+    setCssProp(preview, '--preview-color', hexColor);
     colorInput.value = hexColor;
   };
   
@@ -122,7 +122,7 @@ export function createColorOverride(
   label: string, 
   key: string, 
   colors: ColorOverrides, 
-  palette: ColorPalette,
+  palette: { base: HSLColor; accent: HSLColor; colors?: ColorOverrides },
   onUpdate: () => void
 ): HTMLElement {
   const override = container.createEl('div', { cls: 'color-override collapsible-item' });
@@ -146,7 +146,7 @@ export function createColorOverride(
   
   // Function to update the color preview
   const updateColorPreview = (color: string) => {
-    colorPreview.style.setProperty('--preview-color', color);
+    setCssProp(colorPreview, '--preview-color', color);
     colorInput.value = color;
   };
   

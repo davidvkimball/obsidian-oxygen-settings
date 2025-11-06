@@ -11,6 +11,7 @@ import {
   DARK_SCHEMES
 } from '../constants';
 import { setTheme, getVaultConfig, setVaultConfig } from '../types/obsidian-extensions';
+import { setCssProps } from '../utils/css-props';
 
 export class StyleManagerImpl {
   private plugin: PluginContext;
@@ -136,19 +137,21 @@ export class StyleManagerImpl {
       this.plugin.settings.mapWidth
     );
 
-    // Update custom CSS variables on body element (instead of style element)
-    document.body.style.setProperty('--font-ui-small', `${this.plugin.settings.textSmall}px`);
-    document.body.style.setProperty('--line-height', String(this.plugin.settings.lineHeight));
-    document.body.style.setProperty('--line-width', `${this.plugin.settings.lineWidth}rem`);
-    document.body.style.setProperty('--line-width-wide', `${this.plugin.settings.lineWidthWide}rem`);
-    document.body.style.setProperty('--max-width', `${this.plugin.settings.maxWidth}%`);
-    document.body.style.setProperty('--font-editor-override', this.plugin.settings.editorFont);
+    // Update custom CSS variables on body element using setCssProps utility
+    setCssProps(document.body, {
+      '--font-ui-small': `${this.plugin.settings.textSmall}px`,
+      '--line-height': String(this.plugin.settings.lineHeight),
+      '--line-width': `${this.plugin.settings.lineWidth}rem`,
+      '--line-width-wide': `${this.plugin.settings.lineWidthWide}rem`,
+      '--max-width': `${this.plugin.settings.maxWidth}%`,
+      '--font-editor-override': this.plugin.settings.editorFont
+    });
     
     // Title bar hover behavior - use CSS custom property to control visibility
     // When hideTitleBarOnHover is false (always show), set a custom property
     // The CSS will use this to override the theme's default behavior
     if (!this.plugin.settings.hideTitleBarOnHover) {
-      document.body.style.setProperty('--title-bar-always-visible', '1');
+      setCssProps(document.body, { '--title-bar-always-visible': '1' });
       document.body.classList.add('always-show-title-bar');
     } else {
       document.body.style.removeProperty('--title-bar-always-visible');

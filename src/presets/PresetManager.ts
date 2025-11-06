@@ -13,13 +13,6 @@ import {
 } from '../utils/color-utils';
 
 export class PresetManager {
-  /**
-   * Generate CSS for a custom preset
-   * Delegates to PresetCSSGenerator
-   */
-  static generatePresetCSS(preset: CustomColorPreset, mode: 'light' | 'dark'): string {
-    return PresetCSSGenerator.generateCSS(preset, mode);
-  }
 
   /**
    * Validate preset ID format and uniqueness

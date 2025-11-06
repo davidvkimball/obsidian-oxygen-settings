@@ -5,7 +5,6 @@
 
 import { PluginContext } from '../types';
 import { PresetCSSGenerator } from '../presets/preset-css-generator';
-import { CSS_CLASSES } from '../constants';
 import { setCssProps } from '../utils/css-props';
 
 export class CustomPresetCSS {

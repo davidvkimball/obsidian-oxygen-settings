@@ -3,7 +3,6 @@
  */
 
 import { CustomColorPreset } from './CustomPreset';
-import { PresetCSSGenerator } from './preset-css-generator';
 import { 
   validatePresetId, 
   isPresetIdUnique, 

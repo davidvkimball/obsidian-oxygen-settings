@@ -78,7 +78,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
 
   new Setting(containerEl)
     .setName('Editor font')
-    .setDesc('Overrides the text font defined in Obsidian Appearance settings when in edit mode.')
+    .setDesc('Overrides the text font defined in Obsidian appearance settings when in edit mode.')
     .addText(text => text.setPlaceholder('')
       .setValue((plugin.settings.editorFont || '') + '')
       .onChange((value) => {

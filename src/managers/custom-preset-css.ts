@@ -4,8 +4,9 @@
  */
 
 import { PluginContext } from '../types';
-import { PresetManager } from '../presets/PresetManager';
+import { PresetCSSGenerator } from '../presets/preset-css-generator';
 import { CSS_CLASSES } from '../constants';
+import { setCssProps } from '../utils/css-props';
 
 export class CustomPresetCSS {
   private plugin: PluginContext;
@@ -17,9 +18,7 @@ export class CustomPresetCSS {
   
   /**
    * Initialize custom preset CSS
-   * Note: Custom presets require dynamic CSS rules with class selectors.
-   * This is necessary for preset-specific styling that can't be expressed
-   * with CSS variables alone.
+   * Uses CSS custom properties on body element instead of creating style elements
    */
   initialize(): void {
     // Only initialize if Oxygen theme is active
@@ -31,6 +30,8 @@ export class CustomPresetCSS {
   
   /**
    * Update custom preset CSS based on current settings
+   * Uses CSS custom properties on body element instead of creating style elements
+   * This complies with Obsidian guidelines to avoid creating style elements
    */
   updateCSS(): void {
     // Prevent re-entrant updates (fixes infinite loop)
@@ -46,22 +47,33 @@ export class CustomPresetCSS {
     // Set flag to prevent re-entrant calls
     this.isUpdating = true;
     
-    // Remove existing custom preset styles
-    document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
+    // Remove all custom preset classes from body
+    const allPresetClasses = Array.from(document.body.classList).filter(cls => 
+      cls.startsWith('minimal-custom-')
+    );
+    allPresetClasses.forEach(cls => document.body.classList.remove(cls));
     
-    // Create new style element for custom preset CSS rules
-    // NOTE: While Obsidian guidelines prefer styles.css for static CSS, custom presets
-    // require dynamic CSS rules with class selectors (e.g., .theme-light.minimal-custom-xyz)
-    // that are generated from user input and can't be pre-defined in styles.css.
-    // This is the only way to inject dynamic CSS rules with class selectors.
-    // The style element is properly cleaned up in cleanup().
-    const styleEl = document.createElement('style');
-    styleEl.id = CSS_CLASSES.CUSTOM_PRESETS_STYLE;
-    styleEl.setAttribute('data-custom-presets', 'true');
+    // Remove all custom preset CSS properties
+    // List of all possible custom preset CSS properties
+    const presetProperties = [
+      '--base-h', '--base-s', '--base-l',
+      '--accent-h', '--accent-s', '--accent-l',
+      '--bg1', '--bg2', '--bg-tab', '--bg3',
+      '--ui1', '--ui2', '--ui3',
+      '--tx1', '--tx2', '--tx3', '--tx4',
+      '--hl1', '--hl2',
+      '--sp1',
+      '--text-on-accent',
+      '--color-red', '--color-orange', '--color-yellow', '--color-green',
+      '--color-cyan', '--color-blue', '--color-purple', '--color-pink',
+      '--frame-background-l'
+    ];
     
-    let css = '';
+    presetProperties.forEach(prop => {
+      document.body.style.removeProperty(prop);
+    });
     
-    // Generate CSS for active presets
+    // Find active presets
     const activeLightPreset = this.plugin.settings.customPresets.find(p => 
       this.plugin.settings.lightScheme === `minimal-custom-${p.id}`
     );
@@ -69,49 +81,55 @@ export class CustomPresetCSS {
       this.plugin.settings.darkScheme === `minimal-custom-${p.id}`
     );
     
-    if (activeLightPreset) {
-      css += PresetManager.generatePresetCSS(activeLightPreset, 'light') + '\n';
+    // Determine current theme mode
+    const isLightMode = document.body.classList.contains('theme-light');
+    const activePreset = isLightMode ? activeLightPreset : activeDarkPreset;
+    
+    // Apply properties for the active preset
+    if (activePreset) {
+      const presetClass = `minimal-custom-${activePreset.id}`;
+      document.body.classList.add(presetClass);
+      
+      const mode = isLightMode ? 'light' : 'dark';
+      const properties = PresetCSSGenerator.generateProperties(activePreset, mode);
+      setCssProps(document.body, properties);
     }
-    if (activeDarkPreset) {
-      css += PresetManager.generatePresetCSS(activeDarkPreset, 'dark') + '\n';
-    }
-    
-    if (!css) {
-      this.isUpdating = false;
-      return;
-    }
-    
-    // Don't use !important - allows users to override accent color in Obsidian's native settings
-    // The preset CSS is scoped to body classes, so it will still apply when the preset is active
-    
-    styleEl.textContent = css;
-    
-    // Append at the END of head to ensure it overrides theme CSS
-    document.head.appendChild(styleEl);
     
     // Clear the updating flag after a short delay to allow CSS to settle
     setTimeout(() => {
       this.isUpdating = false;
-    }, 150);
-    
-    // Trigger reflow
-    setTimeout(() => {
-      void document.body.offsetHeight;
-    }, 100);
+    }, 50);
   }
   
   
   /**
-   * Cleanup - remove all custom preset styles
+   * Cleanup - remove all custom preset classes and CSS properties
    */
   cleanup(): void {
-    document.querySelectorAll('style[data-custom-preset]').forEach(el => el.remove());
-    document.querySelectorAll('style[data-custom-presets]').forEach(el => el.remove());
+    // Remove all custom preset classes
+    const allPresetClasses = Array.from(document.body.classList).filter(cls => 
+      cls.startsWith('minimal-custom-')
+    );
+    allPresetClasses.forEach(cls => document.body.classList.remove(cls));
     
-    const customPresetElement = document.getElementById(CSS_CLASSES.CUSTOM_PRESETS_STYLE);
-    if (customPresetElement) {
-      customPresetElement.remove();
-    }
+    // Remove all custom preset CSS properties
+    const presetProperties = [
+      '--base-h', '--base-s', '--base-l',
+      '--accent-h', '--accent-s', '--accent-l',
+      '--bg1', '--bg2', '--bg-tab', '--bg3',
+      '--ui1', '--ui2', '--ui3',
+      '--tx1', '--tx2', '--tx3', '--tx4',
+      '--hl1', '--hl2',
+      '--sp1',
+      '--text-on-accent',
+      '--color-red', '--color-orange', '--color-yellow', '--color-green',
+      '--color-cyan', '--color-blue', '--color-purple', '--color-pink',
+      '--frame-background-l'
+    ];
+    
+    presetProperties.forEach(prop => {
+      document.body.style.removeProperty(prop);
+    });
   }
 }
 

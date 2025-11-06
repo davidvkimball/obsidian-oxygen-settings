@@ -49,7 +49,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use light mode (all white)',
     callback: () => {
       plugin.settings.lightStyle = 'minimal-light-white';
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateLightStyle(plugin);
     }
   });
@@ -59,7 +59,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use light mode (low contrast)',
     callback: () => {
       plugin.settings.lightStyle = 'minimal-light-tonal';
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateLightStyle(plugin);
     }
   });
@@ -69,7 +69,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use light mode (high contrast)',
     callback: () => {
       plugin.settings.lightStyle = 'minimal-light-contrast';
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateLightStyle(plugin);
     }
   });
@@ -90,7 +90,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use dark mode (low contrast)',
     callback: () => {
       plugin.settings.darkStyle = 'minimal-dark-tonal';
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateDarkStyle(plugin);
     }
   });
@@ -100,7 +100,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use dark mode (true black)',
     callback: () => {
       plugin.settings.darkStyle = 'minimal-dark-black';
-      plugin.saveData(plugin.settings);
+      void plugin.saveData(plugin.settings);
       updateDarkStyle(plugin);
     }
   });

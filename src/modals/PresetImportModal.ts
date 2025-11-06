@@ -75,7 +75,7 @@ export class PresetImportModal extends Modal {
     cancelBtn.onclick = () => this.close();
     
     this.importButton = footer.createEl('button', { 
-      text: 'Import Preset', 
+      text: 'Import preset', 
       cls: 'mod-cta' 
     });
     this.importButton.disabled = true;

@@ -21,7 +21,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
   );
   layoutSectionDesc.appendChild(
     createEl('a', {
-      text: "documentation",
+      text: "Documentation",
       href: "https://minimal.guide/features/block-width",
     })
   );

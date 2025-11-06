@@ -67,7 +67,7 @@ export function registerFeatureCommands(plugin: PluginContext): void {
 
   plugin.addCommand({
     id: COMMAND_IDS.DEV_BLOCK_WIDTH,
-    name: 'Dev — Show block widths',
+    name: 'Dev — show block widths',
     callback: () => {
       plugin.settings.devBlockWidth = !plugin.settings.devBlockWidth;
       void plugin.saveData(plugin.settings);

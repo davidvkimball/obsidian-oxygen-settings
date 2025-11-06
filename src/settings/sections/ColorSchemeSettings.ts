@@ -26,7 +26,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
   colorDesc.appendText(' plugin. See ');
   colorDesc.appendChild(
     createEl('a', {
-      text: "documentation",
+      text: "Documentation",
       href: "https://minimal.guide/features/color-schemes",
     })
   );
@@ -57,7 +57,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
 
       // Add custom presets if enabled and any exist
       if (plugin.settings.enableCustomPresets && plugin.settings.customPresets.length > 0) {
-        dropdown.addOption('', '────── Custom Presets ──────');
+        dropdown.addOption('', '────── Custom presets ──────');
         
         plugin.settings.customPresets
           .sort((a, b) => a.name.localeCompare(b.name))
@@ -89,7 +89,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
       .setValue(plugin.settings.lightStyle)
       .onChange((value) => {
         plugin.settings.lightStyle = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         // Only apply light style if currently in light mode
         if (document.body.classList.contains('theme-light')) {
           plugin.updateLightStyle();
@@ -122,7 +122,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
 
       // Add custom presets if enabled and any exist
       if (plugin.settings.enableCustomPresets && plugin.settings.customPresets.length > 0) {
-        dropdown.addOption('', '────── Custom Presets ──────');
+        dropdown.addOption('', '────── Custom presets ──────');
         
         plugin.settings.customPresets
           .sort((a, b) => a.name.localeCompare(b.name))
@@ -153,7 +153,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
       .setValue(plugin.settings.darkStyle)
       .onChange((value) => {
         plugin.settings.darkStyle = value;
-        plugin.saveData(plugin.settings);
+        void plugin.saveData(plugin.settings);
         // Only apply dark style if currently in dark mode
         if (document.body.classList.contains('theme-dark')) {
           plugin.updateDarkStyle();

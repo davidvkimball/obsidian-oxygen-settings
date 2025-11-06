@@ -21,7 +21,7 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
   );
   featuresSectionDesc.appendChild(
     createEl('a', {
-      text: "documentation",
+      text: "Documentation",
       href: "https://minimal.guide",
     })
   );

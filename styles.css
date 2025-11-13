@@ -605,14 +605,60 @@ body.minimal-theme[style*="--nav-indentation-guide-width:0px"] .nav-folder-child
 /* Based on Baseline's approach: use container-inner with margin-bottom: -1px */
 
 /* Apply border and rounded corners to the active tab's content container */
+/* Only round the top-left corner - rest goes to window edge */
 /* Always reserve border space to prevent layout shifts when toggling */
 body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-container {
   border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m);
+  border-radius: var(--radius-m) 0 0 0;
   margin: 0;
   overflow: hidden;
   position: relative;
   box-sizing: border-box;
+}
+
+/* When right sidebar is open, extend border to wrap both main content and right sidebar */
+/* Remove right border from tab container so it connects to sidebar */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace.is-right-sidedock-open .mod-root .workspace-tab-container {
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Add border to right sidebar to complete the unified border */
+/* Target the workspace-tab-container within the right sidebar */
+/* No rounded corners - goes straight to window edge */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace.is-right-sidedock-open .mod-sidedock.mod-right-split .workspace-tab-container {
+  border-top: 1px solid var(--background-modifier-border);
+  border-right: 1px solid var(--background-modifier-border);
+  border-bottom: 1px solid var(--background-modifier-border);
+  border-left: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  box-sizing: border-box;
+}
+
+/* When right sidebar is open, the active tab keeps its normal border treatment */
+/* The connection happens at the container level, not the tab level */
+
+/* Match the left sidebar background color behind the tabs */
+/* Set a CSS variable at workspace level to capture --background-secondary before any overrides */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace {
+  --enhanced-border-sidebar-bg: var(--background-secondary);
+}
+
+/* Apply the background to main content tab header container (always, not just when right sidebar is open) */
+/* Don't apply when colorful-frame is active - let the theme handle it */
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container {
+  background-color: var(--enhanced-border-sidebar-bg);
+}
+
+/* Apply the background to right sidebar tab header container (when right sidebar is open) */
+/* This uses the variable set at workspace level, avoiding the right sidebar's override */
+/* Don't apply when colorful-frame is active - let the theme handle it */
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace.is-right-sidedock-open .mod-sidedock.mod-right-split .workspace-tab-header-container {
+  background-color: var(--enhanced-border-sidebar-bg);
 }
 
 /* Use container-inner with margin-bottom: -1px to overlap the container's top border (Baseline approach) */
@@ -642,6 +688,9 @@ body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root 
   align-items: inherit;
   margin-bottom: -1px;
 }
+
+/* When right sidebar is open, active tab keeps its normal rounded corners */
+/* The unified border is handled at the container level */
 
 /* Prevent icons and close button from shifting when enhanced borders are enabled */
 /* Only apply to active tab to minimize changes */
@@ -690,8 +739,8 @@ body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root 
 }
 
 /* Make sure the tab header container doesn't interfere and allows proper positioning */
+/* Note: background-color is set above to match left sidebar, so we only set margin here */
 body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header-container {
-  background-color: transparent;
   margin-bottom: 0;
 }
 

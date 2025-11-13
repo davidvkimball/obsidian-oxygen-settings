@@ -114,6 +114,7 @@ export class StyleManagerImpl {
 
     // Apply feature toggles
     document.body.classList.toggle('borders-none', !this.plugin.settings.bordersToggle);
+    document.body.classList.toggle('borders-on', this.plugin.settings.bordersToggle);
     document.body.classList.toggle('colorful-headings', this.plugin.settings.colorfulHeadings);
     document.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
     document.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
@@ -128,6 +129,9 @@ export class StyleManagerImpl {
     document.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
     document.body.classList.toggle('minimal-folding', this.plugin.settings.folding);
 
+    // New feature toggles
+    document.body.classList.toggle('workspace-borders-enhanced', this.plugin.settings.workspaceBordersEnhanced);
+
     // Add width classes
     document.body.addClass(
       this.plugin.settings.chartWidth,
@@ -138,14 +142,36 @@ export class StyleManagerImpl {
     );
 
     // Update custom CSS variables on body element using setCssProps utility
-    setCssProps(document.body, {
+    const cssProps: Record<string, string> = {
       '--font-ui-small': `${this.plugin.settings.textSmall}px`,
       '--line-height': String(this.plugin.settings.lineHeight),
       '--line-width': `${this.plugin.settings.lineWidth}rem`,
       '--line-width-wide': `${this.plugin.settings.lineWidthWide}rem`,
       '--max-width': `${this.plugin.settings.maxWidth}%`,
       '--font-editor-override': this.plugin.settings.editorFont
-    });
+    };
+    
+    // Only set indentation guide variables if they differ from default
+    // Width: only set if not default (1px)
+    // Color: only set if not "Subtle" (let theme use its default color)
+    const isDefaultWidth = this.plugin.settings.navIndentationGuideWidth === '1px';
+    const isDefaultColor = this.plugin.settings.navIndentationGuideColor === 'rgba(var(--mono-rgb-100), 0.12)';
+    
+    if (!isDefaultWidth) {
+      cssProps['--nav-indentation-guide-width'] = this.plugin.settings.navIndentationGuideWidth;
+    } else {
+      // Remove width variable to let theme use default
+      document.body.style.removeProperty('--nav-indentation-guide-width');
+    }
+    
+    if (!isDefaultColor) {
+      cssProps['--nav-indentation-guide-color'] = this.plugin.settings.navIndentationGuideColor;
+    } else {
+      // Remove color variable to let theme use its default color
+      document.body.style.removeProperty('--nav-indentation-guide-color');
+    }
+    
+    setCssProps(document.body, cssProps);
     
     // Title bar hover behavior - use CSS custom property to control visibility
     // When hideTitleBarOnHover is false (always show), set a custom property
@@ -304,6 +330,7 @@ export class StyleManagerImpl {
   removeSettings(): void {
     document.body.removeClass(
       'borders-none',
+      'borders-on',
       'colorful-headings',
       'colorful-frame',
       'colorful-active',
@@ -317,6 +344,7 @@ export class StyleManagerImpl {
       'full-file-names',
       'labeled-nav',
       'minimal-folding',
+      'workspace-borders-enhanced',
       'table-wide',
       'table-max',
       'table-100',
@@ -367,6 +395,8 @@ export class StyleManagerImpl {
     document.body.style.removeProperty('--line-width-wide');
     document.body.style.removeProperty('--max-width');
     document.body.style.removeProperty('--font-editor-override');
+    document.body.style.removeProperty('--nav-indentation-guide-width');
+    document.body.style.removeProperty('--nav-indentation-guide-color');
     
     document.body.classList.remove(CSS_CLASSES.PLUGIN_THEME);
     document.body.classList.remove('always-show-title-bar');

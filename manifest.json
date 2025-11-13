@@ -1,7 +1,7 @@
 {
 	"id": "oxygen-settings",
 	"name": "Oxygen Theme Settings",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"minAppVersion": "1.1.9",
 	"description": "Settings plugin to control color schemes in Oxygen Theme.",
 	"author": "David V. Kimball",

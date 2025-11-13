@@ -584,6 +584,118 @@ body.minimal-theme.always-show-title-bar .view-header-title-container:hover {
 }
 
 /* ========================================
+   Sidebar Indentation Guides
+   ======================================== */
+
+/* The theme already handles indentation guides using --nav-indentation-guide-width and --nav-indentation-guide-color */
+/* We only need to override when "None" (0px) is selected - make it invisible but keep it for indentation */
+body.minimal-theme[style*="--nav-indentation-guide-width: 0px"] .nav-folder-children::before,
+body.minimal-theme[style*="--nav-indentation-guide-width:0px"] .nav-folder-children::before {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* ========================================
+   Workspace Borders Enhancements
+   ======================================== */
+
+/* Enhanced workspace borders - minimal rounded corners on main content area only */
+/* Only applies when workspace borders are disabled */
+/* Target only the active tab and its content container */
+/* Based on Baseline's approach: use container-inner with margin-bottom: -1px */
+
+/* Apply border and rounded corners to the active tab's content container */
+/* Always reserve border space to prevent layout shifts when toggling */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-container {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Use container-inner with margin-bottom: -1px to overlap the container's top border (Baseline approach) */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header-container-inner {
+  margin-bottom: -1px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Reserve border space for ALL tabs to prevent shifting when active tab changes */
+/* Only the active tab will show the border */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header {
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  border-bottom: none;
+}
+
+/* Make the active tab header connect seamlessly to the container below it */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active {
+  border-color: var(--background-modifier-border);
+  border-radius: var(--radius-m) var(--radius-m) 0 0;
+  background-color: var(--background-primary);
+  position: relative;
+  /* Ensure the tab header itself doesn't change height or alignment */
+  height: auto;
+  min-height: inherit;
+  align-items: inherit;
+  margin-bottom: -1px;
+}
+
+/* Prevent icons and close button from shifting when enhanced borders are enabled */
+/* Only apply to active tab to minimize changes */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner-close-button {
+  margin-top: -1px;
+}
+
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner-icon,
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner-icon.iconic-icon {
+  margin-top: -1px;
+}
+
+/* Hide the divider line only when it's adjacent to an active tab */
+/* The divider is on the right side of each tab (::after on workspace-tab-header-inner) */
+/* Hide divider on active tab itself */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner::after {
+  display: none !important;
+}
+/* Hide divider on inactive tab that comes immediately before an active tab */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header:not(.is-active):has(+ .workspace-tab-header.is-active) .workspace-tab-header-inner::after {
+  display: none !important;
+}
+
+/* Disable the theme's box-shadow on ::before and ::after that interferes with the connection */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active::before,
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active::after {
+  box-shadow: none !important;
+}
+
+/* Use a pseudo-element to extend the tab's background down and cover the container's top border */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: -1px;
+  right: -1px;
+  height: 3px;
+  background-color: var(--background-primary);
+}
+
+/* Ensure the active tab header inner element also has the rounded top */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner {
+  border-top-left-radius: var(--radius-m);
+  border-top-right-radius: var(--radius-m);
+  background-color: var(--background-primary);
+}
+
+/* Make sure the tab header container doesn't interfere and allows proper positioning */
+body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-header-container {
+  background-color: transparent;
+  margin-bottom: 0;
+}
+
+/* ========================================
    Inline Style Replacements
    ======================================== */
 

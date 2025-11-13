@@ -40,6 +40,11 @@ export interface MinimalSettings {
   readableLineLength: boolean;
   customPresets: CustomColorPreset[];
   enableCustomPresets: boolean;
+  // Sidebar indentation guides
+  navIndentationGuideWidth: string;  // '0px' | '1px' | '2px' | '3px'
+  navIndentationGuideColor: string;   // 'var(--ui1)' | 'var(--text-faint)' | 'var(--text-accent)'
+  // Workspace borders enhancements
+  workspaceBordersEnhanced: boolean;
 }
 
 export const DEFAULT_SETTINGS: MinimalSettings = {
@@ -78,5 +83,10 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   devBlockWidth: false,
   customPresets: [],
   enableCustomPresets: true,
+  // Sidebar indentation guides
+  navIndentationGuideWidth: '1px',
+  navIndentationGuideColor: 'rgba(var(--mono-rgb-100), 0.12)',
+  // Workspace borders enhancements
+  workspaceBordersEnhanced: false,
 };
 

@@ -39,6 +39,9 @@ export default class MinimalTheme extends Plugin {
     // Cache theme state once at startup for performance
     this._isOxygenActive = this.checkOxygenTheme();
     
+    // Initialize last theme mode for change detection
+    const initialThemeMode = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+    
     // Only initialize styles if Oxygen theme is active
     // Note: initialize() calls updateStyle() which also updates custom preset CSS
     if (this._isOxygenActive) {
@@ -64,6 +67,7 @@ export default class MinimalTheme extends Plugin {
     // Watch for theme changes with debouncing for performance
     // css-change fires very frequently, so we debounce and cache the theme state
     let debounceTimer: number;
+    let lastThemeMode: string = initialThemeMode;
     
     this.registerEvent(
       this.app.workspace.on('css-change', () => {
@@ -71,6 +75,9 @@ export default class MinimalTheme extends Plugin {
         window.clearTimeout(debounceTimer);
         debounceTimer = window.setTimeout(() => {
           const newThemeState = this.checkOxygenTheme();
+          const currentThemeMode = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+          const themeModeChanged = lastThemeMode !== null && lastThemeMode !== currentThemeMode;
+          lastThemeMode = currentThemeMode;
           
           // Only act when theme actually changes (not from our own CSS updates)
           if (this._isOxygenActive && !newThemeState) {
@@ -83,9 +90,10 @@ export default class MinimalTheme extends Plugin {
             this._isOxygenActive = true;
             this._isInitialized = true;
             this.styleManager.initialize();
+          } else if (this._isOxygenActive && newThemeState && this._isInitialized && themeModeChanged) {
+            // Still on Oxygen, but theme mode (light/dark) changed - refresh styles
+            this.styleManager.updateStyle();
           }
-          // If already initialized and Oxygen is still active, do nothing
-          // This prevents infinite loops from our own CSS updates
         }, 100); // 100ms debounce
       })
     );

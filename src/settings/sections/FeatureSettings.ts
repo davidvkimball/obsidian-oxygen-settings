@@ -100,6 +100,50 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
         plugin.refresh();
       }));
 
+  // Workspace Borders Enhancements
+  new Setting(containerEl)
+    .setName('Enhanced workspace borders')
+    .setDesc('Add rounded corners and border to the main content area when workspace borders are disabled.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.workspaceBordersEnhanced)
+      .onChange((value) => {
+        plugin.settings.workspaceBordersEnhanced = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Sidebar Indentation Guides
+  new Setting(containerEl)
+    .setName('Indentation guides thickness')
+    .setDesc('Thickness of indentation guides in the sidebar file explorer.')
+    .addDropdown(dropdown => dropdown
+      .addOption('0px', 'None')
+      .addOption('1px', 'Thin')
+      .addOption('2px', 'Medium')
+      .addOption('3px', 'Thick')
+      .setValue(plugin.settings.navIndentationGuideWidth)
+      .onChange((value) => {
+        plugin.settings.navIndentationGuideWidth = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  new Setting(containerEl)
+    .setName('Indentation guides color')
+    .setDesc('Color of indentation guides in the sidebar.')
+    .addDropdown(dropdown => dropdown
+      .addOption('rgba(var(--mono-rgb-100), 0.12)', 'Subtle')
+      .addOption('var(--text-faint)', 'Strong')
+      .addOption('var(--color-accent)', 'Accent color')
+      .setValue(plugin.settings.navIndentationGuideColor)
+      .onChange((value) => {
+        plugin.settings.navIndentationGuideColor = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
   new Setting(containerEl)
     .setName('Focus mode')
     .setDesc('Hide tab bar and status bar, hover to display. Can be toggled via hotkey.')

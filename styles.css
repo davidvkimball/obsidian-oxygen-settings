@@ -1008,11 +1008,8 @@ body.minimal-theme.borders-none:not(.sidebar-color) .mod-right-split {
 	display: none;
 }
 
-/* Hides vault name */
-.zenmode-active .workspace-sidedock-vault-profile,
-body.hider-vault:not(.is-mobile)
-	.workspace-split.mod-left-split
-	.workspace-sidedock-vault-profile {
+/* Hides vault name (zen mode) */
+.zenmode-active .workspace-sidedock-vault-profile {
 	display: none;
 }
 
@@ -1020,18 +1017,8 @@ body.hider-vault:not(.is-mobile)
 	padding-left: var(--frame-left-space);
 }
 
-/* Hide meta */
+/* Hide meta (zen mode) */
 .zenmode-active .markdown-reading-view .metadata-container {
-	display: none;
-}
-
-/* Hide scrollbars */
-.hider-scroll ::-webkit-scrollbar {
-	display: none;
-}
-
-/* Hide search suggestions */
-.hider-search-suggestions .suggestion-container.mod-search-suggestion {
 	display: none;
 }
 
@@ -1050,5 +1037,227 @@ body:not(.is-mobile).zenmode-active .titlebar {
 /* Make interactive elements inside titlebar not draggable */
 body:not(.is-mobile).zenmode-active .titlebar * {
 	-webkit-app-region: no-drag !important;
+}
+
+/* ========================================
+   Hider Plugin Styles
+   ======================================== */
+
+/* Hides vault name */
+.hider-vault .workspace-sidedock-vault-profile,
+body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile {
+	display: none;
+}
+
+/* Hide tabs */
+.hider-tabs .mod-root .workspace-tabs .workspace-tab-header-container {
+	display: none;
+}
+
+.hider-tabs .mod-top-left-space .view-header {
+	padding-left: var(--frame-left-space);
+}
+
+/* Hide sidebar buttons */
+.hider-sidebar-buttons .sidebar-toggle-button.mod-right,
+.hider-sidebar-buttons .sidebar-toggle-button.mod-left {
+	display: none;
+}
+
+.hider-sidebar-buttons.mod-macos.is-hidden-frameless:not(.is-popout-window) .workspace .workspace-tabs.mod-top-right-space .workspace-tab-header-container {
+	padding-right: 4px;
+}
+
+.hider-sidebar-buttons.mod-macos {
+	--frame-left-space: 60px;
+}
+
+/* Hide meta */
+.hider-meta .markdown-reading-view .metadata-container {
+	display: none;
+}
+
+/* Hide scrollbars */
+.hider-scroll ::-webkit-scrollbar {
+	display: none;
+}
+
+/* Hide status */
+.hider-status .status-bar {
+	display: none;
+}
+
+/* Hide tooltips */
+.hider-tooltips .tooltip {
+	display: none;
+}
+
+/* Hide search suggestions */
+.hider-search-suggestions .suggestion-container.mod-search-suggestion {
+	display: none;
+}
+
+/* Hide search count flair */
+.hider-search-counts .tree-item-flair:not(.tag-pane-tag-count) {
+	display: none;
+}
+
+/* Hide instructions */
+.hider-instructions .prompt-instructions {
+	display: none;
+}
+
+/* Hide file nav header */
+.hider-file-nav-header .workspace-leaf-content[data-type=file-explorer] .nav-header {
+	display: none;
+}
+
+/* Hide properties heading */
+.metadata-heading-off .metadata-properties-heading {
+	display: none;
+}
+
+.metadata-heading-off .hover-popover .metadata-container {
+	display: none;
+}
+
+/* Hide "Add property" button */
+.metadata-add-property-off .metadata-add-button {
+	display: none;
+}
+
+/* Auto-hide vault switcher (adapted from Baseline theme) */
+/* Only works when hide-vault is not enabled */
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile {
+	background-color: transparent;
+	border-top: none;
+	position: absolute;
+	inset: auto 0 0;
+	z-index: 1;
+	align-items: unset;
+	width: auto;
+}
+
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile::before {
+	transition: var(--anim-duration-moderate) var(--anim-motion-baseline);
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	pointer-events: none;
+	mask: linear-gradient(to top, hsl(0, 0%, 0%) 0%, hsla(0, 0%, 0%, 0.99) 18.4%, hsla(0, 0%, 0%, 0.963) 33.7%, hsla(0, 0%, 0%, 0.92) 46.4%, hsla(0, 0%, 0%, 0.864) 56.7%, hsla(0, 0%, 0%, 0.796) 64.8%, hsla(0, 0%, 0%, 0.72) 71.2%, hsla(0, 0%, 0%, 0.637) 76.1%, hsla(0, 0%, 0%, 0.55) 79.9%, hsla(0, 0%, 0%, 0.46) 82.8%, hsla(0, 0%, 0%, 0.37) 85.2%, hsla(0, 0%, 0%, 0.283) 87.3%, hsla(0, 0%, 0%, 0.2) 89.6%, hsla(0, 0%, 0%, 0.124) 92.3%, hsla(0, 0%, 0%, 0.056) 95.6%, hsla(0, 0%, 0%, 0) 100%);
+	background-color: var(--background-secondary);
+}
+
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile .workspace-drawer-vault-switcher.has-active-menu {
+	background-color: var(--interactive-normal);
+}
+
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile:not(:hover) {
+	pointer-events: none;
+}
+
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile:not(:hover) .workspace-drawer-vault-switcher:not(.has-active-menu) {
+	opacity: 0;
+	filter: blur(4px);
+	pointer-events: none;
+	transform: scale(0.95);
+}
+
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile:not(:hover)::before {
+	opacity: 0;
+}
+
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-drawer-vault-switcher,
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-drawer-vault-actions .clickable-icon {
+	transition: var(--anim-duration-moderate) var(--anim-motion-baseline);
+	pointer-events: visible;
+}
+
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-leaf-content > .node-insert-event,
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-leaf-content > .view-content {
+	padding-bottom: 64px;
+}
+
+/* Hide help button */
+body:not(.is-mobile).hider-help-button .workspace-split.mod-left-split .workspace-drawer-vault-actions .clickable-icon:first-child {
+	display: none;
+}
+
+/* Ensure cmdr buttons are treated the same as nav-action-button */
+/* This makes cmdr buttons first-class citizens alongside regular nav-action-button elements */
+body .mod-sidedock .workspace-leaf-content > .nav-header .cmdr.clickable-icon,
+body .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .cmdr.clickable-icon {
+	/* Inherit nav-action-button styling */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Collapse file explorer buttons (adapted from Baseline theme) */
+/* Treats cmdr buttons the same as nav-action-button */
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header {
+	transition: var(--anim-duration-moderate) var(--anim-motion-baseline), background-color var(--anim-duration-fast);
+}
+
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header .nav-buttons-container,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .nav-buttons-container,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header .nav-action-button,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .nav-action-button,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header .nav-action-button::after,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .nav-action-button::after,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header svg,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header svg {
+	transition: var(--anim-duration-moderate) var(--anim-motion-baseline), background-color var(--anim-duration-fast);
+}
+
+/* Collapse buttons when not hovering */
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-buttons-container,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-buttons-container {
+	gap: 4px !important;
+	padding: 0 !important;
+	background-color: var(--background-modifier-hover) !important;
+	border-radius: 100vh;
+	width: 70px;
+	height: 5px;
+}
+
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-action-button,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-action-button,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .cmdr.clickable-icon,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .cmdr.clickable-icon {
+	padding: 2px !important;
+	width: 0 !important;
+	flex: 0;
+	background-color: transparent;
+	box-shadow: none !important;
+	min-width: 0;
+}
+
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-action-button::after,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-action-button::after {
+	font-size: 0;
+}
+
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-action-button.is-active,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-action-button.is-active {
+	background-color: var(--background-modifier-hover) !important;
+}
+
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-action-button.clickable-icon[aria-disabled="true"],
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-action-button.clickable-icon[aria-disabled="true"],
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .cmdr.clickable-icon[aria-disabled="true"],
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .cmdr.clickable-icon[aria-disabled="true"] {
+	opacity: var(--icon-opacity);
+}
+
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) svg,
+body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) svg {
+	width: 0px;
+	height: 0px;
 }
 

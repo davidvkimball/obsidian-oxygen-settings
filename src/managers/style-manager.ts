@@ -149,6 +149,24 @@ export class StyleManagerImpl {
     document.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
     document.body.classList.toggle('minimal-folding', this.plugin.settings.folding);
 
+    // Hider classes
+    document.body.classList.toggle('hider-status', this.plugin.settings.hideStatus);
+    document.body.classList.toggle('hider-tabs', this.plugin.settings.hideTabs);
+    document.body.classList.toggle('hider-scroll', this.plugin.settings.hideScroll);
+    document.body.classList.toggle('hider-sidebar-buttons', this.plugin.settings.hideSidebarButtons);
+    document.body.classList.toggle('hider-tooltips', this.plugin.settings.hideTooltips);
+    document.body.classList.toggle('hider-search-suggestions', this.plugin.settings.hideSearchSuggestions);
+    document.body.classList.toggle('hider-file-nav-header', this.plugin.settings.hideFileNavButtons);
+    document.body.classList.toggle('hider-search-counts', this.plugin.settings.hideSearchCounts);
+    document.body.classList.toggle('hider-instructions', this.plugin.settings.hideInstructions);
+    document.body.classList.toggle('hider-meta', this.plugin.settings.hidePropertiesReading);
+    document.body.classList.toggle('hider-vault', this.plugin.settings.hideVault);
+    document.body.classList.toggle('metadata-heading-off', this.plugin.settings.hidePropertiesHeading);
+    document.body.classList.toggle('metadata-add-property-off', this.plugin.settings.hideAddPropertyButton);
+    document.body.classList.toggle('auto-hide-vault-switcher', this.plugin.settings.autoHideVaultSwitcher);
+    document.body.classList.toggle('hider-help-button', this.plugin.settings.hideHelpButton);
+    document.body.classList.toggle('collapse-file-explorer-buttons', this.plugin.settings.collapseFileExplorerButtons);
+
     // Add width classes
     document.body.addClass(
       this.plugin.settings.chartWidth,
@@ -362,6 +380,22 @@ export class StyleManagerImpl {
       'full-file-names',
       'labeled-nav',
       'minimal-folding',
+      'hider-status',
+      'hider-tabs',
+      'hider-scroll',
+      'hider-sidebar-buttons',
+      'hider-tooltips',
+      'hider-search-suggestions',
+      'hider-file-nav-header',
+      'hider-search-counts',
+      'hider-instructions',
+      'hider-meta',
+      'hider-vault',
+      'metadata-heading-off',
+      'metadata-add-property-off',
+      'auto-hide-vault-switcher',
+      'hider-help-button',
+      'collapse-file-explorer-buttons',
       'table-wide',
       'table-max',
       'table-100',

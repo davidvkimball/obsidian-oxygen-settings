@@ -48,6 +48,23 @@ export interface MinimalSettings {
   zenModeFullscreen: boolean;
   zenModeLeftSidebar: boolean;
   zenModeRightSidebar: boolean;
+  // Hider settings
+  hideTabs: boolean;
+  hideStatus: boolean;
+  hideScroll: boolean;
+  hideSidebarButtons: boolean;
+  hideTooltips: boolean;
+  hideFileNavButtons: boolean;
+  hideSearchSuggestions: boolean;
+  hideSearchCounts: boolean;
+  hideInstructions: boolean;
+  hidePropertiesReading: boolean;
+  hideVault: boolean;
+  hidePropertiesHeading: boolean;
+  hideAddPropertyButton: boolean;
+  autoHideVaultSwitcher: boolean;
+  hideHelpButton: boolean;
+  collapseFileExplorerButtons: boolean;
 }
 
 export const DEFAULT_SETTINGS: MinimalSettings = {
@@ -94,5 +111,22 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   zenModeFullscreen: false,
   zenModeLeftSidebar: false,
   zenModeRightSidebar: false,
+  // Hider settings
+  hideTabs: false,
+  hideStatus: false,
+  hideScroll: false,
+  hideSidebarButtons: false,
+  hideTooltips: false,
+  hideFileNavButtons: false,
+  hideSearchSuggestions: false,
+  hideSearchCounts: false,
+  hideInstructions: false,
+  hidePropertiesReading: false,
+  hideVault: false,
+  hidePropertiesHeading: false,
+  hideAddPropertyButton: false,
+  autoHideVaultSwitcher: false,
+  hideHelpButton: false,
+  collapseFileExplorerButtons: false,
 };
 

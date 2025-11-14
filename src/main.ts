@@ -119,9 +119,10 @@ export default class MinimalTheme extends Plugin {
     }
     
     // Migration for workspace borders: convert old bordersToggle + workspaceBordersEnhanced to new workspaceBorders dropdown
+    // Only migrate if workspaceBorders hasn't been explicitly set by the user yet
     if (loadedData && (loadedData.bordersToggle !== undefined || loadedData.workspaceBordersEnhanced !== undefined)) {
-      if (this.settings.workspaceBorders === DEFAULT_SETTINGS.workspaceBorders) {
-        // Only migrate if workspaceBorders hasn't been set yet (still at default)
+      if (loadedData.workspaceBorders === undefined) {
+        // Only migrate if workspaceBorders hasn't been set yet (not in saved data)
         if (loadedData.bordersToggle === false) {
           this.settings.workspaceBorders = 'none';
         } else if (loadedData.workspaceBordersEnhanced === true) {

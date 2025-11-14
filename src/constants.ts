@@ -158,6 +158,10 @@ export const COMMAND_IDS = {
   
   // Dev commands
   DEV_BLOCK_WIDTH: 'toggle-minimal-dev-block-width',
+  
+  // Hider commands
+  TOGGLE_TAB_BAR: 'toggle-tab-containers',
+  TOGGLE_STATUS_BAR: 'toggle-hider-status',
 } as const;
 
 // Scheme command ID prefixes

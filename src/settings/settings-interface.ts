@@ -43,6 +43,11 @@ export interface MinimalSettings {
   // Sidebar indentation guides
   navIndentationGuideWidth: string;  // '0px' | '1px' | '2px' | '3px'
   navIndentationGuideColor: string;   // 'var(--ui1)' | 'var(--text-faint)' | 'var(--text-accent)'
+  // Zen mode
+  zenMode: boolean;
+  zenModeFullscreen: boolean;
+  zenModeLeftSidebar: boolean;
+  zenModeRightSidebar: boolean;
 }
 
 export const DEFAULT_SETTINGS: MinimalSettings = {
@@ -82,7 +87,12 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   customPresets: [],
   enableCustomPresets: true,
   // Sidebar indentation guides
-  navIndentationGuideWidth: '1px',
+  navIndentationGuideWidth: '0px',
   navIndentationGuideColor: 'rgba(var(--mono-rgb-100), 0.12)',
+  // Zen mode
+  zenMode: false,
+  zenModeFullscreen: false,
+  zenModeLeftSidebar: false,
+  zenModeRightSidebar: false,
 };
 

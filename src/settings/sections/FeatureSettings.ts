@@ -150,6 +150,33 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     );
 
   new Setting(containerEl)
+    .setName('Zen mode')
+    .setDesc('Hide most UI elements for distraction-free writing.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.zenMode)
+      .onChange((value) => {
+        const app = plugin.app;
+        // Store sidebar state before entering zen mode
+        if (value && app.workspace.leftSplit && app.workspace.rightSplit) {
+          plugin.settings.zenModeLeftSidebar = app.workspace.leftSplit.collapsed;
+          plugin.settings.zenModeRightSidebar = app.workspace.rightSplit.collapsed;
+        }
+        plugin.settings.zenMode = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  new Setting(containerEl)
+    .setName('Zen mode: Use fullscreen')
+    .setDesc('When enabled, Zen mode command will also toggle fullscreen.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.zenModeFullscreen)
+      .onChange((value) => {
+        plugin.settings.zenModeFullscreen = value;
+        void plugin.saveData(plugin.settings);
+      })
+    );
+
+  new Setting(containerEl)
     .setName('Underline internal links')
     .setDesc('Show underlines on internal links.')
     .addToggle(toggle => toggle.setValue(plugin.settings.underlineInternal)

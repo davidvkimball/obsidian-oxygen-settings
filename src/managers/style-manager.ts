@@ -88,6 +88,9 @@ export class StyleManagerImpl {
     
     this.removeStyle();
     this.removeSettings();
+    
+    // Handle zen mode sidebar visibility
+    this.setZenModeSidebarVisibility();
 
     // Add style classes (only if not empty)
     if (this.plugin.settings.lightStyle && this.plugin.settings.lightStyle.trim()) {
@@ -135,6 +138,7 @@ export class StyleManagerImpl {
     document.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
     document.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
     document.body.classList.toggle('minimal-focus-mode', this.plugin.settings.focusMode);
+    document.body.classList.toggle('zenmode-active', this.plugin.settings.zenMode);
     document.body.classList.toggle('links-int-on', this.plugin.settings.underlineInternal);
     document.body.classList.toggle('links-ext-on', this.plugin.settings.underlineExternal);
     document.body.classList.toggle('full-width-media', this.plugin.settings.fullWidthMedia);
@@ -165,9 +169,9 @@ export class StyleManagerImpl {
     };
     
     // Only set indentation guide variables if they differ from default
-    // Width: only set if not default (1px)
+    // Width: only set if not default (0px - theme now hides guides by default)
     // Color: only set if not "Subtle" (let theme use its default color)
-    const isDefaultWidth = this.plugin.settings.navIndentationGuideWidth === '1px';
+    const isDefaultWidth = this.plugin.settings.navIndentationGuideWidth === '0px';
     const isDefaultColor = this.plugin.settings.navIndentationGuideColor === 'rgba(var(--mono-rgb-100), 0.12)';
     
     if (!isDefaultWidth) {
@@ -348,6 +352,7 @@ export class StyleManagerImpl {
       'colorful-frame',
       'colorful-active',
       'minimal-focus-mode',
+      'zenmode-active',
       'links-int-on',
       'links-ext-on',
       'full-width-media',
@@ -420,6 +425,39 @@ export class StyleManagerImpl {
   private setupCSSWatcher(): void {
     // CSS watcher disabled - was causing infinite loops
     // Custom preset CSS is now only updated when explicitly called
+  }
+
+  /**
+   * Set sidebar visibility based on zen mode state
+   */
+  private setZenModeSidebarVisibility(): void {
+    const app = this.plugin.app;
+
+    if (
+      app.workspace.leftSplit == undefined ||
+      app.workspace.rightSplit == undefined
+    ) {
+      return;
+    }
+
+    if (!this.plugin.settings.zenMode) {
+      // Restore sidebars if they were not collapsed before zen mode
+      if (!this.plugin.settings.zenModeLeftSidebar) {
+        app.workspace.leftSplit.expand();
+      }
+      if (!this.plugin.settings.zenModeRightSidebar) {
+        app.workspace.rightSplit.expand();
+      }
+    } else {
+      // Collapse sidebars if they're not already collapsed
+      if (!app.workspace.leftSplit.collapsed) {
+        app.workspace.leftSplit.collapse();
+      }
+
+      if (!app.workspace.rightSplit.collapsed) {
+        app.workspace.rightSplit.collapse();
+      }
+    }
   }
 }
 

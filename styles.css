@@ -605,42 +605,16 @@ body.minimal-theme[style*="--nav-indentation-guide-width:0px"] .nav-folder-child
 /* Based on Baseline's approach: use container-inner with margin-bottom: -1px */
 
 /* Apply border and rounded corners to the active tab's content container */
-/* Only round the top-left corner - rest goes to window edge */
+/* Round the top-left and top-right corners - only the main content is contained */
 /* Always reserve border space to prevent layout shifts when toggling */
 body.minimal-theme.borders-none.workspace-borders-enhanced .workspace .mod-root .workspace-tab-container {
   border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m) 0 0 0;
+  border-radius: var(--radius-m) var(--radius-m) 0 0; /* Top-left and top-right rounded */
   margin: 0;
   overflow: hidden;
   position: relative;
   box-sizing: border-box;
 }
-
-/* When right sidebar is open, extend border to wrap both main content and right sidebar */
-/* Remove right border from tab container so it connects to sidebar */
-body.minimal-theme.borders-none.workspace-borders-enhanced .workspace.is-right-sidedock-open .mod-root .workspace-tab-container {
-  border-right: none;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-/* Add border to right sidebar to complete the unified border */
-/* Target the workspace-tab-container within the right sidebar */
-/* No rounded corners - goes straight to window edge */
-body.minimal-theme.borders-none.workspace-borders-enhanced .workspace.is-right-sidedock-open .mod-sidedock.mod-right-split .workspace-tab-container {
-  border-top: 1px solid var(--background-modifier-border);
-  border-right: 1px solid var(--background-modifier-border);
-  border-bottom: 1px solid var(--background-modifier-border);
-  border-left: none;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  box-sizing: border-box;
-}
-
-/* When right sidebar is open, the active tab keeps its normal border treatment */
-/* The connection happens at the container level, not the tab level */
 
 /* Match the left sidebar background color behind the tabs */
 /* Set a CSS variable at workspace level to capture --background-secondary before any overrides */
@@ -650,15 +624,42 @@ body.minimal-theme.borders-none.workspace-borders-enhanced .workspace {
 
 /* Apply the background to main content tab header container (always, not just when right sidebar is open) */
 /* Don't apply when colorful-frame is active - let the theme handle it */
-body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container {
-  background-color: var(--enhanced-border-sidebar-bg);
+/* Add border-radius to match the active tab's rounded corners for seamless appearance */
+/* Override the theme's --tab-container-background variable chain (which goes to --titlebar-background -> --bg1) */
+/* We want it to use --background-secondary (bg2) instead, matching the sidebar */
+/* Apply to both main content and right sidebar */
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace .mod-root .workspace-tabs.mod-top,
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tabs.mod-top {
+  --tab-container-background: var(--enhanced-border-sidebar-bg) !important;
 }
 
-/* Apply the background to right sidebar tab header container (when right sidebar is open) */
-/* This uses the variable set at workspace level, avoiding the right sidebar's override */
-/* Don't apply when colorful-frame is active - let the theme handle it */
-body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace.is-right-sidedock-open .mod-sidedock.mod-right-split .workspace-tab-header-container {
-  background-color: var(--enhanced-border-sidebar-bg);
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container,
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tab-header-container {
+  background-color: var(--enhanced-border-sidebar-bg) !important;
+}
+
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container {
+  border-top-left-radius: var(--radius-m);
+  border-top-right-radius: var(--radius-m);
+}
+
+/* Override the workspace-split.mod-root background to match sidebar color */
+/* The theme sets it to --background-primary, but we want --background-secondary for seamless appearance */
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.colorful-frame) .workspace .workspace-split.mod-root {
+  background-color: var(--enhanced-border-sidebar-bg) !important;
+}
+
+/* Override the theme rule that makes right sidebar use --background-primary */
+/* When enhanced borders are active, make right sidebar match left sidebar color */
+/* The theme rule is: body:not(.sidebar-color) .mod-right-split { --background-secondary: var(--background-primary); } */
+/* Capture the original --background-secondary at workspace level before the override applies */
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.sidebar-color) .workspace {
+  --enhanced-border-right-sidebar-bg: var(--background-secondary);
+}
+
+/* Override the theme's override to restore the original --background-secondary value */
+body.minimal-theme.borders-none.workspace-borders-enhanced:not(.sidebar-color) .mod-right-split {
+  --background-secondary: var(--enhanced-border-right-sidebar-bg) !important;
 }
 
 /* Use container-inner with margin-bottom: -1px to overlap the container's top border (Baseline approach) */

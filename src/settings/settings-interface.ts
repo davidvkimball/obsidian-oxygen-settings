@@ -15,7 +15,7 @@ export interface MinimalSettings {
   colorfulActiveStates: boolean;
   trimNames: boolean;
   labeledNav: boolean;
-  bordersToggle: boolean;
+  workspaceBorders: string;  // 'enhanced' | 'default' | 'none'
   focusMode: boolean;
   lineHeight: number;
   lineWidth: number;
@@ -43,8 +43,6 @@ export interface MinimalSettings {
   // Sidebar indentation guides
   navIndentationGuideWidth: string;  // '0px' | '1px' | '2px' | '3px'
   navIndentationGuideColor: string;   // 'var(--ui1)' | 'var(--text-faint)' | 'var(--text-accent)'
-  // Workspace borders enhancements
-  workspaceBordersEnhanced: boolean;
 }
 
 export const DEFAULT_SETTINGS: MinimalSettings = {
@@ -72,7 +70,7 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   labeledNav: false,
   fullWidthMedia: true,
   hideTitleBarOnHover: true,
-  bordersToggle: true,
+  workspaceBorders: 'enhanced',
   minimalStatus: true,
   focusMode: false,
   underlineInternal: true,
@@ -86,7 +84,5 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   // Sidebar indentation guides
   navIndentationGuideWidth: '1px',
   navIndentationGuideColor: 'rgba(var(--mono-rgb-100), 0.12)',
-  // Workspace borders enhancements
-  workspaceBordersEnhanced: false,
 };
 

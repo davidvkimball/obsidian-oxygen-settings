@@ -90,23 +90,17 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
         plugin.refresh();
       }));
 
+  // Workspace Borders
   new Setting(containerEl)
-    .setName('Workspace borders')
-    .setDesc('Display divider lines between workspace elements.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.bordersToggle)
+    .setName('Borders')
+    .setDesc('Border style for workspace elements.')
+    .addDropdown(dropdown => dropdown
+      .addOption('enhanced', 'Enhanced')
+      .addOption('default', 'Default')
+      .addOption('none', 'None')
+      .setValue(plugin.settings.workspaceBorders)
       .onChange((value) => {
-        plugin.settings.bordersToggle = value;
-        void plugin.saveData(plugin.settings);
-        plugin.refresh();
-      }));
-
-  // Workspace Borders Enhancements
-  new Setting(containerEl)
-    .setName('Enhanced workspace borders')
-    .setDesc('Add rounded corners and border to the main content area when workspace borders are disabled.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.workspaceBordersEnhanced)
-      .onChange((value) => {
-        plugin.settings.workspaceBordersEnhanced = value;
+        plugin.settings.workspaceBorders = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })

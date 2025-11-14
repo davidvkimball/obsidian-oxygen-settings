@@ -11,7 +11,15 @@ export function registerFeatureCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.TOGGLE_BORDERS,
     name: 'Toggle sidebar borders',
     callback: () => {
-      plugin.settings.bordersToggle = !plugin.settings.bordersToggle;
+      // Cycle through: enhanced -> default -> none -> enhanced
+      const current = plugin.settings.workspaceBorders;
+      if (current === 'enhanced') {
+        plugin.settings.workspaceBorders = 'default';
+      } else if (current === 'default') {
+        plugin.settings.workspaceBorders = 'none';
+      } else {
+        plugin.settings.workspaceBorders = 'enhanced';
+      }
       void plugin.saveData(plugin.settings);
       refresh(plugin);
     }

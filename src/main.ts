@@ -107,7 +107,8 @@ export default class MinimalTheme extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const loadedData = await this.loadData();
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
     
     // Migration for renamed default schemes
     if (this.settings.lightScheme === 'minimal-default-light') {
@@ -115,6 +116,22 @@ export default class MinimalTheme extends Plugin {
     }
     if (this.settings.darkScheme === 'minimal-default-dark') {
       this.settings.darkScheme = 'minimal-minimal-dark';
+    }
+    
+    // Migration for workspace borders: convert old bordersToggle + workspaceBordersEnhanced to new workspaceBorders dropdown
+    if (loadedData && (loadedData.bordersToggle !== undefined || loadedData.workspaceBordersEnhanced !== undefined)) {
+      if (this.settings.workspaceBorders === DEFAULT_SETTINGS.workspaceBorders) {
+        // Only migrate if workspaceBorders hasn't been set yet (still at default)
+        if (loadedData.bordersToggle === false) {
+          this.settings.workspaceBorders = 'none';
+        } else if (loadedData.workspaceBordersEnhanced === true) {
+          this.settings.workspaceBorders = 'enhanced';
+        } else {
+          this.settings.workspaceBorders = 'default';
+        }
+        // Save migrated settings
+        await this.saveData(this.settings);
+      }
     }
     
     // Ensure custom presets array exists (for existing users)

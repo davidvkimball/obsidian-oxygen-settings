@@ -113,8 +113,24 @@ export class StyleManagerImpl {
     }
 
     // Apply feature toggles
-    document.body.classList.toggle('borders-none', !this.plugin.settings.bordersToggle);
-    document.body.classList.toggle('borders-on', this.plugin.settings.bordersToggle);
+    // Workspace borders: 'enhanced' | 'default' | 'none'
+    // - 'enhanced' (default): Do nothing - theme's default behavior applies (body:not(.borders-on))
+    // - 'default': Add borders-on to restore Obsidian's original borders
+    // - 'none': Add borders-none to remove all borders
+    const bordersValue = this.plugin.settings.workspaceBorders;
+    if (bordersValue === 'enhanced') {
+      // Enhanced is default - remove any border classes to let theme handle it
+      document.body.classList.remove('borders-none', 'borders-on');
+    } else if (bordersValue === 'default') {
+      // Default - restore Obsidian's original borders
+      document.body.classList.remove('borders-none');
+      document.body.classList.add('borders-on');
+    } else if (bordersValue === 'none') {
+      // None - remove all borders
+      document.body.classList.remove('borders-on');
+      document.body.classList.add('borders-none');
+    }
+    
     document.body.classList.toggle('colorful-headings', this.plugin.settings.colorfulHeadings);
     document.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
     document.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
@@ -128,9 +144,6 @@ export class StyleManagerImpl {
     document.body.classList.toggle('full-file-names', !this.plugin.settings.trimNames);
     document.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
     document.body.classList.toggle('minimal-folding', this.plugin.settings.folding);
-
-    // New feature toggles
-    document.body.classList.toggle('workspace-borders-enhanced', this.plugin.settings.workspaceBordersEnhanced);
 
     // Add width classes
     document.body.addClass(
@@ -344,7 +357,6 @@ export class StyleManagerImpl {
       'full-file-names',
       'labeled-nav',
       'minimal-folding',
-      'workspace-borders-enhanced',
       'table-wide',
       'table-max',
       'table-100',

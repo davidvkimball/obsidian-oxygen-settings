@@ -43,11 +43,6 @@ export interface MinimalSettings {
   // Sidebar indentation guides
   navIndentationGuideWidth: string;  // '0px' | '1px' | '2px' | '3px'
   navIndentationGuideColor: string;   // 'var(--ui1)' | 'var(--text-faint)' | 'var(--text-accent)'
-  // Zen mode
-  zenMode: boolean;
-  zenModeFullscreen: boolean;
-  zenModeLeftSidebar: boolean;
-  zenModeRightSidebar: boolean;
   // Hider settings
   hideTabs: boolean;
   hideStatus: boolean;
@@ -106,11 +101,6 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   // Sidebar indentation guides
   navIndentationGuideWidth: '0px',
   navIndentationGuideColor: 'rgba(var(--mono-rgb-100), 0.12)',
-  // Zen mode
-  zenMode: false,
-  zenModeFullscreen: false,
-  zenModeLeftSidebar: false,
-  zenModeRightSidebar: false,
   // Hider settings
   hideTabs: false,
   hideStatus: false,

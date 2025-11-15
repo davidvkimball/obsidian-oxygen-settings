@@ -46,63 +46,6 @@ export function registerFeatureCommands(plugin: PluginContext): void {
   });
 
   plugin.addCommand({
-    id: COMMAND_IDS.TOGGLE_ZEN_MODE,
-    name: 'Toggle Zen mode',
-    callback: async () => {
-      const enteringZenMode = !plugin.settings.zenMode;
-      const app = plugin.app;
-      
-      // Store sidebar state before entering zen mode
-      if (enteringZenMode && app.workspace.leftSplit && app.workspace.rightSplit) {
-        plugin.settings.zenModeLeftSidebar = app.workspace.leftSplit.collapsed;
-        plugin.settings.zenModeRightSidebar = app.workspace.rightSplit.collapsed;
-      }
-      
-      if (plugin.settings.zenModeFullscreen) {
-        // Fullscreen mode
-        if (enteringZenMode) {
-          // Enter fullscreen first, then update zen mode
-          if (document.documentElement.requestFullscreen) {
-            try {
-              await document.documentElement.requestFullscreen();
-              // Wait for next frame to ensure fullscreen transition is smooth
-              await new Promise((resolve) =>
-                requestAnimationFrame(resolve)
-              );
-            } catch (e) {
-              // Fullscreen might fail (e.g., user cancelled), continue anyway
-            }
-          }
-          // Now update zen mode after fullscreen is active
-          plugin.settings.zenMode = true;
-          void plugin.saveData(plugin.settings);
-          refresh(plugin);
-        } else {
-          // Exit zen mode first
-          plugin.settings.zenMode = false;
-          void plugin.saveData(plugin.settings);
-          refresh(plugin);
-          // Wait for DOM updates to complete
-          await new Promise((resolve) => requestAnimationFrame(resolve));
-          // Then exit fullscreen
-          if (document.fullscreenElement) {
-            try {
-              await document.exitFullscreen();
-            } catch (e) {
-              // Ignore errors
-            }
-          }
-        }
-      } else {
-        // Regular mode (no fullscreen)
-        plugin.settings.zenMode = !plugin.settings.zenMode;
-        void plugin.saveData(plugin.settings);
-        refresh(plugin);
-      }
-    }
-  });
-
-  plugin.addCommand({
     id: COMMAND_IDS.TOGGLE_COLORFUL_FRAME,
     name: 'Toggle colorful window frame',
     callback: () => {

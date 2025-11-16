@@ -11,6 +11,7 @@ import { buildHiderSettings } from './settings/sections/HiderSettings';
 import { buildLayoutSettings } from './settings/sections/LayoutSettings';
 import { buildTypographySettings } from './settings/sections/TypographySettings';
 import { buildCustomPresetSettings } from './settings/sections/CustomPresetSettings';
+import { buildAnimationSettings } from './settings/sections/AnimationSettings';
 
 // Re-export from settings-interface for backward compatibility
 export type { MinimalSettings } from './settings/settings-interface';
@@ -32,6 +33,7 @@ export class MinimalSettingsTab extends PluginSettingTab {
     buildColorSchemeSettings(containerEl, this.plugin);
     buildCustomPresetSettings(containerEl, this.plugin, this.app, () => this.display());
     buildFeatureSettings(containerEl, this.plugin);
+    buildAnimationSettings(containerEl, this.plugin);
     buildHiderSettings(containerEl, this.plugin);
     buildLayoutSettings(containerEl, this.plugin);
     buildTypographySettings(containerEl, this.plugin);

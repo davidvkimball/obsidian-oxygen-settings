@@ -142,6 +142,16 @@ export default class MinimalTheme extends Plugin {
     if (this.settings.enableCustomPresets === undefined) {
       this.settings.enableCustomPresets = true;
     }
+    
+    // Migration for animation personality: convert 'refined' to 'default'
+    if (loadedData && loadedData.animationPersonality === 'refined') {
+      this.settings.animationPersonality = 'default';
+      await this.saveData(this.settings);
+    }
+    // Ensure animationPersonality is set (default to 'default' if missing)
+    if (!this.settings.animationPersonality) {
+      this.settings.animationPersonality = 'default';
+    }
   }
 
   async saveSettings() {

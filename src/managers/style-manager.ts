@@ -215,6 +215,29 @@ export class StyleManagerImpl {
       document.body.classList.remove('always-show-title-bar');
     }
     
+    // Apply animation settings
+    // Remove all animation classes first (including old 'animations-refined' for migration)
+    document.body.classList.remove('animations-refined', 'animations-default', 'animations-playful', 'animations-off');
+    
+    // Get animation personality (default to 'default' if not set for migration)
+    const animationPersonality = this.plugin.settings.animationPersonality || 'default';
+    
+    // Apply personality class
+    if (animationPersonality === 'off') {
+      document.body.classList.add('animations-off');
+      // Speed is automatically 0 when off, but clear the variable to be explicit
+      document.body.style.removeProperty('--anim-speed-modifier');
+    } else if (animationPersonality === 'playful') {
+      document.body.classList.add('animations-playful');
+      // Apply speed (only if not "off")
+      document.body.style.setProperty('--anim-speed-modifier', this.plugin.settings.animationSpeed.toString());
+    } else {
+      // default (maps to animations-default class)
+      document.body.classList.add('animations-default');
+      // Apply speed (only if not "off")
+      document.body.style.setProperty('--anim-speed-modifier', this.plugin.settings.animationSpeed.toString());
+    }
+    
     this.customPresetCSS.updateCSS();
   }
 
@@ -391,6 +414,10 @@ export class StyleManagerImpl {
       'auto-hide-vault-switcher',
       'hider-help-button',
       'collapse-file-explorer-buttons',
+      'animations-refined',
+      'animations-default',
+      'animations-playful',
+      'animations-off',
       'table-wide',
       'table-max',
       'table-100',
@@ -443,6 +470,7 @@ export class StyleManagerImpl {
     document.body.style.removeProperty('--font-editor-override');
     document.body.style.removeProperty('--nav-indentation-guide-width');
     document.body.style.removeProperty('--nav-indentation-guide-color');
+    document.body.style.removeProperty('--anim-speed-modifier');
     
     document.body.classList.remove(CSS_CLASSES.PLUGIN_THEME);
     document.body.classList.remove('always-show-title-bar');

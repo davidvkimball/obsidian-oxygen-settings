@@ -60,6 +60,9 @@ export interface MinimalSettings {
   autoHideVaultSwitcher: boolean;
   hideHelpButton: boolean;
   collapseFileExplorerButtons: boolean;
+  // Animation settings
+  animationPersonality: 'default' | 'playful' | 'off';
+  animationSpeed: number; // 0-2, default 1
 }
 
 export const DEFAULT_SETTINGS: MinimalSettings = {
@@ -118,5 +121,8 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   autoHideVaultSwitcher: false,
   hideHelpButton: false,
   collapseFileExplorerButtons: false,
+  // Animation settings
+  animationPersonality: 'default',
+  animationSpeed: 1,
 };
 

@@ -21,5 +21,10 @@ Settings plugin for [Oxygen Theme](https://github.com/davidvkimball/obsidian-oxy
 ## Requirements
 
 - [Oxygen theme](https://github.com/davidvkimball/obsidian-oxygen)
-- Optional: [Hider plugin](https://github.com/kepano/obsidian-hider) for additional UI simplification
 - Optional: [Style Settings plugin](https://github.com/mgmeyers/obsidian-style-settings) for more specific tweaks if desired
+
+## Credits
+
+- [Minimal Theme Settings](https://github.com/kepano/obsidian-minimal-settings) - the plugin upon which this one is based.
+- [Hider](https://github.com/kepano/obsidian-hider) - most "hide" features in this plugin are based on this plugin.
+- [Baseline](https://github.com/aaaaalexis/obsidian-baseline) theme for the animation effects and some feature ideas.

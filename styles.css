@@ -1124,6 +1124,16 @@ body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mo
 	padding-bottom: 64px;
 }
 
+/* Auto-hide settings button (Meridian style - completely hidden until hover) */
+body:not(.is-mobile):not(.hider-vault).auto-hide-settings-button .workspace-split.mod-left-split .workspace-drawer-vault-actions .clickable-icon:last-child {
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+body:not(.is-mobile):not(.hider-vault).auto-hide-settings-button .workspace-split.mod-left-split .workspace-sidedock-vault-profile:hover .workspace-drawer-vault-actions .clickable-icon:last-child {
+	opacity: 1;
+}
+
 /* Hide help button */
 body:not(.is-mobile).hider-help-button .workspace-split.mod-left-split .workspace-drawer-vault-actions .clickable-icon:first-child {
 	display: none;
@@ -1139,66 +1149,174 @@ body .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .cmdr.c
 	justify-content: center;
 }
 
-/* Collapse file explorer buttons (adapted from Baseline theme) */
+/* Auto-hide file explorer nav header (Meridian style - completely hidden until hover) */
+body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer] .nav-header {
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	background-color: transparent;
+	transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer] .nav-header svg {
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer]:hover .nav-header {
+	max-height: 2.5em;
+	opacity: 1;
+}
+
+body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer]:hover .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer]:hover .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer]:hover .nav-header svg {
+	opacity: 1;
+}
+
+/* Auto-hide other nav headers (tag, backlinks, outgoing links, outline, bookmarks) - Meridian style */
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=tag] .nav-header,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=outgoing-link] .nav-header,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=backlink] .nav-header,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=outline] .nav-header,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=bookmarks] .nav-header {
+	padding: 0;
+	opacity: 0;
+	height: 0;
+	overflow: hidden;
+	background-color: transparent;
+	transition: opacity 0.3s ease, height 0.3s ease, padding 0.3s ease;
+}
+
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=tag] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=tag] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=tag] .nav-header svg,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=outgoing-link] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=outgoing-link] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=outgoing-link] .nav-header svg,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=backlink] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=backlink] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=backlink] .nav-header svg,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=outline] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=outline] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=outline] .nav-header svg,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=bookmarks] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=bookmarks] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split .workspace-leaf-content[data-type=bookmarks] .nav-header svg {
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=tag] .nav-header,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=outgoing-link] .nav-header,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=backlink] .nav-header,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=outline] .nav-header,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=bookmarks] .nav-header {
+	opacity: 1;
+	height: 1.75em;
+}
+
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=tag] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=tag] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=tag] .nav-header svg,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=outgoing-link] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=outgoing-link] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=outgoing-link] .nav-header svg,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=backlink] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=backlink] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=backlink] .nav-header svg,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=outline] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=outline] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=outline] .nav-header svg,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=bookmarks] .nav-header .nav-buttons-container,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=bookmarks] .nav-header .nav-action-button,
+body:not(.is-mobile).auto-hide-other-nav-headers .workspace-split:hover .workspace-leaf-content[data-type=bookmarks] .nav-header svg {
+	opacity: 1;
+}
+
+/* Auto-hide left tab headers (Meridian style - completely hidden until hover) */
+body:not(.is-mobile).auto-hide-left-tab-headers .mod-left-split .mod-top-left-space .workspace-tab-header-container-inner {
+	opacity: 0;
+	transition: opacity 0.25s ease;
+}
+
+body:not(.is-mobile).auto-hide-left-tab-headers .mod-left-split .mod-top-left-space .workspace-tab-header-container-inner:hover {
+	opacity: 1;
+}
+
+/* Auto-hide right tab headers (Meridian style - completely hidden until hover) */
+body:not(.is-mobile).auto-hide-right-tab-headers .mod-right-split .mod-top-right-space .workspace-tab-header-container-inner {
+	opacity: 0;
+	transition: opacity 0.25s ease;
+}
+
+body:not(.is-mobile).auto-hide-right-tab-headers .mod-right-split .mod-top-right-space .workspace-tab-header-container-inner:hover {
+	opacity: 1;
+}
+
+/* Collapse other nav headers (excluding file explorer) - adapted from Baseline theme */
 /* Treats cmdr buttons the same as nav-action-button */
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header {
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header {
 	transition: var(--anim-duration-moderate) var(--anim-motion-baseline), background-color var(--anim-duration-fast);
 }
 
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header .nav-buttons-container,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .nav-buttons-container,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header .nav-action-button,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .nav-action-button,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header .nav-action-button::after,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .nav-action-button::after,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header svg,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header svg {
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header .nav-buttons-container,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header .nav-buttons-container,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header .nav-action-button,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header .nav-action-button,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header .nav-action-button::after,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header .nav-action-button::after,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header svg,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header svg {
 	transition: var(--anim-duration-moderate) var(--anim-motion-baseline), background-color var(--anim-duration-fast);
 }
 
-/* Collapse buttons when not hovering */
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-buttons-container,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-buttons-container {
+/* Collapse buttons when not hovering (no bar indicator - completely hidden) */
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header:not(:hover) .nav-buttons-container,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header:not(:hover) .nav-buttons-container {
 	gap: 4px !important;
 	padding: 0 !important;
-	background-color: var(--background-modifier-hover) !important;
-	border-radius: 100vh;
-	width: 70px;
-	height: 5px;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	overflow: hidden;
 }
 
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-action-button,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-action-button,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .cmdr.clickable-icon,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .cmdr.clickable-icon {
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header:not(:hover) .nav-action-button,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header:not(:hover) .nav-action-button,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header:not(:hover) .cmdr.clickable-icon,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header:not(:hover) .cmdr.clickable-icon {
 	padding: 2px !important;
 	width: 0 !important;
 	flex: 0;
 	background-color: transparent;
 	box-shadow: none !important;
 	min-width: 0;
+	opacity: 0;
 }
 
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-action-button::after,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-action-button::after {
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header:not(:hover) .nav-action-button::after,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header:not(:hover) .nav-action-button::after {
 	font-size: 0;
 }
 
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-action-button.is-active,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-action-button.is-active {
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header:not(:hover) .nav-action-button.is-active,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header:not(:hover) .nav-action-button.is-active {
 	background-color: var(--background-modifier-hover) !important;
 }
 
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .nav-action-button.clickable-icon[aria-disabled="true"],
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .nav-action-button.clickable-icon[aria-disabled="true"],
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) .cmdr.clickable-icon[aria-disabled="true"],
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) .cmdr.clickable-icon[aria-disabled="true"] {
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header:not(:hover) .nav-action-button.clickable-icon[aria-disabled="true"],
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header:not(:hover) .nav-action-button.clickable-icon[aria-disabled="true"],
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header:not(:hover) .cmdr.clickable-icon[aria-disabled="true"],
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header:not(:hover) .cmdr.clickable-icon[aria-disabled="true"] {
 	opacity: var(--icon-opacity);
 }
 
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .nav-header:not(:hover) svg,
-body.collapse-file-explorer-buttons .mod-sidedock .workspace-leaf-content > .view-content > .nav-header:not(:hover) svg {
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .nav-header:not(:hover) svg,
+body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-type="file-explorer"]) > .view-content > .nav-header:not(:hover) svg {
 	width: 0px;
 	height: 0px;
 }

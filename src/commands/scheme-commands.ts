@@ -41,7 +41,7 @@ export function registerSchemeCommands(plugin: PluginContext): void {
   });
 }
 
-function updateLightScheme(plugin: PluginContext): void {
+export function updateLightScheme(plugin: PluginContext): void {
   removeLightScheme(plugin);
   removeDarkScheme(plugin);
   
@@ -53,7 +53,7 @@ function updateLightScheme(plugin: PluginContext): void {
   document.body.addClass(plugin.settings.lightScheme);
 }
 
-function updateDarkScheme(plugin: PluginContext): void {
+export function updateDarkScheme(plugin: PluginContext): void {
   removeDarkScheme(plugin);
   removeLightScheme(plugin);
   

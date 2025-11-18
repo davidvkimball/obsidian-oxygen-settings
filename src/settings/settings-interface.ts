@@ -59,7 +59,13 @@ export interface MinimalSettings {
   hideAddPropertyButton: boolean;
   autoHideVaultSwitcher: boolean;
   hideHelpButton: boolean;
-  collapseFileExplorerButtons: boolean;
+  autoHideSettingsButton: boolean;
+  collapseFileExplorerButtons: boolean; // Deprecated: use autoHideFileExplorerNavHeader and collapseOtherNavHeaders instead
+  autoHideFileExplorerNavHeader: boolean;
+  autoHideOtherNavHeaders: boolean;
+  autoHideLeftTabHeaders: boolean;
+  autoHideRightTabHeaders: boolean;
+  collapseOtherNavHeaders: boolean;
   // Animation settings
   animationPersonality: 'default' | 'playful' | 'off';
   animationSpeed: number; // 0-2, default 1
@@ -120,7 +126,13 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   hideAddPropertyButton: false,
   autoHideVaultSwitcher: false,
   hideHelpButton: false,
+  autoHideSettingsButton: false,
   collapseFileExplorerButtons: false,
+  autoHideFileExplorerNavHeader: false,
+  autoHideOtherNavHeaders: false,
+  autoHideLeftTabHeaders: false,
+  autoHideRightTabHeaders: false,
+  collapseOtherNavHeaders: false,
   // Animation settings
   animationPersonality: 'default',
   animationSpeed: 1,

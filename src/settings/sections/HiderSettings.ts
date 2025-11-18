@@ -36,6 +36,50 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
         plugin.refresh();
       }));
 
+  // Auto-hide file explorer nav header
+  new Setting(containerEl)
+    .setName('Auto-hide file explorer nav header')
+    .setDesc('Hide file explorer navigation header until hover. Elegantly reveals on hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideFileExplorerNavHeader)
+      .onChange((value) => {
+        plugin.settings.autoHideFileExplorerNavHeader = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      }));
+
+  // Auto-hide other nav headers
+  new Setting(containerEl)
+    .setName('Auto-hide other nav headers')
+    .setDesc('Hide navigation headers for tag, backlinks, outgoing links, outline, and bookmarks panes until hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideOtherNavHeaders)
+      .onChange((value) => {
+        plugin.settings.autoHideOtherNavHeaders = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      }));
+
+  // Auto-hide left tab headers
+  new Setting(containerEl)
+    .setName('Auto-hide left tab headers')
+    .setDesc('Hide left panel tab headers until hover. Elegantly reveals on hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideLeftTabHeaders)
+      .onChange((value) => {
+        plugin.settings.autoHideLeftTabHeaders = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      }));
+
+  // Auto-hide right tab headers
+  new Setting(containerEl)
+    .setName('Auto-hide right tab headers')
+    .setDesc('Hide right panel tab headers until hover. Elegantly reveals on hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideRightTabHeaders)
+      .onChange((value) => {
+        plugin.settings.autoHideRightTabHeaders = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      }));
+
   // Hide tab bar
   new Setting(containerEl)
     .setName('Hide tab bar')
@@ -120,13 +164,13 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
-  // Collapse file explorer buttons
+  // Collapse other nav headers
   new Setting(containerEl)
-    .setName('Collapse file explorer buttons')
-    .setDesc('Collapse file explorer buttons to a small indicator until hover.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.collapseFileExplorerButtons)
+    .setName('Collapse all other navigation bars')
+    .setDesc('Collapse navigation bars (excluding file explorer) to a small indicator until hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.collapseOtherNavHeaders)
       .onChange((value) => {
-        plugin.settings.collapseFileExplorerButtons = value;
+        plugin.settings.collapseOtherNavHeaders = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
@@ -211,6 +255,18 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
     .addToggle(toggle => toggle.setValue(plugin.settings.autoHideVaultSwitcher)
       .onChange((value) => {
         plugin.settings.autoHideVaultSwitcher = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Auto-hide settings button
+  new Setting(containerEl)
+    .setName('Auto-hide settings button')
+    .setDesc('Hide settings button until hover. Elegantly reveals on hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideSettingsButton)
+      .onChange((value) => {
+        plugin.settings.autoHideSettingsButton = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })

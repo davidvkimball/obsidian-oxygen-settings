@@ -5,6 +5,7 @@
 import { PluginContext } from '../types';
 import { COMMAND_IDS, LIGHT_STYLES, DARK_STYLES } from '../constants';
 import { setTheme, getVaultConfig, setVaultConfig } from '../types/obsidian-extensions';
+import { updateLightScheme, updateDarkScheme } from './scheme-commands';
 
 export function registerStyleCommands(plugin: PluginContext): void {
   // Cycle dark styles
@@ -39,7 +40,9 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use light mode (default)',
     callback: () => {
       plugin.settings.lightStyle = 'minimal-light';
+      plugin.settings.lightScheme = 'minimal-oxygen-light';
       void plugin.saveData(plugin.settings);
+      updateLightScheme(plugin);
       updateLightStyle(plugin);
     }
   });
@@ -80,7 +83,9 @@ export function registerStyleCommands(plugin: PluginContext): void {
     name: 'Use dark mode (default)',
     callback: () => {
       plugin.settings.darkStyle = 'minimal-dark';
+      plugin.settings.darkScheme = 'minimal-oxygen-dark';
       void plugin.saveData(plugin.settings);
+      updateDarkScheme(plugin);
       updateDarkStyle(plugin);
     }
   });

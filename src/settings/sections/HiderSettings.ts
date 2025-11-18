@@ -13,7 +13,9 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
   const hiderSectionInfo = hiderSection.createEl('div', {cls: 'setting-item-info'});
   hiderSectionInfo.createEl('div', {text: 'Hider', cls: 'setting-item-name'});
 
+  // ========================================
   // Focus mode
+  // ========================================
   new Setting(containerEl)
     .setName('Focus mode')
     .setDesc('Hide tab bar and status bar, hover to display. Can be toggled via hotkey.')
@@ -25,6 +27,11 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
+  containerEl.createEl('br');
+
+  // ========================================
+  // Auto-hide features (Meridian style)
+  // ========================================
   // Auto-hide title bar
   new Setting(containerEl)
     .setName('Auto-hide title bar')
@@ -80,25 +87,42 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
         plugin.refresh();
       }));
 
-  // Hide tab bar
+  // Auto-hide vault switcher
   new Setting(containerEl)
-    .setName('Hide tab bar')
-    .setDesc('Hides the tab container at the top of the window.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.hideTabs)
+    .setName('Auto-hide vault switcher')
+    .setDesc('Hide vault switcher until hover. Does not work when "Hide vault name" is enabled.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideVaultSwitcher)
       .onChange((value) => {
-        plugin.settings.hideTabs = value;
+        plugin.settings.autoHideVaultSwitcher = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
 
-  // Hide status bar
+  // Auto-hide settings button
   new Setting(containerEl)
-    .setName('Hide status bar')
-    .setDesc('Hides word count, character count and backlink count.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.hideStatus)
+    .setName('Auto-hide settings button')
+    .setDesc('Hide settings button until hover. Elegantly reveals on hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideSettingsButton)
       .onChange((value) => {
-        plugin.settings.hideStatus = value;
+        plugin.settings.autoHideSettingsButton = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  containerEl.createEl('br');
+
+  // ========================================
+  // Vault profile area
+  // ========================================
+  // Hide help button
+  new Setting(containerEl)
+    .setName('Hide help button')
+    .setDesc('Hides the help button in the vault profile area.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideHelpButton)
+      .onChange((value) => {
+        plugin.settings.hideHelpButton = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
@@ -111,6 +135,64 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
     .addToggle(toggle => toggle.setValue(plugin.settings.hideVault)
       .onChange((value) => {
         plugin.settings.hideVault = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  containerEl.createEl('br');
+
+  // ========================================
+  // Navigation & tabs
+  // ========================================
+  // Hide tab bar
+  new Setting(containerEl)
+    .setName('Hide tab bar')
+    .setDesc('Hides the tab container at the top of the window.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideTabs)
+      .onChange((value) => {
+        plugin.settings.hideTabs = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide file explorer buttons
+  new Setting(containerEl)
+    .setName('Hide file explorer buttons')
+    .setDesc('Hides buttons at the top of file explorer (new file, new folder, etc).')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideFileNavButtons)
+      .onChange((value) => {
+        plugin.settings.hideFileNavButtons = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Collapse other nav headers
+  new Setting(containerEl)
+    .setName('Collapse all other navigation bars')
+    .setDesc('Collapse navigation bars (excluding file explorer) to a small indicator until hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.collapseOtherNavHeaders)
+      .onChange((value) => {
+        plugin.settings.collapseOtherNavHeaders = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  containerEl.createEl('br');
+
+  // ========================================
+  // Status & UI elements
+  // ========================================
+  // Hide status bar
+  new Setting(containerEl)
+    .setName('Hide status bar')
+    .setDesc('Hides word count, character count and backlink count.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideStatus)
+      .onChange((value) => {
+        plugin.settings.hideStatus = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
@@ -152,42 +234,11 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
-  // Hide file explorer buttons
-  new Setting(containerEl)
-    .setName('Hide file explorer buttons')
-    .setDesc('Hides buttons at the top of file explorer (new file, new folder, etc).')
-    .addToggle(toggle => toggle.setValue(plugin.settings.hideFileNavButtons)
-      .onChange((value) => {
-        plugin.settings.hideFileNavButtons = value;
-        void plugin.saveData(plugin.settings);
-        plugin.refresh();
-      })
-    );
+  containerEl.createEl('br');
 
-  // Collapse other nav headers
-  new Setting(containerEl)
-    .setName('Collapse all other navigation bars')
-    .setDesc('Collapse navigation bars (excluding file explorer) to a small indicator until hover.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.collapseOtherNavHeaders)
-      .onChange((value) => {
-        plugin.settings.collapseOtherNavHeaders = value;
-        void plugin.saveData(plugin.settings);
-        plugin.refresh();
-      })
-    );
-
-  // Hide instructions
-  new Setting(containerEl)
-    .setName('Hide instructions')
-    .setDesc('Hides instructional tips in modals.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.hideInstructions)
-      .onChange((value) => {
-        plugin.settings.hideInstructions = value;
-        void plugin.saveData(plugin.settings);
-        plugin.refresh();
-      })
-    );
-
+  // ========================================
+  // Search
+  // ========================================
   // Hide search suggestions
   new Setting(containerEl)
     .setName('Hide search suggestions')
@@ -212,6 +263,11 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
+  containerEl.createEl('br');
+
+  // ========================================
+  // Properties
+  // ========================================
   // Hide properties in Reading view
   new Setting(containerEl)
     .setName('Hide properties in Reading view')
@@ -248,40 +304,20 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
-  // Auto-hide vault switcher
-  new Setting(containerEl)
-    .setName('Auto-hide vault switcher')
-    .setDesc('Hide vault switcher until hover. Does not work when "Hide vault name" is enabled.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideVaultSwitcher)
-      .onChange((value) => {
-        plugin.settings.autoHideVaultSwitcher = value;
-        void plugin.saveData(plugin.settings);
-        plugin.refresh();
-      })
-    );
+  containerEl.createEl('br');
 
-  // Auto-hide settings button
+  // ========================================
+  // Other
+  // ========================================
+  // Hide instructions
   new Setting(containerEl)
-    .setName('Auto-hide settings button')
-    .setDesc('Hide settings button until hover. Elegantly reveals on hover.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideSettingsButton)
+    .setName('Hide instructions')
+    .setDesc('Hides instructional tips in modals.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideInstructions)
       .onChange((value) => {
-        plugin.settings.autoHideSettingsButton = value;
-        void plugin.saveData(plugin.settings);
-        plugin.refresh();
-      })
-    );
-
-  // Hide help button
-  new Setting(containerEl)
-    .setName('Hide help button')
-    .setDesc('Hides the help button in the vault profile area.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.hideHelpButton)
-      .onChange((value) => {
-        plugin.settings.hideHelpButton = value;
+        plugin.settings.hideInstructions = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
     );
 }
-

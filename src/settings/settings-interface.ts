@@ -57,6 +57,7 @@ export interface MinimalSettings {
   hideVault: boolean;
   hidePropertiesHeading: boolean;
   hideAddPropertyButton: boolean;
+  deemphasizeProperties: boolean;
   autoHideVaultSwitcher: boolean;
   hideHelpButton: boolean;
   autoHideSettingsButton: boolean;
@@ -66,6 +67,7 @@ export interface MinimalSettings {
   autoHideLeftTabHeaders: boolean;
   autoHideRightTabHeaders: boolean;
   collapseOtherNavHeaders: boolean;
+  autoCollapseRibbon: boolean;
   // Animation settings
   animationPersonality: 'default' | 'playful' | 'off';
   animationSpeed: number; // 0-2, default 1
@@ -124,6 +126,7 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   hideVault: false,
   hidePropertiesHeading: false,
   hideAddPropertyButton: false,
+  deemphasizeProperties: false,
   autoHideVaultSwitcher: false,
   hideHelpButton: false,
   autoHideSettingsButton: false,
@@ -133,6 +136,7 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   autoHideLeftTabHeaders: false,
   autoHideRightTabHeaders: false,
   collapseOtherNavHeaders: false,
+  autoCollapseRibbon: false,
   // Animation settings
   animationPersonality: 'default',
   animationSpeed: 1,

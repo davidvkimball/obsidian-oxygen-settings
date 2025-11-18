@@ -159,6 +159,7 @@ export class StyleManagerImpl {
     document.body.classList.toggle('hider-vault', this.plugin.settings.hideVault);
     document.body.classList.toggle('metadata-heading-off', this.plugin.settings.hidePropertiesHeading);
     document.body.classList.toggle('metadata-add-property-off', this.plugin.settings.hideAddPropertyButton);
+    document.body.classList.toggle('deemphasize-properties', this.plugin.settings.deemphasizeProperties);
     document.body.classList.toggle('auto-hide-vault-switcher', this.plugin.settings.autoHideVaultSwitcher);
     document.body.classList.toggle('auto-hide-settings-button', this.plugin.settings.autoHideSettingsButton);
     document.body.classList.toggle('hider-help-button', this.plugin.settings.hideHelpButton);
@@ -166,6 +167,7 @@ export class StyleManagerImpl {
     document.body.classList.toggle('auto-hide-other-nav-headers', this.plugin.settings.autoHideOtherNavHeaders);
     document.body.classList.toggle('auto-hide-left-tab-headers', this.plugin.settings.autoHideLeftTabHeaders);
     document.body.classList.toggle('auto-hide-right-tab-headers', this.plugin.settings.autoHideRightTabHeaders);
+    document.body.classList.toggle('auto-collapse-ribbon', this.plugin.settings.autoCollapseRibbon);
     document.body.classList.toggle('collapse-other-nav-headers', this.plugin.settings.collapseOtherNavHeaders);
 
     // Add width classes
@@ -416,6 +418,7 @@ export class StyleManagerImpl {
       'hider-vault',
       'metadata-heading-off',
       'metadata-add-property-off',
+      'deemphasize-properties',
       'auto-hide-vault-switcher',
       'auto-hide-settings-button',
       'hider-help-button',
@@ -423,6 +426,7 @@ export class StyleManagerImpl {
       'auto-hide-other-nav-headers',
       'auto-hide-left-tab-headers',
       'auto-hide-right-tab-headers',
+      'auto-collapse-ribbon',
       'collapse-other-nav-headers',
       'animations-refined',
       'animations-default',

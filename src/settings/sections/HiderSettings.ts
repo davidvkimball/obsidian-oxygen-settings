@@ -87,6 +87,17 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
         plugin.refresh();
       }));
 
+  // Auto-collapse ribbon
+  new Setting(containerEl)
+    .setName('Auto-collapse ribbon')
+    .setDesc('Collapse the left ribbon to a thin strip until hover. Elegantly expands on hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoCollapseRibbon)
+      .onChange((value) => {
+        plugin.settings.autoCollapseRibbon = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      }));
+
   // Auto-hide vault switcher
   new Setting(containerEl)
     .setName('Auto-hide vault switcher')
@@ -299,6 +310,18 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
     .addToggle(toggle => toggle.setValue(plugin.settings.hideAddPropertyButton)
       .onChange((value) => {
         plugin.settings.hideAddPropertyButton = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Deemphasize properties
+  new Setting(containerEl)
+    .setName('Deemphasize properties')
+    .setDesc('Softens visual prominence of file properties. They become more visible on hover.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.deemphasizeProperties)
+      .onChange((value) => {
+        plugin.settings.deemphasizeProperties = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })

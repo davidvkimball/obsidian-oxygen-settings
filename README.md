@@ -29,3 +29,4 @@ Settings plugin for [Oxygen Theme](https://github.com/davidvkimball/obsidian-oxy
 - [Hider](https://github.com/kepano/obsidian-hider) - most "hide" features in this plugin are based on this plugin.
 - [Baseline](https://github.com/aaaaalexis/obsidian-baseline) theme for the animation effects and some feature ideas.
 - [Meridian](https://github.com/mvahaste/meridian) theme for the auto-hide animations for the file explorer icons and nav bar auto-hide reveal.
+- [Adrenaline](github.com/Spekulucius/obsidian-adrenaline) theme for the auto-collapsing sidebar treatment.

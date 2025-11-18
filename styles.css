@@ -1068,6 +1068,19 @@ body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-side
 	display: none;
 }
 
+/* Deemphasize properties (Meridian style) */
+body:not(.is-mobile).deemphasize-properties .metadata-container {
+	filter: grayscale(1);
+	opacity: 0.3;
+	transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+body:not(.is-mobile).deemphasize-properties .metadata-container:hover,
+body:not(.is-mobile).deemphasize-properties .metadata-container:focus-within {
+	filter: grayscale(0);
+	opacity: 1;
+}
+
 /* Auto-hide vault switcher (adapted from Baseline theme) */
 /* Only works when hide-vault is not enabled */
 body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile {
@@ -1254,6 +1267,68 @@ body:not(.is-mobile).auto-hide-right-tab-headers .mod-right-split .mod-top-right
 
 body:not(.is-mobile).auto-hide-right-tab-headers .mod-right-split .mod-top-right-space .workspace-tab-header-container-inner:hover {
 	opacity: 1;
+}
+
+/* Auto-collapse ribbon (Adrenaline style - collapses to thin strip until hover) */
+body:not(.is-mobile).auto-collapse-ribbon .workspace-ribbon.side-dock-ribbon.mod-left {
+	flex-basis: 20px;
+	transition: flex-basis 0.5s ease;
+	background: var(--background-secondary) !important;
+}
+
+body:not(.is-mobile).auto-collapse-ribbon .workspace-ribbon.side-dock-ribbon.mod-left:hover {
+	flex-basis: 44px;
+	transition: flex-basis 0.1s ease;
+	background: var(--background-secondary) !important;
+}
+
+/* Collapse the :before pseudo-element to match ribbon width */
+body:not(.is-mobile).auto-collapse-ribbon .workspace-ribbon.mod-left:before {
+	width: 20px !important;
+	transition: width 0.5s ease;
+	background-color: var(--background-secondary) !important;
+}
+
+body:not(.is-mobile).auto-collapse-ribbon .workspace-ribbon.mod-left:hover:before {
+	width: 44px !important;
+	transition: width 0.1s ease;
+	background-color: var(--background-secondary) !important;
+}
+
+body:not(.is-mobile).auto-collapse-ribbon .workspace-ribbon.side-dock-ribbon.mod-left .side-dock-ribbon-action {
+	width: 0px;
+	height: 27.3px;
+	padding: 3px;
+	transition: width 0.5s ease, background 0.2s ease, color 0.01s ease;
+}
+
+body:not(.is-mobile).auto-collapse-ribbon .workspace-ribbon.side-dock-ribbon.mod-left:hover .side-dock-ribbon-action {
+	width: 33.333px;
+	transition: width 0.1s ease, background 0.2s ease, color 0.1s ease;
+}
+
+/* Sidebar toggle button matches ribbon collapse state */
+body:not(.is-mobile):not(.mod-macos).auto-collapse-ribbon .workspace-ribbon.side-dock-ribbon.mod-left .sidebar-toggle-button.mod-left {
+	width: 20px;
+	transition: width 0.5s ease;
+	padding-top: 6px !important;
+	padding-bottom: 6px !important;
+}
+
+body:not(.is-mobile):not(.mod-macos).auto-collapse-ribbon .workspace-ribbon.side-dock-ribbon.mod-left:hover .sidebar-toggle-button.mod-left {
+	width: 44px !important;
+	transition: width 0.1s ease;
+}
+
+body:not(.is-mobile):not(.mod-macos).auto-collapse-ribbon .workspace-ribbon.side-dock-ribbon.mod-left .sidebar-toggle-button.mod-left > .clickable-icon {
+	width: 0px;
+	padding: 3px;
+	transition: width 0.5s ease;
+}
+
+body:not(.is-mobile):not(.mod-macos).auto-collapse-ribbon .workspace-ribbon.side-dock-ribbon.mod-left:hover .sidebar-toggle-button.mod-left > .clickable-icon {
+	width: 33.333px;
+	transition: width 0.1s ease;
 }
 
 /* Collapse other nav headers (excluding file explorer) - adapted from Baseline theme */

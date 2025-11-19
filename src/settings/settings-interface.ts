@@ -47,7 +47,9 @@ export interface MinimalSettings {
   hideTabs: boolean;
   hideStatus: boolean;
   hideScroll: boolean;
-  hideSidebarButtons: boolean;
+  hideSidebarButtons: boolean; // Deprecated: use hideLeftSidebarButton and hideRightSidebarButton instead
+  hideLeftSidebarButton: boolean;
+  hideRightSidebarButton: boolean;
   hideTooltips: boolean;
   hideFileNavButtons: boolean;
   hideSearchSuggestions: boolean;
@@ -146,7 +148,9 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   hideTabs: false,
   hideStatus: false,
   hideScroll: false,
-  hideSidebarButtons: false,
+  hideSidebarButtons: false, // Deprecated: kept for backward compatibility
+  hideLeftSidebarButton: false,
+  hideRightSidebarButton: false,
   hideTooltips: false,
   hideFileNavButtons: false,
   hideSearchSuggestions: false,

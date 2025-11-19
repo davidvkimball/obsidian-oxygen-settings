@@ -149,7 +149,12 @@ export class StyleManagerImpl {
     document.body.classList.toggle('hider-status', this.plugin.settings.hideStatus);
     document.body.classList.toggle('hider-tabs', this.plugin.settings.hideTabs);
     document.body.classList.toggle('hider-scroll', this.plugin.settings.hideScroll);
+    // Support both old combined setting and new separate settings
+    const hideLeft = this.plugin.settings.hideLeftSidebarButton ?? this.plugin.settings.hideSidebarButtons;
+    const hideRight = this.plugin.settings.hideRightSidebarButton ?? this.plugin.settings.hideSidebarButtons;
     document.body.classList.toggle('hider-sidebar-buttons', this.plugin.settings.hideSidebarButtons);
+    document.body.classList.toggle('hider-left-sidebar-button', hideLeft);
+    document.body.classList.toggle('hider-right-sidebar-button', hideRight);
     document.body.classList.toggle('hider-tooltips', this.plugin.settings.hideTooltips);
     document.body.classList.toggle('hider-search-suggestions', this.plugin.settings.hideSearchSuggestions);
     document.body.classList.toggle('hider-file-nav-header', this.plugin.settings.hideFileNavButtons);
@@ -452,6 +457,8 @@ export class StyleManagerImpl {
       'hider-tabs',
       'hider-scroll',
       'hider-sidebar-buttons',
+      'hider-left-sidebar-button',
+      'hider-right-sidebar-button',
       'hider-tooltips',
       'hider-search-suggestions',
       'hider-file-nav-header',

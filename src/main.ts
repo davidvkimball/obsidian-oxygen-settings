@@ -152,6 +152,17 @@ export default class MinimalTheme extends Plugin {
     if (!this.settings.animationPersonality) {
       this.settings.animationPersonality = 'default';
     }
+    
+    // Migration for sidebar buttons: convert old hideSidebarButtons to separate left/right settings
+    if (loadedData && loadedData.hideSidebarButtons !== undefined) {
+      // Only migrate if new settings haven't been set yet
+      if (loadedData.hideLeftSidebarButton === undefined && loadedData.hideRightSidebarButton === undefined) {
+        this.settings.hideLeftSidebarButton = loadedData.hideSidebarButtons;
+        this.settings.hideRightSidebarButton = loadedData.hideSidebarButtons;
+        // Save migrated settings
+        await this.saveData(this.settings);
+      }
+    }
   }
 
   async saveSettings() {

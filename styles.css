@@ -1006,11 +1006,22 @@ body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-side
 	display: none;
 }
 
+/* Hide left sidebar button */
+.hider-left-sidebar-button .sidebar-toggle-button.mod-left {
+	display: none;
+}
+
+/* Hide right sidebar button */
+.hider-right-sidebar-button .sidebar-toggle-button.mod-right {
+	display: none;
+}
+
 .hider-sidebar-buttons.mod-macos.is-hidden-frameless:not(.is-popout-window) .workspace .workspace-tabs.mod-top-right-space .workspace-tab-header-container {
 	padding-right: 4px;
 }
 
-.hider-sidebar-buttons.mod-macos {
+.hider-sidebar-buttons.mod-macos,
+.hider-left-sidebar-button.mod-macos {
 	--frame-left-space: 60px;
 }
 

@@ -245,13 +245,25 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
-  // Hide sidebar toggle buttons
+  // Hide left sidebar toggle button
   new Setting(containerEl)
-    .setName('Hide sidebar toggle buttons')
-    .setDesc('Hides both sidebar buttons.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.hideSidebarButtons)
+    .setName('Hide left sidebar toggle button')
+    .setDesc('Hides the left sidebar toggle button.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideLeftSidebarButton)
       .onChange((value) => {
-        plugin.settings.hideSidebarButtons = value;
+        plugin.settings.hideLeftSidebarButton = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide right sidebar toggle button
+  new Setting(containerEl)
+    .setName('Hide right sidebar toggle button')
+    .setDesc('Hides the right sidebar toggle button.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideRightSidebarButton)
+      .onChange((value) => {
+        plugin.settings.hideRightSidebarButton = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })

@@ -170,6 +170,49 @@ export class StyleManagerImpl {
     document.body.classList.toggle('auto-collapse-ribbon', this.plugin.settings.autoCollapseRibbon);
     document.body.classList.toggle('collapse-other-nav-headers', this.plugin.settings.collapseOtherNavHeaders);
 
+    // Tab icons
+    document.body.classList.toggle('hide-tab-list-icon', this.plugin.settings.hideTabListIcon);
+    document.body.classList.toggle('hide-new-tab-icon', this.plugin.settings.hideNewTabIcon);
+    document.body.classList.toggle('hide-tab-close-button', this.plugin.settings.hideTabCloseButton);
+
+    // Desktop hide buttons
+    document.body.classList.toggle('hide-button-new-note', this.plugin.settings.hideButtonNewNote);
+    document.body.classList.toggle('hide-button-new-folder', this.plugin.settings.hideButtonNewFolder);
+    document.body.classList.toggle('hide-button-sort-order', this.plugin.settings.hideButtonSortOrder);
+    document.body.classList.toggle('hide-button-auto-reveal', this.plugin.settings.hideButtonAutoReveal);
+    document.body.classList.toggle('hide-button-collapse-all', this.plugin.settings.hideButtonCollapseAll);
+    document.body.classList.toggle('hide-button-reading-mode', this.plugin.settings.hideButtonReadingMode);
+    document.body.classList.toggle('hide-button-search-settings', this.plugin.settings.hideButtonSearchSettings);
+
+    // Mobile hide icons
+    document.body.classList.toggle('hide-icon-mobile-chevrons', this.plugin.settings.hideIconMobileChevrons);
+
+    // Mobile hide buttons
+    document.body.classList.toggle('hide-button-mobile-navbar-action-back', this.plugin.settings.hideButtonMobileNavbarActionBack);
+    document.body.classList.toggle('hide-button-mobile-navbar-action-forward', this.plugin.settings.hideButtonMobileNavbarActionForward);
+    document.body.classList.toggle('hide-button-mobile-navbar-action-quick-switcher', this.plugin.settings.hideButtonMobileNavbarActionQuickSwitcher);
+    document.body.classList.toggle('hide-button-mobile-navbar-action-new-tab', this.plugin.settings.hideButtonMobileNavbarActionNewTab);
+    document.body.classList.toggle('hide-button-mobile-navbar-action-tabs', this.plugin.settings.hideButtonMobileNavbarActionTabs);
+    document.body.classList.toggle('hide-button-mobile-navbar-action-menu', this.plugin.settings.hideButtonMobileNavbarActionMenu);
+
+    // Mobile swap button icon
+    document.body.classList.toggle('swap-mobile-new-tab-icon', this.plugin.settings.swapMobileNewTabIcon);
+
+    // Mobile navigation menu ordering
+    // Remove all existing order classes first
+    const orderClasses = Array.from(document.body.classList).filter(cls => 
+      cls.startsWith('order-navbar-button-nth-child-')
+    );
+    orderClasses.forEach(cls => document.body.classList.remove(cls));
+    
+    // Add the selected order classes
+    document.body.classList.add(this.plugin.settings.orderNavbarButton1);
+    document.body.classList.add(this.plugin.settings.orderNavbarButton2);
+    document.body.classList.add(this.plugin.settings.orderNavbarButton3);
+    document.body.classList.add(this.plugin.settings.orderNavbarButton4);
+    document.body.classList.add(this.plugin.settings.orderNavbarButton5);
+    document.body.classList.add(this.plugin.settings.orderNavbarButton6);
+
     // Add width classes
     document.body.addClass(
       this.plugin.settings.chartWidth,

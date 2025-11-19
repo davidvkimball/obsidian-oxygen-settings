@@ -68,6 +68,36 @@ export interface MinimalSettings {
   autoHideRightTabHeaders: boolean;
   collapseOtherNavHeaders: boolean;
   autoCollapseRibbon: boolean;
+  // Desktop hide buttons
+  hideButtonNewNote: boolean;
+  hideButtonNewFolder: boolean;
+  hideButtonSortOrder: boolean;
+  hideButtonAutoReveal: boolean;
+  hideButtonCollapseAll: boolean;
+  hideButtonReadingMode: boolean;
+  hideButtonSearchSettings: boolean;
+  // Tab icons
+  hideTabListIcon: boolean;
+  hideNewTabIcon: boolean;
+  hideTabCloseButton: boolean;
+  // Mobile hide icons
+  hideIconMobileChevrons: boolean;
+  // Mobile hide buttons
+  hideButtonMobileNavbarActionBack: boolean;
+  hideButtonMobileNavbarActionForward: boolean;
+  hideButtonMobileNavbarActionQuickSwitcher: boolean;
+  hideButtonMobileNavbarActionNewTab: boolean;
+  hideButtonMobileNavbarActionTabs: boolean;
+  hideButtonMobileNavbarActionMenu: boolean;
+  // Mobile swap button icon
+  swapMobileNewTabIcon: boolean;
+  // Mobile navigation menu ordering
+  orderNavbarButton1: string; // 'order-navbar-button-nth-child-1-1' to 'order-navbar-button-nth-child-1-6'
+  orderNavbarButton2: string; // 'order-navbar-button-nth-child-2-1' to 'order-navbar-button-nth-child-2-6'
+  orderNavbarButton3: string; // 'order-navbar-button-nth-child-3-1' to 'order-navbar-button-nth-child-3-6'
+  orderNavbarButton4: string; // 'order-navbar-button-nth-child-4-1' to 'order-navbar-button-nth-child-4-6'
+  orderNavbarButton5: string; // 'order-navbar-button-nth-child-5-1' to 'order-navbar-button-nth-child-5-6'
+  orderNavbarButton6: string; // 'order-navbar-button-nth-child-6-1' to 'order-navbar-button-nth-child-6-6'
   // Animation settings
   animationPersonality: 'default' | 'playful' | 'off';
   animationSpeed: number; // 0-2, default 1
@@ -137,6 +167,36 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   autoHideRightTabHeaders: false,
   collapseOtherNavHeaders: false,
   autoCollapseRibbon: false,
+  // Desktop hide buttons
+  hideButtonNewNote: false,
+  hideButtonNewFolder: false,
+  hideButtonSortOrder: false,
+  hideButtonAutoReveal: false,
+  hideButtonCollapseAll: false,
+  hideButtonReadingMode: false,
+  hideButtonSearchSettings: false,
+  // Tab icons
+  hideTabListIcon: false,
+  hideNewTabIcon: false,
+  hideTabCloseButton: false,
+  // Mobile hide icons
+  hideIconMobileChevrons: false,
+  // Mobile hide buttons
+  hideButtonMobileNavbarActionBack: false,
+  hideButtonMobileNavbarActionForward: false,
+  hideButtonMobileNavbarActionQuickSwitcher: false,
+  hideButtonMobileNavbarActionNewTab: false,
+  hideButtonMobileNavbarActionTabs: false,
+  hideButtonMobileNavbarActionMenu: false,
+  // Mobile swap button icon
+  swapMobileNewTabIcon: false,
+  // Mobile navigation menu ordering
+  orderNavbarButton1: 'order-navbar-button-nth-child-1-1',
+  orderNavbarButton2: 'order-navbar-button-nth-child-2-2',
+  orderNavbarButton3: 'order-navbar-button-nth-child-3-3',
+  orderNavbarButton4: 'order-navbar-button-nth-child-4-4',
+  orderNavbarButton5: 'order-navbar-button-nth-child-5-5',
+  orderNavbarButton6: 'order-navbar-button-nth-child-6-6',
   // Animation settings
   animationPersonality: 'default',
   animationSpeed: 1,

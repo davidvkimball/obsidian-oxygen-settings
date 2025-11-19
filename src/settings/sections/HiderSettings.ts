@@ -180,13 +180,37 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
-  // Collapse other nav headers
+  // Hide tab list icon
   new Setting(containerEl)
-    .setName('Collapse all other navigation bars')
-    .setDesc('Collapse navigation bars (excluding file explorer) to a small indicator until hover.')
-    .addToggle(toggle => toggle.setValue(plugin.settings.collapseOtherNavHeaders)
+    .setName('Hide tab list icon')
+    .setDesc('Hides the tab list icon. You can still access tabs via other methods.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideTabListIcon)
       .onChange((value) => {
-        plugin.settings.collapseOtherNavHeaders = value;
+        plugin.settings.hideTabListIcon = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide new tab icon
+  new Setting(containerEl)
+    .setName('Hide new tab icon')
+    .setDesc('Hides the new tab icon. You can still create new tabs with Ctrl+T (Cmd+T on Mac).')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideNewTabIcon)
+      .onChange((value) => {
+        plugin.settings.hideNewTabIcon = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide tab close button
+  new Setting(containerEl)
+    .setName('Hide tab close button')
+    .setDesc('Hides the close button on tabs. You can still close tabs with middle click or other methods.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideTabCloseButton)
+      .onChange((value) => {
+        plugin.settings.hideTabCloseButton = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       })
@@ -343,4 +367,328 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
         plugin.refresh();
       })
     );
+
+  containerEl.createEl('br');
+
+  // ========================================
+  // Desktop hide buttons
+  // ========================================
+  const desktopButtonsHeading = containerEl.createEl('div', {cls: 'setting-item setting-item-heading'});
+  const desktopButtonsHeadingInfo = desktopButtonsHeading.createEl('div', {cls: 'setting-item-info'});
+  desktopButtonsHeadingInfo.createEl('div', {text: 'Desktop hide buttons', cls: 'setting-item-name'});
+
+  // Hide "New note" button
+  new Setting(containerEl)
+    .setName('Hide "New note" button')
+    .setDesc('Hide "New note" button in navigation headers.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonNewNote)
+      .onChange((value) => {
+        plugin.settings.hideButtonNewNote = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "New folder" button
+  new Setting(containerEl)
+    .setName('Hide "New folder" button')
+    .setDesc('Hide "New folder" button in navigation headers.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonNewFolder)
+      .onChange((value) => {
+        plugin.settings.hideButtonNewFolder = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Sort order" button
+  new Setting(containerEl)
+    .setName('Hide "Sort order" button')
+    .setDesc('Hide "Sort order" button in navigation headers.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonSortOrder)
+      .onChange((value) => {
+        plugin.settings.hideButtonSortOrder = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Auto-reveal" button
+  new Setting(containerEl)
+    .setName('Hide "Auto-reveal" button')
+    .setDesc('Hide "Auto-reveal" button in navigation headers.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonAutoReveal)
+      .onChange((value) => {
+        plugin.settings.hideButtonAutoReveal = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Collapse all" button
+  new Setting(containerEl)
+    .setName('Hide "Collapse all" button')
+    .setDesc('Hide "Collapse all" button in navigation headers.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonCollapseAll)
+      .onChange((value) => {
+        plugin.settings.hideButtonCollapseAll = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Reading mode" button
+  new Setting(containerEl)
+    .setName('Hide "Reading mode" button')
+    .setDesc('Hide "Reading mode" button in view headers.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonReadingMode)
+      .onChange((value) => {
+        plugin.settings.hideButtonReadingMode = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Search settings" button
+  new Setting(containerEl)
+    .setName('Hide "Search settings" button')
+    .setDesc('Hide "Search settings" button in search pane.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonSearchSettings)
+      .onChange((value) => {
+        plugin.settings.hideButtonSearchSettings = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  containerEl.createEl('br');
+
+  // ========================================
+  // Mobile devices
+  // ========================================
+  const mobileHeading = containerEl.createEl('div', {cls: 'setting-item setting-item-heading'});
+  const mobileHeadingInfo = mobileHeading.createEl('div', {cls: 'setting-item-info'});
+  mobileHeadingInfo.createEl('div', {text: 'Mobile devices', cls: 'setting-item-name'});
+
+  // ========================================
+  // Mobile hide icons
+  // ========================================
+  const mobileIconsHeading = containerEl.createEl('div', {cls: 'setting-item setting-item-heading'});
+  const mobileIconsHeadingInfo = mobileIconsHeading.createEl('div', {cls: 'setting-item-info'});
+  mobileIconsHeadingInfo.createEl('div', {text: 'Hide icons', cls: 'setting-item-name'});
+
+  // Hide "Mobile chevrons" icon
+  new Setting(containerEl)
+    .setName('Hide "Mobile chevrons" icon')
+    .setDesc('Hide "Mobile chevrons" icon in mobile navbar.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideIconMobileChevrons)
+      .onChange((value) => {
+        plugin.settings.hideIconMobileChevrons = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  containerEl.createEl('br');
+
+  // ========================================
+  // Mobile hide buttons
+  // ========================================
+  const mobileButtonsHeading = containerEl.createEl('div', {cls: 'setting-item setting-item-heading'});
+  const mobileButtonsHeadingInfo = mobileButtonsHeading.createEl('div', {cls: 'setting-item-info'});
+  mobileButtonsHeadingInfo.createEl('div', {text: 'Hide buttons', cls: 'setting-item-name'});
+
+  // Hide "Navigate back" button
+  new Setting(containerEl)
+    .setName('Hide "Navigate back" button')
+    .setDesc('Hide "Navigate back" button in mobile navbar.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonMobileNavbarActionBack)
+      .onChange((value) => {
+        plugin.settings.hideButtonMobileNavbarActionBack = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Navigate forward" button
+  new Setting(containerEl)
+    .setName('Hide "Navigate forward" button')
+    .setDesc('Hide "Navigate forward" button in mobile navbar.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonMobileNavbarActionForward)
+      .onChange((value) => {
+        plugin.settings.hideButtonMobileNavbarActionForward = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Quick switcher" button
+  new Setting(containerEl)
+    .setName('Hide "Quick switcher" button')
+    .setDesc('Hide "Quick switcher" button in mobile navbar.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonMobileNavbarActionQuickSwitcher)
+      .onChange((value) => {
+        plugin.settings.hideButtonMobileNavbarActionQuickSwitcher = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "New tab" button
+  new Setting(containerEl)
+    .setName('Hide "New tab" button')
+    .setDesc('Hide "New tab" button in mobile navbar.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonMobileNavbarActionNewTab)
+      .onChange((value) => {
+        plugin.settings.hideButtonMobileNavbarActionNewTab = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Open tabs" button
+  new Setting(containerEl)
+    .setName('Hide "Open tabs" button')
+    .setDesc('Hide "Open tabs" button in mobile navbar.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonMobileNavbarActionTabs)
+      .onChange((value) => {
+        plugin.settings.hideButtonMobileNavbarActionTabs = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  // Hide "Ribbon menu" button
+  new Setting(containerEl)
+    .setName('Hide "Ribbon menu" button')
+    .setDesc('Hide "Ribbon menu" button in mobile navbar.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.hideButtonMobileNavbarActionMenu)
+      .onChange((value) => {
+        plugin.settings.hideButtonMobileNavbarActionMenu = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  containerEl.createEl('br');
+
+  // ========================================
+  // Mobile swap button icon
+  // ========================================
+  // Swap mobile new tab icon
+  new Setting(containerEl)
+    .setName('Swap mobile new tab icon')
+    .setDesc('Replace the new tab plus icon with a home button icon in mobile navbar.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.swapMobileNewTabIcon)
+      .onChange((value) => {
+        plugin.settings.swapMobileNewTabIcon = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
+  containerEl.createEl('br');
+
+  // ========================================
+  // Mobile navigation menu
+  // ========================================
+  const mobileNavMenuHeading = containerEl.createEl('div', {cls: 'setting-item setting-item-heading'});
+  const mobileNavMenuHeadingInfo = mobileNavMenuHeading.createEl('div', {cls: 'setting-item-info'});
+  mobileNavMenuHeadingInfo.createEl('div', {text: 'Mobile navigation menu', cls: 'setting-item-name'});
+
+  // Order navbar button 1 (Navigate back)
+  new Setting(containerEl)
+    .setName('"Navigate back" button position')
+    .setDesc('Select the position for the "Navigate back" button (default 1).')
+    .addDropdown(dropdown => {
+      for (let i = 1; i <= 6; i++) {
+        dropdown.addOption(`order-navbar-button-nth-child-1-${i}`, String(i));
+      }
+      dropdown.setValue(plugin.settings.orderNavbarButton1);
+      dropdown.onChange((value) => {
+        plugin.settings.orderNavbarButton1 = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      });
+    });
+
+  // Order navbar button 2 (Navigate forward)
+  new Setting(containerEl)
+    .setName('"Navigate forward" button position')
+    .setDesc('Select the position for the "Navigate forward" button (default 2).')
+    .addDropdown(dropdown => {
+      for (let i = 1; i <= 6; i++) {
+        dropdown.addOption(`order-navbar-button-nth-child-2-${i}`, String(i));
+      }
+      dropdown.setValue(plugin.settings.orderNavbarButton2);
+      dropdown.onChange((value) => {
+        plugin.settings.orderNavbarButton2 = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      });
+    });
+
+  // Order navbar button 3 (Quick switcher)
+  new Setting(containerEl)
+    .setName('"Quick switcher" button position')
+    .setDesc('Select the position for the "Quick switcher" button (default 3).')
+    .addDropdown(dropdown => {
+      for (let i = 1; i <= 6; i++) {
+        dropdown.addOption(`order-navbar-button-nth-child-3-${i}`, String(i));
+      }
+      dropdown.setValue(plugin.settings.orderNavbarButton3);
+      dropdown.onChange((value) => {
+        plugin.settings.orderNavbarButton3 = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      });
+    });
+
+  // Order navbar button 4 (New tab)
+  new Setting(containerEl)
+    .setName('"New tab" button position')
+    .setDesc('Select the position for the "New tab" button (default 4).')
+    .addDropdown(dropdown => {
+      for (let i = 1; i <= 6; i++) {
+        dropdown.addOption(`order-navbar-button-nth-child-4-${i}`, String(i));
+      }
+      dropdown.setValue(plugin.settings.orderNavbarButton4);
+      dropdown.onChange((value) => {
+        plugin.settings.orderNavbarButton4 = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      });
+    });
+
+  // Order navbar button 5 (Open tabs)
+  new Setting(containerEl)
+    .setName('"Open tabs" button position')
+    .setDesc('Select the position for the "Open tabs" button (default 5).')
+    .addDropdown(dropdown => {
+      for (let i = 1; i <= 6; i++) {
+        dropdown.addOption(`order-navbar-button-nth-child-5-${i}`, String(i));
+      }
+      dropdown.setValue(plugin.settings.orderNavbarButton5);
+      dropdown.onChange((value) => {
+        plugin.settings.orderNavbarButton5 = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      });
+    });
+
+  // Order navbar button 6 (Ribbon menu)
+  new Setting(containerEl)
+    .setName('"Ribbon menu" button position')
+    .setDesc('Select the position for the "Ribbon menu" button (default 6).')
+    .addDropdown(dropdown => {
+      for (let i = 1; i <= 6; i++) {
+        dropdown.addOption(`order-navbar-button-nth-child-6-${i}`, String(i));
+      }
+      dropdown.setValue(plugin.settings.orderNavbarButton6);
+      dropdown.onChange((value) => {
+        plugin.settings.orderNavbarButton6 = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      });
+    });
 }

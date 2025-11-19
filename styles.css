@@ -1396,3 +1396,261 @@ body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-
 	height: 0px;
 }
 
+/* ========================================
+   Tab Icons
+   ======================================== */
+
+.hide-tab-list-icon .workspace-tab-header-tab-list {
+	display: none;
+}
+
+.hide-new-tab-icon .workspace-tab-header-new-tab {
+	display: none;
+}
+
+.hide-tab-close-button .workspace-tab-header-inner-close-button {
+	display: none;
+}
+
+/* ========================================
+   Desktop Hide Buttons
+   ======================================== */
+
+.hide-button-new-note .clickable-icon.nav-action-button:has(.svg-icon.lucide-edit) {
+	display: none;
+}
+
+.hide-button-new-folder .clickable-icon.nav-action-button:has(.svg-icon.lucide-folder-plus) {
+	display: none;
+}
+
+.hide-button-sort-order .clickable-icon.nav-action-button:has(.svg-icon.lucide-sort-asc) {
+	display: none;
+}
+
+.hide-button-auto-reveal .clickable-icon.nav-action-button:has(.svg-icon.lucide-gallery-vertical) {
+	display: none;
+}
+
+.hide-button-collapse-all .clickable-icon.nav-action-button:has(.svg-icon.lucide-chevrons-up-down),
+.hide-button-collapse-all .clickable-icon.nav-action-button:has(.svg-icon.lucide-chevrons-down-up) {
+	display: none;
+}
+
+.hide-button-reading-mode .view-header .clickable-icon.view-action:has(.svg-icon.lucide-book-open),
+.hide-button-reading-mode .view-header .clickable-icon.view-action:has(.svg-icon.lucide-edit-3) {
+	display: none;
+}
+
+.hide-button-search-settings .search-row .clickable-icon:has(.svg-icon.lucide-sliders-horizontal) {
+	display: none;
+}
+
+/* ========================================
+   Mobile Hide Icons
+   ======================================== */
+
+.hide-icon-mobile-chevrons .mobile-navbar .navbar-action-flair:has(.svg-icon.lucide-chevrons-up-down) {
+	display: none;
+}
+
+/* ========================================
+   Mobile Hide Buttons
+   ======================================== */
+
+.hide-button-mobile-navbar-action-back .mobile-navbar-action.mobile-navbar-action-back {
+	display: none;
+}
+
+.hide-button-mobile-navbar-action-forward .mobile-navbar-action.mobile-navbar-action-forward {
+	display: none;
+}
+
+.hide-button-mobile-navbar-action-quick-switcher .mobile-navbar-action.mobile-navbar-action-quick-switcher {
+	display: none;
+}
+
+.hide-button-mobile-navbar-action-new-tab .mobile-navbar-action.mobile-navbar-action-new-tab {
+	display: none;
+}
+
+.hide-button-mobile-navbar-action-tabs .mobile-navbar-action.mobile-navbar-action-tabs {
+	display: none;
+}
+
+.hide-button-mobile-navbar-action-menu .mobile-navbar-action.mobile-navbar-action-menu {
+	display: none;
+}
+
+/* ========================================
+   Mobile Swap New Tab Icon
+   ======================================== */
+
+.swap-mobile-new-tab-icon .mobile-navbar-action-new-tab .clickable-icon svg {
+	display: none;
+}
+
+.swap-mobile-new-tab-icon .mobile-navbar-action-new-tab .clickable-icon::before {
+	content: '';
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background-color: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.025 21H6v-7H3v-1.5L12 3l9 9.5V14h-3v7h-4v-7h-3.975v7Z'/%3E%3C/svg%3E") no-repeat center / contain;
+	mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10.025 21H6v-7H3v-1.5L12 3l9 9.5V14h-3v7h-4v-7h-3.975v7Z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+/* ========================================
+   Mobile Navigation Menu Ordering
+   ======================================== */
+
+/* Button 1 (Navigate back) */
+.order-navbar-button-nth-child-1-1 .mobile-navbar-action:nth-child(1) {
+	order: 1;
+}
+
+.order-navbar-button-nth-child-1-2 .mobile-navbar-action:nth-child(1) {
+	order: 2;
+}
+
+.order-navbar-button-nth-child-1-3 .mobile-navbar-action:nth-child(1) {
+	order: 3;
+}
+
+.order-navbar-button-nth-child-1-4 .mobile-navbar-action:nth-child(1) {
+	order: 4;
+}
+
+.order-navbar-button-nth-child-1-5 .mobile-navbar-action:nth-child(1) {
+	order: 5;
+}
+
+.order-navbar-button-nth-child-1-6 .mobile-navbar-action:nth-child(1) {
+	order: 6;
+}
+
+/* Button 2 (Navigate forward) */
+.order-navbar-button-nth-child-2-1 .mobile-navbar-action:nth-child(2) {
+	order: 1;
+}
+
+.order-navbar-button-nth-child-2-2 .mobile-navbar-action:nth-child(2) {
+	order: 2;
+}
+
+.order-navbar-button-nth-child-2-3 .mobile-navbar-action:nth-child(2) {
+	order: 3;
+}
+
+.order-navbar-button-nth-child-2-4 .mobile-navbar-action:nth-child(2) {
+	order: 4;
+}
+
+.order-navbar-button-nth-child-2-5 .mobile-navbar-action:nth-child(2) {
+	order: 5;
+}
+
+.order-navbar-button-nth-child-2-6 .mobile-navbar-action:nth-child(2) {
+	order: 6;
+}
+
+/* Button 3 (Quick switcher) */
+.order-navbar-button-nth-child-3-1 .mobile-navbar-action:nth-child(3) {
+	order: 1;
+}
+
+.order-navbar-button-nth-child-3-2 .mobile-navbar-action:nth-child(3) {
+	order: 2;
+}
+
+.order-navbar-button-nth-child-3-3 .mobile-navbar-action:nth-child(3) {
+	order: 3;
+}
+
+.order-navbar-button-nth-child-3-4 .mobile-navbar-action:nth-child(3) {
+	order: 4;
+}
+
+.order-navbar-button-nth-child-3-5 .mobile-navbar-action:nth-child(3) {
+	order: 5;
+}
+
+.order-navbar-button-nth-child-3-6 .mobile-navbar-action:nth-child(3) {
+	order: 6;
+}
+
+/* Button 4 (New tab) */
+.order-navbar-button-nth-child-4-1 .mobile-navbar-action:nth-child(4) {
+	order: 1;
+}
+
+.order-navbar-button-nth-child-4-2 .mobile-navbar-action:nth-child(4) {
+	order: 2;
+}
+
+.order-navbar-button-nth-child-4-3 .mobile-navbar-action:nth-child(4) {
+	order: 3;
+}
+
+.order-navbar-button-nth-child-4-4 .mobile-navbar-action:nth-child(4) {
+	order: 4;
+}
+
+.order-navbar-button-nth-child-4-5 .mobile-navbar-action:nth-child(4) {
+	order: 5;
+}
+
+.order-navbar-button-nth-child-4-6 .mobile-navbar-action:nth-child(4) {
+	order: 6;
+}
+
+/* Button 5 (Open tabs) */
+.order-navbar-button-nth-child-5-1 .mobile-navbar-action:nth-child(5) {
+	order: 1;
+}
+
+.order-navbar-button-nth-child-5-2 .mobile-navbar-action:nth-child(5) {
+	order: 2;
+}
+
+.order-navbar-button-nth-child-5-3 .mobile-navbar-action:nth-child(5) {
+	order: 3;
+}
+
+.order-navbar-button-nth-child-5-4 .mobile-navbar-action:nth-child(5) {
+	order: 4;
+}
+
+.order-navbar-button-nth-child-5-5 .mobile-navbar-action:nth-child(5) {
+	order: 5;
+}
+
+.order-navbar-button-nth-child-5-6 .mobile-navbar-action:nth-child(5) {
+	order: 6;
+}
+
+/* Button 6 (Ribbon menu) */
+.order-navbar-button-nth-child-6-1 .mobile-navbar-action:nth-child(6) {
+	order: 1;
+}
+
+.order-navbar-button-nth-child-6-2 .mobile-navbar-action:nth-child(6) {
+	order: 2;
+}
+
+.order-navbar-button-nth-child-6-3 .mobile-navbar-action:nth-child(6) {
+	order: 3;
+}
+
+.order-navbar-button-nth-child-6-4 .mobile-navbar-action:nth-child(6) {
+	order: 4;
+}
+
+.order-navbar-button-nth-child-6-5 .mobile-navbar-action:nth-child(6) {
+	order: 5;
+}
+
+.order-navbar-button-nth-child-6-6 .mobile-navbar-action:nth-child(6) {
+	order: 6;
+}
+

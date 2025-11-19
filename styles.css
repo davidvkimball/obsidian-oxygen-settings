@@ -599,53 +599,63 @@ body.minimal-theme[style*="--nav-indentation-guide-width:0px"] .nav-folder-child
    Workspace Borders Enhancements
    ======================================== */
 
+.borders-none {
+	--divider-width:0px;
+	--tab-outline-width: 0px;
+}
+body.minimal-theme:is(.borders-none) .mod-root .workspace-tab-header-container:is(div, :hover){
+	--tab-outline-width: 0px;
+}
+
+/* ========================================
+   Enhanced Workspace Borders (Default)
+   ======================================== */
+
 /* Enhanced workspace borders - minimal rounded corners on main content area only */
-/* This matches the theme's default behavior when borders-on is NOT present */
-/* The theme handles this with body:not(.borders-on), but we add plugin-specific overrides here */
-/* Only apply when borders-on is NOT present AND borders-none is NOT present (enhanced mode) */
+/* This is now the DEFAULT behavior - applies when borders-on is NOT present */
 /* Based on Baseline's approach: use container-inner with margin-bottom: -1px */
 
 /* CRITICAL: Disable default Obsidian borders by setting CSS variables to 0 */
 /* This is how borders-none works - it sets these variables which Obsidian uses for borders */
-body.minimal-theme:not(.borders-on):not(.borders-none) {
-  --divider-width: 0px;
-  --tab-outline-width: 0px;
+body.minimal-theme:not(.borders-on) {
+	--divider-width: 0px;
+	--tab-outline-width: 0px;
 }
 
-body.minimal-theme:not(.borders-on):not(.borders-none) .mod-root .workspace-tab-header-container:is(div, :hover) {
-  --tab-outline-width: 0px;
+body.minimal-theme:not(.borders-on) .mod-root .workspace-tab-header-container:is(div, :hover) {
+	--tab-outline-width: 0px;
 }
 
 /* CRITICAL: Disable default borders on workspace-tab-container BEFORE applying enhanced border */
 /* This prevents the double border effect */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-container {
-  border: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-radius: 0 !important;
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-container {
+	border: none !important;
+	border-top: none !important;
+	border-bottom: none !important;
+	border-left: none !important;
+	border-right: none !important;
+	border-radius: 0 !important;
 }
 
 /* Now apply the enhanced border styling */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-container {
-  border: 1px solid var(--background-modifier-border) !important;
-  border-top: 1px solid var(--background-modifier-border) !important;
-  border-left: 1px solid var(--background-modifier-border) !important;
-  border-right: 1px solid var(--background-modifier-border) !important;
-  border-bottom: none !important;
-  border-radius: var(--radius-m) var(--radius-m) var(--radius-m) var(--radius-m) !important; /* All corners rounded */
-  margin: 0;
-  overflow: hidden;
-  position: relative;
-  box-sizing: border-box;
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-container {
+	border: 1px solid var(--background-modifier-border) !important;
+	border-top: 1px solid var(--background-modifier-border) !important;
+	border-left: 1px solid var(--background-modifier-border) !important;
+	border-right: 1px solid var(--background-modifier-border) !important;
+	border-bottom: none !important;
+	border-radius: var(--radius-m) var(--radius-m) var(--radius-m) var(--radius-m) !important; /* All corners rounded */
+	margin: 0;
+	overflow: hidden;
+	position: relative;
+	box-sizing: border-box;
 }
 
 /* Match the left sidebar background color behind the tabs */
 /* Set a CSS variable at workspace level to capture --background-secondary before any overrides */
-/* Only apply when borders-on is NOT present AND borders-none is NOT present (enhanced mode) */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace {
-  --enhanced-border-sidebar-bg: var(--background-secondary);
+/* Only apply when borders-on is NOT present */
+body.minimal-theme:not(.borders-on) .workspace {
+	--enhanced-border-sidebar-bg: var(--background-secondary);
 }
 
 /* Apply the background to main content tab header container (always, not just when right sidebar is open) */
@@ -654,102 +664,116 @@ body.minimal-theme:not(.borders-on):not(.borders-none) .workspace {
 /* Override the theme's --tab-container-background variable chain (which goes to --titlebar-background -> --bg1) */
 /* We want it to use --background-secondary (bg2) instead, matching the sidebar */
 /* Apply to both main content and right sidebar */
-body.minimal-theme:not(.borders-on):not(.borders-none):not(.colorful-frame) .workspace .mod-root .workspace-tabs.mod-top,
-body.minimal-theme:not(.borders-on):not(.borders-none):not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tabs.mod-top {
-  --tab-container-background: var(--enhanced-border-sidebar-bg) !important;
+body.minimal-theme:not(.borders-on):not(.colorful-frame) .workspace .mod-root .workspace-tabs.mod-top,
+body.minimal-theme:not(.borders-on):not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tabs.mod-top {
+	--tab-container-background: var(--enhanced-border-sidebar-bg) !important;
 }
 
-body.minimal-theme:not(.borders-on):not(.borders-none):not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container,
-body.minimal-theme:not(.borders-on):not(.borders-none):not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tab-header-container {
-  background-color: var(--enhanced-border-sidebar-bg) !important;
+body.minimal-theme:not(.borders-on):not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container,
+body.minimal-theme:not(.borders-on):not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tab-header-container {
+	background-color: var(--enhanced-border-sidebar-bg) !important;
 }
 
-body.minimal-theme:not(.borders-on):not(.borders-none):not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container {
-  border-top-left-radius: var(--radius-m);
-  border-top-right-radius: var(--radius-m);
+body.minimal-theme:not(.borders-on):not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container {
+	border-top-left-radius: var(--radius-m);
+	border-top-right-radius: var(--radius-m);
 }
 
 /* Override the workspace-split.mod-root background to match sidebar color */
 /* The theme sets it to --background-primary, but we want --background-secondary for seamless appearance */
-body.minimal-theme:not(.borders-on):not(.borders-none):not(.colorful-frame) .workspace .workspace-split.mod-root {
-  background-color: var(--enhanced-border-sidebar-bg) !important;
+body.minimal-theme:not(.borders-on):not(.colorful-frame) .workspace .workspace-split.mod-root {
+	background-color: var(--enhanced-border-sidebar-bg) !important;
 }
 
 /* Override the theme rule that makes right sidebar use --background-primary */
 /* When enhanced borders are active, make right sidebar match left sidebar color */
 /* The theme rule is: body:not(.sidebar-color) .mod-right-split { --background-secondary: var(--background-primary); } */
 /* Capture the original --background-secondary at workspace level before the override applies */
-body.minimal-theme:not(.borders-on):not(.borders-none):not(.sidebar-color) .workspace {
-  --enhanced-border-right-sidebar-bg: var(--background-secondary);
+body.minimal-theme:not(.borders-on):not(.sidebar-color) .workspace {
+	--enhanced-border-right-sidebar-bg: var(--background-secondary);
 }
 
 /* Override the theme's override to restore the original --background-secondary value */
-body.minimal-theme:not(.borders-on):not(.borders-none):not(.sidebar-color) .mod-right-split {
-  --background-secondary: var(--enhanced-border-right-sidebar-bg) !important;
+body.minimal-theme:not(.borders-on):not(.sidebar-color) .mod-right-split {
+	--background-secondary: var(--enhanced-border-right-sidebar-bg) !important;
 }
 
-/* Use container-inner with margin-bottom: -1px to overlap the container's top border */
+/* Use container-inner to overlap the container's top border */
 /* Only apply when borders-on is NOT present */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header-container-inner {
-  margin-bottom: -1px;
-  position: relative;
-  z-index: 1;
+/* The margin-bottom: -1px moves the container up to overlap the border */
+/* Add top: -1px to move the entire tab container up by 1px to compensate for border visual effect */
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-header-container-inner {
+	margin-bottom: -1px;
+	position: relative;
+	z-index: 1;
+}
+
+/* Compensate for margin-bottom: -1px by adjusting padding-top */
+/* Must have higher specificity than tabs-modern rule to override its padding */
+body.minimal-theme:not(.borders-on) .tabs-modern .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header-container-inner {
+	padding-top: 3px !important; /* Override tabs-modern's 2px padding-top */
+}
+
+/* Adjust tab height to match Minimal - reduce by 1px if tabs appear taller */
+body.minimal-theme:not(.borders-on) .tabs-modern .mod-root .workspace-tabs:not(.mod-stacked) {
+	--tab-height: calc(var(--header-height) - 15px); /* Reduced from 14px to 15px to make tabs 1px shorter */
 }
 
 /* TAB BORDERS ONLY - Isolated to just tab treatment */
 /* Active tab: visible border on left/right, extend down to cover container's top border */
 /* Set tab outline variables ONLY for active tabs (for curved corners) */
 /* Only apply when borders-on is NOT present */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active {
-  border-left-color: var(--background-modifier-border);
-  border-right-color: var(--background-modifier-border);
-  margin-bottom: -1px;
-  position: relative;
-  --tab-outline-width: 1px;
-  --tab-outline-color: var(--background-modifier-border);
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-header.is-active {
+	border-left-color: var(--background-modifier-border);
+	border-right-color: var(--background-modifier-border);
+	margin-bottom: -1px;
+	position: relative;
+	--tab-outline-width: 1px;
+	--tab-outline-color: var(--background-modifier-border);
 }
 
 /* Enhance ::before/::after to extend the border down to cover container's top border */
 /* Obsidian's box-shadow already includes the border on the curve via --tab-outline-width */
 /* We just need to extend it down to cover the container border */
 /* Only apply when borders-on is NOT present */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active::before,
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active::after {
-  /* Preserve Obsidian's existing box-shadow (includes border via --tab-outline-width) */
-  /* Then add extended border layers that continue down to cover container */
-  box-shadow: inset 0 0 0 var(--tab-outline-width) var(--tab-outline-color), 
-              0 0 0 calc(var(--tab-curve) * 4) var(--tab-background-active),
-              0 calc(var(--tab-curve) * 2) 0 var(--tab-outline-width) var(--tab-outline-color),
-              0 calc(var(--tab-curve) * 2 + 1px) 0 var(--tab-outline-width) var(--tab-outline-color),
-              0 calc(var(--tab-curve) * 2 + 2px) 0 var(--tab-outline-width) var(--tab-outline-color);
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-header.is-active::before,
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-header.is-active::after {
+	/* Preserve Obsidian's existing box-shadow (includes border via --tab-outline-width) */
+	/* Then add extended border layers that continue down to cover container */
+	box-shadow: inset 0 0 0 var(--tab-outline-width) var(--tab-outline-color), 
+	            0 0 0 calc(var(--tab-curve) * 4) var(--tab-background-active),
+	            0 calc(var(--tab-curve) * 2) 0 var(--tab-outline-width) var(--tab-outline-color),
+	            0 calc(var(--tab-curve) * 2 + 1px) 0 var(--tab-outline-width) var(--tab-outline-color),
+	            0 calc(var(--tab-curve) * 2 + 2px) 0 var(--tab-outline-width) var(--tab-outline-color);
 }
 
 /* Extend the active tab's background down to cover the container's top border */
 /* Use the inner element since tab's ::after is used by Obsidian for right curve */
 /* Only apply when borders-on is NOT present */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner {
-  position: relative;
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner {
+	position: relative;
 }
 
 /* Create extension to cover container border - use inner's ::after */
 /* Hide Obsidian's divider first, then add our extension */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: -1px;
-  right: -1px;
-  height: 2px;
-  background-color: var(--tab-background-active);
-  z-index: 1;
-  /* This extends below the curved corners to cover the container border */
-  /* Note: This replaces Obsidian's divider line on the active tab */
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner::after {
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	left: -1px;
+	right: -1px;
+	height: 2px;
+	background-color: var(--tab-background-active);
+	z-index: 1;
+	/* This extends below the curved corners to cover the container border */
+	/* Note: This replaces Obsidian's divider line on the active tab */
 }
 
 /* Make sure the tab header container doesn't interfere and allows proper positioning */
 /* Note: background-color is set above to match left sidebar, so we only set margin here */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header-container {
-  margin-bottom: 0;
+/* Only apply when borders-on is NOT present */
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-header-container {
+	margin-bottom: 0;
 }
 
 /* ========================================
@@ -794,118 +818,34 @@ body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.minimal-theme:not(.border
 }
 
 
-/* ========================================
-   Disable Enhanced Borders for "Default" and "None" modes
-   ======================================== */
-
-/* When borders-on is present (Default mode), remove ALL plugin tab styling */
-/* Let Obsidian's completely default styling work - don't interfere at all */
-/* The theme's body.borders-on rules handle disabling enhanced borders */
-/* We only reset background colors and CSS variables that were changed by enhanced borders */
-
-/* Restore Obsidian's default tab outline width (the theme sets it to 0 for enhanced borders) */
-/* This ensures the border-bottom on tab-header-container shows properly */
-body.minimal-theme.borders-on {
-  --tab-outline-width: 1px !important;
-  --divider-width: 1px !important;
-}
-
-body.minimal-theme.borders-on .mod-root .workspace-tab-header-container:is(div, :hover) {
-  --tab-outline-width: 1px !important;
-}
-
-/* Override the theme's margin-bottom: 0 on tab-header-container-inner when borders-on is active */
-/* The theme sets margin-bottom: 0 which causes the border-bottom to show as a line under the tab */
-/* We need to set it to a negative value to overlap the border, similar to enhanced borders but for default */
-body.minimal-theme.borders-on .workspace .mod-root .workspace-tab-header-container-inner {
-  margin-bottom: -1px !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* Reset background colors when borders-on is active - restore Obsidian defaults */
-/* Only reset what was changed by enhanced borders, don't touch tab styling */
-body.minimal-theme.borders-on:not(.colorful-frame) .workspace .mod-root .workspace-tabs.mod-top,
-body.minimal-theme.borders-on:not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tabs.mod-top {
-  --tab-container-background: var(--titlebar-background) !important;
-}
-
-body.minimal-theme.borders-on:not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container,
-body.minimal-theme.borders-on:not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tab-header-container {
-  background-color: var(--tab-container-background) !important;
-}
-
-body.minimal-theme.borders-on:not(.colorful-frame) .workspace .workspace-split.mod-root {
-  background-color: var(--background-primary) !important;
-}
-
-/* Restore right sidebar to use primary background (Obsidian default) */
-body.minimal-theme.borders-on:not(.sidebar-color) .workspace {
-  --enhanced-border-sidebar-bg: unset !important;
-  --enhanced-border-right-sidebar-bg: unset !important;
-}
-
-body.minimal-theme.borders-on:not(.sidebar-color) .mod-right-split {
-  --background-secondary: var(--background-primary) !important;
-}
-
-/* Remove bottom rounded corners for Default mode (theme may apply them for Enhanced) */
+/* Disable enhanced borders when borders-on is explicitly set (restore original border behavior) */
 body.minimal-theme.borders-on .workspace .mod-root .workspace-tab-container {
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
+	border: none !important;
+	border-radius: 0 !important;
 }
 
-/* When borders-none is present (None mode), disable all enhanced border styling */
-/* The theme sets CSS variables to 0, but we also need to disable the enhanced border CSS */
+body.minimal-theme.borders-on .workspace .mod-root .workspace-tab-header-container-inner {
+	margin-bottom: 0 !important;
+}
+
+body.minimal-theme.borders-on .workspace .mod-root .workspace-tab-header {
+	border: none !important;
+}
+
+/* Disable enhanced borders when borders-none is active */
 body.minimal-theme.borders-none .workspace .mod-root .workspace-tab-container {
-  border: none !important;
-  border-radius: 0 !important;
-  margin: 0 !important;
+	border: none !important;
+	border-radius: 0 !important;
 }
 
 body.minimal-theme.borders-none .workspace .mod-root .workspace-tab-header-container-inner {
-  margin-bottom: 0 !important;
+	margin-bottom: 0 !important;
 }
 
 body.minimal-theme.borders-none .workspace .mod-root .workspace-tab-header {
-  border: none !important;
-  border-radius: 0 !important;
-  margin-bottom: 0 !important;
+	border: none !important;
 }
 
-body.minimal-theme.borders-none .workspace .mod-root .workspace-tab-header.is-active {
-  border: none !important;
-  border-radius: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-body.minimal-theme.borders-none .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner {
-  border-radius: 0 !important;
-}
-
-body.minimal-theme.borders-none .workspace .mod-root .workspace-tab-header.is-active::after {
-  display: none !important;
-}
-
-/* Reset background colors when borders-none is active */
-body.minimal-theme.borders-none:not(.colorful-frame) .workspace .mod-root .workspace-tabs.mod-top,
-body.minimal-theme.borders-none:not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tabs.mod-top {
-  --tab-container-background: var(--titlebar-background) !important;
-}
-
-body.minimal-theme.borders-none:not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container,
-body.minimal-theme.borders-none:not(.colorful-frame) .workspace .mod-sidedock.mod-right-split .workspace-tab-header-container {
-  background-color: var(--tab-container-background) !important;
-  border-radius: 0 !important;
-}
-
-body.minimal-theme.borders-none:not(.colorful-frame) .workspace .workspace-split.mod-root {
-  background-color: var(--background-primary) !important;
-}
-
-body.minimal-theme.borders-none:not(.sidebar-color) .mod-right-split {
-  --background-secondary: var(--background-primary) !important;
-}
 
 /* ========================================
    Inline Style Replacements

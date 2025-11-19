@@ -18,6 +18,7 @@ export class StyleManagerImpl {
   private cssObserver: MutationObserver | null = null;
   private customPresetCSS: CustomPresetCSS;
   private tabObserver: MutationObserver | null = null;
+  private sidebarObserver: MutationObserver | null = null;
 
   constructor(plugin: PluginContext) {
     this.plugin = plugin;
@@ -568,6 +569,7 @@ export class StyleManagerImpl {
 
   /**
    * Setup observer to watch for tab changes and toggle single-tab class
+   * Also checks sidebar states to conditionally hide view-header-left and view-actions
    */
   private setupTabObserver(): void {
     if (this.tabObserver) {
@@ -582,13 +584,101 @@ export class StyleManagerImpl {
           const tabHeaders = workspaceTabs.querySelectorAll('.workspace-tab-header');
           const hasSingleTab = tabHeaders.length === 1;
           
+          // Check sidebar states using DOM classes - most reliable method
+          // Query fresh each time to ensure we get current state
+          // Try multiple selectors to find the right element
+          const leftSidebarEl = document.querySelector('.workspace-split.mod-left-split') || 
+                                document.querySelector('.mod-left-split');
+          const rightSidebarEl = document.querySelector('.workspace-split.mod-right-split') || 
+                                 document.querySelector('.mod-right-split');
+          
+          // Check for the is-sidedock-collapsed class - this is the most reliable indicator
+          const leftSidebarCollapsed = leftSidebarEl ? leftSidebarEl.classList.contains('is-sidedock-collapsed') : false;
+          const rightSidebarCollapsed = rightSidebarEl ? rightSidebarEl.classList.contains('is-sidedock-collapsed') : false;
+          
+          
+          // Also check API and width for debugging
+          const leftSplit = this.plugin.app.workspace.leftSplit;
+          const rightSplit = this.plugin.app.workspace.rightSplit;
+          const leftSidebarCollapsedAPI = leftSplit.collapsed;
+          const rightSidebarCollapsedAPI = rightSplit.collapsed;
+          
+          const getSidebarWidth = (el: Element | null): number => {
+            if (!el) return 0;
+            const rect = (el as HTMLElement).getBoundingClientRect();
+            return rect.width;
+          };
+          
+          const leftWidth = getSidebarWidth(leftSidebarEl);
+          const rightWidth = getSidebarWidth(rightSidebarEl);
+          
+          
+          // Remove all single-tab related classes first
+          modRoot.classList.remove(
+            'has-single-tab',
+            'has-single-tab-left-collapsed',
+            'has-single-tab-right-collapsed'
+          );
+          
           if (hasSingleTab) {
             modRoot.classList.add('has-single-tab');
+            
+            // Add specific classes based on sidebar states
+            // Only hide view-header-left if left sidebar is NOT expanded (is collapsed)
+            if (leftSidebarCollapsed) {
+              modRoot.classList.add('has-single-tab-left-collapsed');
+            }
+            
+            // Only hide view-actions if right sidebar is NOT expanded (is collapsed)
+            if (rightSidebarCollapsed) {
+              modRoot.classList.add('has-single-tab-right-collapsed');
+              
+              // JavaScript fallback: directly apply style if CSS doesn't work
+              // Use requestAnimationFrame to ensure DOM is ready
+              requestAnimationFrame(() => {
+                const viewActions = modRoot.querySelectorAll('.view-header .view-actions');
+                viewActions.forEach((el) => {
+                  (el as HTMLElement).style.setProperty('display', 'none', 'important');
+                });
+              });
+            } else {
+              // Remove inline style when sidebar is expanded
+              // Use requestAnimationFrame and explicitly set display back to empty string to remove !important
+              requestAnimationFrame(() => {
+                const viewActions = modRoot.querySelectorAll('.view-header .view-actions');
+                viewActions.forEach((el) => {
+                  const htmlEl = el as HTMLElement;
+                  // First set to empty string to remove !important, then remove the property
+                  htmlEl.style.setProperty('display', '', 'important');
+                  htmlEl.style.removeProperty('display');
+                });
+              });
+            }
           } else {
-            modRoot.classList.remove('has-single-tab');
+            // Remove inline styles when not single tab
+            requestAnimationFrame(() => {
+              const viewActions = modRoot.querySelectorAll('.view-header .view-actions');
+              viewActions.forEach((el) => {
+                const htmlEl = el as HTMLElement;
+                htmlEl.style.setProperty('display', '', 'important');
+                htmlEl.style.removeProperty('display');
+              });
+            });
           }
         }
       });
+    };
+
+    // Debounce function to avoid rapid toggling during animations
+    let checkTimeout: number | null = null;
+    const debouncedCheckTabs = () => {
+      if (checkTimeout) {
+        clearTimeout(checkTimeout);
+      }
+      checkTimeout = window.setTimeout(() => {
+        checkTabs();
+        checkTimeout = null;
+      }, 150); // 150ms debounce
     };
 
     // Initial check
@@ -596,7 +686,7 @@ export class StyleManagerImpl {
 
     // Watch for changes in workspace
     this.tabObserver = new MutationObserver(() => {
-      checkTabs();
+      debouncedCheckTabs();
     });
 
     // Observe the workspace container
@@ -608,12 +698,42 @@ export class StyleManagerImpl {
       });
     }
 
-    // Also listen to workspace layout changes
+    // Also listen to workspace layout changes (includes sidebar toggles)
     this.plugin.registerEvent(
       this.plugin.app.workspace.on('layout-change', () => {
-        setTimeout(checkTabs, 50);
+        debouncedCheckTabs();
       })
     );
+
+    // Watch for class changes on sidebar elements specifically
+    const leftSidebarEl = document.querySelector('.workspace-split.mod-left-split');
+    const rightSidebarEl = document.querySelector('.workspace-split.mod-right-split');
+    
+    if (leftSidebarEl) {
+      this.sidebarObserver = new MutationObserver((mutations) => {
+        let shouldCheck = false;
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            shouldCheck = true;
+          }
+        });
+        if (shouldCheck) {
+          debouncedCheckTabs();
+        }
+      });
+      
+      this.sidebarObserver.observe(leftSidebarEl, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+      
+      if (rightSidebarEl && rightSidebarEl !== leftSidebarEl) {
+        this.sidebarObserver.observe(rightSidebarEl, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
+      }
+    }
   }
 
   /**
@@ -625,9 +745,18 @@ export class StyleManagerImpl {
       this.tabObserver = null;
     }
     
-    // Remove class from all mod-roots
-    document.querySelectorAll('.mod-root.has-single-tab').forEach((el) => {
-      el.classList.remove('has-single-tab');
+    if (this.sidebarObserver) {
+      this.sidebarObserver.disconnect();
+      this.sidebarObserver = null;
+    }
+    
+    // Remove all single-tab related classes from all mod-roots
+    document.querySelectorAll('.mod-root').forEach((el) => {
+      el.classList.remove(
+        'has-single-tab',
+        'has-single-tab-left-collapsed',
+        'has-single-tab-right-collapsed'
+      );
     });
   }
 

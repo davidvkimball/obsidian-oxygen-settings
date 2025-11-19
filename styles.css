@@ -720,6 +720,12 @@ body.minimal-theme:not(.borders-on) .tabs-modern .mod-root .workspace-tabs:not(.
 }
 
 /* TAB BORDERS ONLY - Isolated to just tab treatment */
+/* Set --tab-curve on all tabs to control bottom corner curvature */
+/* Only apply when borders-on is NOT present */
+body.minimal-theme:not(.borders-on) .workspace .mod-root .workspace-tab-header {
+	--tab-curve: 8px !important; /* Increase curve amount for more pronounced bottom corners */
+}
+
 /* Active tab: visible border on left/right, extend down to cover container's top border */
 /* Set tab outline variables ONLY for active tabs (for curved corners) */
 /* Only apply when borders-on is NOT present */
@@ -798,20 +804,29 @@ body.minimal-theme:not(.borders-on):not(.borders-none) .view-header-nav-buttons 
   -webkit-app-region: no-drag;
 }
 
-/* Hide view-header-left (contains nav-buttons) ONLY when tab bar is collapsed (single tab) */
+/* Hide view-header-left (contains nav-buttons) ONLY when:
+   - tab bar is collapsed (single tab) AND
+   - left sidebar is NOT expanded (is collapsed) */
 /* Use JavaScript-added class instead of :has() for better compatibility */
 body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.minimal-theme:not(.borders-on):not(.borders-none)
-  .mod-root.has-single-tab
+  .mod-root.has-single-tab.has-single-tab-left-collapsed
   .workspace-tab-container
   .view-header-left {
   display: none !important;
 }
 
-/* Hide view-actions (right side buttons) ONLY when tab bar is collapsed (single tab) */
+/* Hide view-actions (right side buttons) ONLY when:
+   - tab bar is collapsed (single tab) AND
+   - right sidebar is NOT expanded (is collapsed) */
 /* Use JavaScript-added class instead of :has() for better compatibility */
+/* Match the structure of the left sidebar rule exactly for consistency */
 body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.minimal-theme:not(.borders-on):not(.borders-none)
-  .mod-root.has-single-tab
+  .mod-root.has-single-tab.has-single-tab-right-collapsed
   .workspace-tab-container
+  .view-header
+  .view-actions,
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.minimal-theme:not(.borders-on):not(.borders-none)
+  .mod-root.has-single-tab.has-single-tab-right-collapsed
   .view-header
   .view-actions {
   display: none !important;

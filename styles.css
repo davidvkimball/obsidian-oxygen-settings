@@ -605,12 +605,36 @@ body.minimal-theme[style*="--nav-indentation-guide-width:0px"] .nav-folder-child
 /* Only apply when borders-on is NOT present AND borders-none is NOT present (enhanced mode) */
 /* Based on Baseline's approach: use container-inner with margin-bottom: -1px */
 
-/* Apply border and rounded corners to the active tab's content container */
-/* Round the top-left and top-right corners - only the main content is contained */
-/* Always reserve border space to prevent layout shifts when toggling */
+/* CRITICAL: Disable default Obsidian borders by setting CSS variables to 0 */
+/* This is how borders-none works - it sets these variables which Obsidian uses for borders */
+body.minimal-theme:not(.borders-on):not(.borders-none) {
+  --divider-width: 0px;
+  --tab-outline-width: 0px;
+}
+
+body.minimal-theme:not(.borders-on):not(.borders-none) .mod-root .workspace-tab-header-container:is(div, :hover) {
+  --tab-outline-width: 0px;
+}
+
+/* CRITICAL: Disable default borders on workspace-tab-container BEFORE applying enhanced border */
+/* This prevents the double border effect */
 body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-container {
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m) var(--radius-m) 0 0; /* Top-left and top-right rounded */
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0 !important;
+}
+
+/* Now apply the enhanced border styling */
+body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-container {
+  border: 1px solid var(--background-modifier-border) !important;
+  border-top: 1px solid var(--background-modifier-border) !important;
+  border-left: 1px solid var(--background-modifier-border) !important;
+  border-right: 1px solid var(--background-modifier-border) !important;
+  border-bottom: none !important;
+  border-radius: var(--radius-m) var(--radius-m) var(--radius-m) var(--radius-m) !important; /* All corners rounded */
   margin: 0;
   overflow: hidden;
   position: relative;
@@ -664,81 +688,62 @@ body.minimal-theme:not(.borders-on):not(.borders-none):not(.sidebar-color) .mod-
   --background-secondary: var(--enhanced-border-right-sidebar-bg) !important;
 }
 
-/* Use container-inner with margin-bottom: -1px to overlap the container's top border (Baseline approach) */
+/* Use container-inner with margin-bottom: -1px to overlap the container's top border */
+/* Only apply when borders-on is NOT present */
 body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header-container-inner {
   margin-bottom: -1px;
   position: relative;
   z-index: 1;
 }
 
-/* Reserve border space for ALL tabs to prevent shifting when active tab changes */
-/* Only the active tab will show the border */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header {
-  box-sizing: border-box;
-  border: 1px solid transparent;
-  border-bottom: none;
-}
-
-/* Make the active tab header connect seamlessly to the container below it */
+/* TAB BORDERS ONLY - Isolated to just tab treatment */
+/* Active tab: visible border on left/right, extend down to cover container's top border */
+/* Set tab outline variables ONLY for active tabs (for curved corners) */
+/* Only apply when borders-on is NOT present */
 body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active {
-  border-color: var(--background-modifier-border);
-  border-radius: var(--radius-m) var(--radius-m) 0 0;
-  background-color: var(--background-primary);
-  position: relative;
-  /* Ensure the tab header itself doesn't change height or alignment */
-  height: auto;
-  min-height: inherit;
-  align-items: inherit;
+  border-left-color: var(--background-modifier-border);
+  border-right-color: var(--background-modifier-border);
   margin-bottom: -1px;
+  position: relative;
+  --tab-outline-width: 1px;
+  --tab-outline-color: var(--background-modifier-border);
 }
 
-/* When right sidebar is open, active tab keeps its normal rounded corners */
-/* The unified border is handled at the container level */
-
-/* Prevent icons and close button from shifting when enhanced borders are enabled */
-/* Only apply to active tab to minimize changes */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner-close-button {
-  margin-top: -1px;
-}
-
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner-icon,
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner-icon.iconic-icon {
-  margin-top: -1px;
-}
-
-/* Hide the divider line only when it's adjacent to an active tab */
-/* The divider is on the right side of each tab (::after on workspace-tab-header-inner) */
-/* Hide divider on active tab itself */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner::after {
-  display: none !important;
-}
-/* Hide divider on inactive tab that comes immediately before an active tab */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header:not(.is-active):has(+ .workspace-tab-header.is-active) .workspace-tab-header-inner::after {
-  display: none !important;
-}
-
-/* Disable the theme's box-shadow on ::before and ::after that interferes with the connection */
+/* Enhance ::before/::after to extend the border down to cover container's top border */
+/* Obsidian's box-shadow already includes the border on the curve via --tab-outline-width */
+/* We just need to extend it down to cover the container border */
+/* Only apply when borders-on is NOT present */
 body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active::before,
 body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active::after {
-  box-shadow: none !important;
+  /* Preserve Obsidian's existing box-shadow (includes border via --tab-outline-width) */
+  /* Then add extended border layers that continue down to cover container */
+  box-shadow: inset 0 0 0 var(--tab-outline-width) var(--tab-outline-color), 
+              0 0 0 calc(var(--tab-curve) * 4) var(--tab-background-active),
+              0 calc(var(--tab-curve) * 2) 0 var(--tab-outline-width) var(--tab-outline-color),
+              0 calc(var(--tab-curve) * 2 + 1px) 0 var(--tab-outline-width) var(--tab-outline-color),
+              0 calc(var(--tab-curve) * 2 + 2px) 0 var(--tab-outline-width) var(--tab-outline-color);
 }
 
-/* Use a pseudo-element to extend the tab's background down and cover the container's top border */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active::after {
+/* Extend the active tab's background down to cover the container's top border */
+/* Use the inner element since tab's ::after is used by Obsidian for right curve */
+/* Only apply when borders-on is NOT present */
+body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner {
+  position: relative;
+}
+
+/* Create extension to cover container border - use inner's ::after */
+/* Hide Obsidian's divider first, then add our extension */
+body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner::after {
   content: '';
   position: absolute;
   bottom: -2px;
   left: -1px;
   right: -1px;
-  height: 3px;
-  background-color: var(--background-primary);
-}
-
-/* Ensure the active tab header inner element also has the rounded top */
-body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner {
-  border-top-left-radius: var(--radius-m);
-  border-top-right-radius: var(--radius-m);
-  background-color: var(--background-primary);
+  height: 2px;
+  background-color: var(--tab-background-active);
+  z-index: 1;
+  /* This extends below the curved corners to cover the container border */
+  /* Note: This replaces Obsidian's divider line on the active tab */
 }
 
 /* Make sure the tab header container doesn't interfere and allows proper positioning */
@@ -746,6 +751,48 @@ body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .wor
 body.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header-container {
   margin-bottom: 0;
 }
+
+/* ========================================
+   Meridian-style: Make titlebar draggable (preserve OS buttons)
+   ======================================== */
+/* Draggable strip (leave OS window buttons untouched) - based on provided reference */
+body.minimal-theme:not(.borders-on):not(.borders-none):not(.is-mobile) .titlebar {
+  display: block !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 10 !important;
+  background: transparent !important;
+  -webkit-app-region: drag !important;
+}
+
+/* Make sure interactive elements inside view-header are not draggable */
+body.minimal-theme:not(.borders-on):not(.borders-none) .view-header-title-container div,
+body.minimal-theme:not(.borders-on):not(.borders-none) .view-header .view-actions,
+body.minimal-theme:not(.borders-on):not(.borders-none) .view-header-nav-buttons {
+  -webkit-app-region: no-drag;
+}
+
+/* Hide view-header-left (contains nav-buttons) ONLY when tab bar is collapsed (single tab) */
+/* Use JavaScript-added class instead of :has() for better compatibility */
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.minimal-theme:not(.borders-on):not(.borders-none)
+  .mod-root.has-single-tab
+  .workspace-tab-container
+  .view-header-left {
+  display: none !important;
+}
+
+/* Hide view-actions (right side buttons) ONLY when tab bar is collapsed (single tab) */
+/* Use JavaScript-added class instead of :has() for better compatibility */
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.minimal-theme:not(.borders-on):not(.borders-none)
+  .mod-root.has-single-tab
+  .workspace-tab-container
+  .view-header
+  .view-actions {
+  display: none !important;
+}
+
 
 /* ========================================
    Disable Enhanced Borders for "Default" and "None" modes
@@ -998,6 +1045,29 @@ body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-side
 
 .hider-tabs .mod-top-left-space .view-header {
 	padding-left: var(--frame-left-space);
+}
+
+/* Auto-hide tab bar when single tab (Meridian Theme style - exact implementation) */
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  .workspace-tab-header-container {
+  max-height: 3em;
+  opacity: 1;
+  overflow: hidden;
+  transition:
+    opacity 0.3s ease,
+    max-height 0.3s ease;
+}
+
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
+  .mod-root
+  .workspace-tabs:not(.mod-stacked):not(
+    :has(.workspace-tab-header:nth-of-type(2))
+  )
+  .workspace-tab-header-container {
+  max-height: 0;
+  opacity: 0;
 }
 
 /* Hide sidebar buttons */

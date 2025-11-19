@@ -70,6 +70,7 @@ export interface MinimalSettings {
   autoHideRightTabHeaders: boolean;
   collapseOtherNavHeaders: boolean;
   autoCollapseRibbon: boolean;
+  autoHideTabBarWhenSingleTab: boolean;
   // Desktop hide buttons
   hideButtonNewNote: boolean;
   hideButtonNewFolder: boolean;
@@ -171,6 +172,7 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   autoHideRightTabHeaders: false,
   collapseOtherNavHeaders: false,
   autoCollapseRibbon: false,
+  autoHideTabBarWhenSingleTab: false,
   // Desktop hide buttons
   hideButtonNewNote: false,
   hideButtonNewFolder: false,

@@ -17,6 +17,7 @@ export class StyleManagerImpl {
   private plugin: PluginContext;
   private cssObserver: MutationObserver | null = null;
   private customPresetCSS: CustomPresetCSS;
+  private tabObserver: MutationObserver | null = null;
 
   constructor(plugin: PluginContext) {
     this.plugin = plugin;
@@ -30,6 +31,11 @@ export class StyleManagerImpl {
     this.loadRules();
     // CSS watcher removed - it was causing infinite loops
     // Custom preset CSS updates are handled by settings UI and theme switches
+    
+    // Watch for tab changes to toggle single-tab class
+    if (this.plugin.settings.autoHideTabBarWhenSingleTab) {
+      this.setupTabObserver();
+    }
   }
   
   /**
@@ -57,6 +63,9 @@ export class StyleManagerImpl {
       this.cssObserver.disconnect();
       this.cssObserver = null;
     }
+    
+    // Cleanup tab observer
+    this.cleanupTabObserver();
   }
 
   /**
@@ -174,6 +183,14 @@ export class StyleManagerImpl {
     document.body.classList.toggle('auto-hide-right-tab-headers', this.plugin.settings.autoHideRightTabHeaders);
     document.body.classList.toggle('auto-collapse-ribbon', this.plugin.settings.autoCollapseRibbon);
     document.body.classList.toggle('collapse-other-nav-headers', this.plugin.settings.collapseOtherNavHeaders);
+    document.body.classList.toggle('auto-hide-tab-bar-when-single-tab', this.plugin.settings.autoHideTabBarWhenSingleTab);
+    
+    // Setup or cleanup tab observer based on setting
+    if (this.plugin.settings.autoHideTabBarWhenSingleTab) {
+      this.setupTabObserver();
+    } else {
+      this.cleanupTabObserver();
+    }
 
     // Tab icons
     document.body.classList.toggle('hide-tab-list-icon', this.plugin.settings.hideTabListIcon);
@@ -478,6 +495,7 @@ export class StyleManagerImpl {
       'auto-hide-right-tab-headers',
       'auto-collapse-ribbon',
       'collapse-other-nav-headers',
+      'auto-hide-tab-bar-when-single-tab',
       'animations-refined',
       'animations-default',
       'animations-playful',
@@ -546,6 +564,71 @@ export class StyleManagerImpl {
   private setupCSSWatcher(): void {
     // CSS watcher disabled - was causing infinite loops
     // Custom preset CSS is now only updated when explicitly called
+  }
+
+  /**
+   * Setup observer to watch for tab changes and toggle single-tab class
+   */
+  private setupTabObserver(): void {
+    if (this.tabObserver) {
+      return; // Already set up
+    }
+
+    const checkTabs = () => {
+      const modRoots = document.querySelectorAll('.mod-root');
+      modRoots.forEach((modRoot) => {
+        const workspaceTabs = modRoot.querySelector('.workspace-tabs:not(.mod-stacked)');
+        if (workspaceTabs) {
+          const tabHeaders = workspaceTabs.querySelectorAll('.workspace-tab-header');
+          const hasSingleTab = tabHeaders.length === 1;
+          
+          if (hasSingleTab) {
+            modRoot.classList.add('has-single-tab');
+          } else {
+            modRoot.classList.remove('has-single-tab');
+          }
+        }
+      });
+    };
+
+    // Initial check
+    setTimeout(checkTabs, 100);
+
+    // Watch for changes in workspace
+    this.tabObserver = new MutationObserver(() => {
+      checkTabs();
+    });
+
+    // Observe the workspace container
+    const workspace = document.querySelector('.workspace');
+    if (workspace) {
+      this.tabObserver.observe(workspace, {
+        childList: true,
+        subtree: true
+      });
+    }
+
+    // Also listen to workspace layout changes
+    this.plugin.registerEvent(
+      this.plugin.app.workspace.on('layout-change', () => {
+        setTimeout(checkTabs, 50);
+      })
+    );
+  }
+
+  /**
+   * Cleanup tab observer
+   */
+  private cleanupTabObserver(): void {
+    if (this.tabObserver) {
+      this.tabObserver.disconnect();
+      this.tabObserver = null;
+    }
+    
+    // Remove class from all mod-roots
+    document.querySelectorAll('.mod-root.has-single-tab').forEach((el) => {
+      el.classList.remove('has-single-tab');
+    });
   }
 
 }

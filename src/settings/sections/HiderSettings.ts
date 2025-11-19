@@ -122,6 +122,18 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
+  // Auto-hide tab bar when single tab
+  new Setting(containerEl)
+    .setName('Auto-hide tab bar when single tab')
+    .setDesc('Hide the tab bar automatically when only 1 tab is open. Inspired by Meridian Theme.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.autoHideTabBarWhenSingleTab)
+      .onChange((value) => {
+        plugin.settings.autoHideTabBarWhenSingleTab = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
   containerEl.createEl('br');
 
   // ========================================

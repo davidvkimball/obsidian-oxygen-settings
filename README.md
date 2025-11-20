@@ -8,15 +8,27 @@ Settings plugin for [Oxygen Theme](https://github.com/davidvkimball/obsidian-oxy
 
 ## Features
 
-**Custom color presets** - Create and manage your own color schemes with a built-in preset editor.
+- **Custom color presets** - Create and manage your own color schemes with a built-in preset editor.
+- **Built-in color schemes** - Includes the 14 preset color schemes from Minimal: Atom, Ayu, Catppuccin, Dracula, Everforest, Flexoki, Gruvbox, macOS, Nord, Rosé Pine, Solarized, and more.
+- **Background styles** - Toggle between default, low contrast, high contrast (light mode), and true black (dark mode) backgrounds via hotkeys.
+- **Customization** - Control fonts, sizes, line width, link styles, focus mode, icons, image grids, and width settings for tables, images, and iframes.
+- **Hotkeys** - Quick toggles for light/dark mode, cycling color schemes, adjusting font size, and toggling interface elements.
 
-**Built-in color schemes** - Includes the 14 preset color schemes from Minimal: Atom, Ayu, Catppuccin, Dracula, Everforest, Flexoki, Gruvbox, macOS, Nord, Rosé Pine, Solarized, and more.
+## Installation
 
-**Background styles** - Toggle between default, low contrast, high contrast (light mode), and true black (dark mode) backgrounds via hotkeys.
+Oxygen Theme Settings is not yet available in the Community plugins section. Install using [BRAT](https://github.com/TfTHacker/obsidian42-brat) or manually:
 
-**Customization** - Control fonts, sizes, line width, link styles, focus mode, icons, image grids, and width settings for tables, images, and iframes.
+### BRAT
 
-**Hotkeys** - Quick toggles for light/dark mode, cycling color schemes, adjusting font size, and toggling interface elements.
+1. Download the [Beta Reviewers Auto-update Tester (BRAT)](https://github.com/TfTHacker/obsidian42-brat) plugin from the [Obsidian community plugins directory](https://obsidian.md/plugins?id=obsidian42-brat) and enable it.
+2. In the BRAT plugin settings, select `Add beta plugin`.
+3. Paste the following: `https://github.com/davidvkimball/obsidian-oxygen-settings` and select `Add plugin`.
+
+### Manual
+
+1. Download the latest release from the [Releases page](https://github.com/davidvkimball/obsidian-oxygen-settings/releases) and navigate to your Obsidian vault's `.obsidian/plugins/` directory.
+2. Create a new folder called `oxygen-settings` and ensure `manifest.json`, `main.js`, and `styles.css` are in there.
+3. In Obsidian, go to Settings > Community plugins (enable it if you haven't already) and then enable "Oxygen Theme Settings."
 
 ## Requirements
 

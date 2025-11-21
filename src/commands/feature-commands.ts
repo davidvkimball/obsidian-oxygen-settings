@@ -103,6 +103,18 @@ export function registerFeatureCommands(plugin: PluginContext): void {
       refresh(plugin);
     }
   });
+
+  // Open settings command
+  plugin.addCommand({
+    id: COMMAND_IDS.OPEN_SETTINGS,
+    name: 'Open Oxygen Theme Settings',
+    icon: 'settings-2',
+    callback: () => {
+      // Open settings and navigate to this plugin's tab
+      (plugin.app as any).setting.open();
+      (plugin.app as any).setting.openTabById(plugin.manifest.id);
+    }
+  });
 }
 
 function refresh(plugin: PluginContext): void {

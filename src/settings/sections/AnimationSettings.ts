@@ -43,7 +43,7 @@ export function buildAnimationSettings(containerEl: HTMLElement, plugin: Minimal
   // Animation Speed slider
   speedSetting = new Setting(containerEl)
     .setName('Animation speed')
-    .setDesc('Control the speed of animations. Range: 0 (disabled) to 2 (double speed). Default: 1 (normal speed).')
+    .setDesc('Control the speed of animations. Range: 0 (disabled) to 2 (half speed / slower). Default: 1 (normal speed). Lower values = faster animations, higher values = slower animations.')
     .addSlider(slider => slider
       .setLimits(0, 2, 0.1)
       .setValue(plugin.settings.animationSpeed)

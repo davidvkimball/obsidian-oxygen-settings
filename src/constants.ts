@@ -161,6 +161,9 @@ export const COMMAND_IDS = {
   // Hider commands
   TOGGLE_TAB_BAR: 'toggle-tab-containers',
   TOGGLE_STATUS_BAR: 'toggle-hider-status',
+  
+  // Settings command
+  OPEN_SETTINGS: 'oxygen-settings:open-settings',
 } as const;
 
 // Scheme command ID prefixes

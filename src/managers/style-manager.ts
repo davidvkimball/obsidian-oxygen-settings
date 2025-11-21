@@ -176,6 +176,16 @@ export class StyleManagerImpl {
     document.body.classList.toggle('metadata-add-property-off', this.plugin.settings.hideAddPropertyButton);
     document.body.classList.toggle('deemphasize-properties', this.plugin.settings.deemphasizeProperties);
     document.body.classList.toggle('auto-hide-vault-switcher', this.plugin.settings.autoHideVaultSwitcher);
+    // Set background transparency CSS variable for auto-hide vault switcher
+    document.body.style.setProperty('--auto-hide-vault-switcher-bg-transparency', 
+      this.plugin.settings.autoHideVaultSwitcherBgTransparency.toString());
+    // Remove mask when fully opaque (transparency = 1) to ensure full opacity
+    if (this.plugin.settings.autoHideVaultSwitcherBgTransparency >= 1) {
+      document.body.style.setProperty('--auto-hide-vault-switcher-mask', 'none');
+    } else {
+      document.body.style.setProperty('--auto-hide-vault-switcher-mask', 
+        'linear-gradient(to top, hsl(0, 0%, 0%) 0%, hsla(0, 0%, 0%, 0.99) 18.4%, hsla(0, 0%, 0%, 0.963) 33.7%, hsla(0, 0%, 0%, 0.92) 46.4%, hsla(0, 0%, 0%, 0.864) 56.7%, hsla(0, 0%, 0%, 0.796) 64.8%, hsla(0, 0%, 0%, 0.72) 71.2%, hsla(0, 0%, 0%, 0.637) 76.1%, hsla(0, 0%, 0%, 0.55) 79.9%, hsla(0, 0%, 0%, 0.46) 82.8%, hsla(0, 0%, 0%, 0.37) 85.2%, hsla(0, 0%, 0%, 0.283) 87.3%, hsla(0, 0%, 0%, 0.2) 89.6%, hsla(0, 0%, 0%, 0.124) 92.3%, hsla(0, 0%, 0%, 0.056) 95.6%, hsla(0, 0%, 0%, 0) 100%)');
+    }
     document.body.classList.toggle('auto-hide-settings-button', this.plugin.settings.autoHideSettingsButton);
     document.body.classList.toggle('hider-help-button', this.plugin.settings.hideHelpButton);
     document.body.classList.toggle('auto-hide-file-explorer-nav-header', this.plugin.settings.autoHideFileExplorerNavHeader);

@@ -5,6 +5,8 @@
 
 import { Setting } from 'obsidian';
 import MinimalTheme from '../../main';
+import { CommandPickerModal } from '../../modals/components/CommandPickerModal';
+import { IconPickerModal } from '../../modals/components/IconPickerModal';
 
 export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalTheme): void {
   containerEl.createEl('br');
@@ -110,6 +112,21 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       })
     );
 
+  // Auto-hide vault switcher background transparency
+  new Setting(containerEl)
+    .setName('Vault switcher background transparency')
+    .setDesc('Adjust the transparency of the vault switcher background when hidden. Range: 0 (fully transparent) to 1 (fully opaque).')
+    .addSlider(slider => slider
+      .setLimits(0, 1, 0.1)
+      .setValue(plugin.settings.autoHideVaultSwitcherBgTransparency)
+      .setDynamicTooltip()
+      .onChange((value) => {
+        plugin.settings.autoHideVaultSwitcherBgTransparency = value;
+        void plugin.saveData(plugin.settings);
+        plugin.refresh();
+      })
+    );
+
   // Auto-hide settings button
   new Setting(containerEl)
     .setName('Auto-hide settings button')
@@ -148,8 +165,143 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
         plugin.settings.hideHelpButton = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
+        // Trigger help button replacement update
+        if ((plugin as any).updateHelpButton) {
+          void (plugin as any).updateHelpButton();
+        }
+        // Re-render settings tab to show/hide replacement options
+        if (plugin.settingsTab) {
+          plugin.settingsTab.display();
+        }
       })
     );
+
+  // Replace help button with custom action (only shown when hideHelpButton is enabled)
+  if (plugin.settings.hideHelpButton) {
+    // Initialize helpButtonReplacement if it doesn't exist
+    if (!plugin.settings.helpButtonReplacement) {
+      plugin.settings.helpButtonReplacement = {
+        enabled: false,
+        commandId: 'oxygen-settings:open-settings',
+        iconId: 'settings-2',
+      };
+    }
+
+    // Toggle for enabling replacement
+    new Setting(containerEl)
+      .setName('Replace help button with custom action')
+      .setDesc('Replace the hidden help button with a custom icon and command. Requires "Hide help button" to be enabled.')
+      .addToggle(toggle => toggle.setValue(plugin.settings.helpButtonReplacement?.enabled ?? false)
+        .onChange(async (value) => {
+          if (!plugin.settings.helpButtonReplacement) {
+            plugin.settings.helpButtonReplacement = {
+              enabled: true,
+              commandId: 'oxygen-settings:open-settings',
+              iconId: 'settings-2',
+            };
+          }
+          plugin.settings.helpButtonReplacement.enabled = value;
+          await plugin.saveData(plugin.settings);
+          // Trigger help button replacement update
+          if ((plugin as any).updateHelpButton) {
+            await (plugin as any).updateHelpButton();
+          }
+          // Re-render settings tab to show/hide options
+          if (plugin.settingsTab) {
+            plugin.settingsTab.display();
+          }
+        })
+      );
+
+    // Show command and icon pickers only if replacement is enabled
+    if (plugin.settings.helpButtonReplacement?.enabled) {
+      // Command picker
+      const getCommandName = (commandId: string): string => {
+        try {
+          const commands = (plugin.app as any).commands;
+          if (commands && commands.listCommands) {
+            const allCommands = commands.listCommands();
+            const command = allCommands.find((cmd: any) => cmd.id === commandId);
+            return command?.name || commandId;
+          }
+        } catch (e) {
+          console.warn('[Oxygen Settings] Error getting command name:', e);
+        }
+        return commandId;
+      };
+
+      const commandName = getCommandName(plugin.settings.helpButtonReplacement.commandId);
+      new Setting(containerEl)
+        .setName('Command')
+        .setDesc('Select the command to execute when the button is clicked')
+        .addButton(button => button
+          .setButtonText(commandName || 'Select command...')
+          .onClick(() => {
+            const modal = new CommandPickerModal(plugin.app, async (commandId) => {
+              if (!plugin.settings.helpButtonReplacement) {
+                plugin.settings.helpButtonReplacement = {
+                  enabled: true,
+                  commandId: '',
+                  iconId: 'wrench',
+                };
+              }
+              plugin.settings.helpButtonReplacement.commandId = commandId;
+              await plugin.saveData(plugin.settings);
+              // Trigger help button replacement update immediately
+              if ((plugin as any).updateHelpButton) {
+                await (plugin as any).updateHelpButton();
+              }
+              // Re-render settings tab to show updated command name
+              if (plugin.settingsTab) {
+                plugin.settingsTab.display();
+              }
+            });
+            modal.open();
+          })
+        );
+
+      // Icon picker
+      const getIconName = (iconId: string): string => {
+        if (!iconId) return '';
+        // Convert icon ID to a readable name, removing lucide- prefix if present
+        return iconId
+          .replace(/^lucide-/, '') // Remove lucide- prefix
+          .split('-')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+      };
+
+      const iconName = getIconName(plugin.settings.helpButtonReplacement.iconId);
+      new Setting(containerEl)
+        .setName('Icon')
+        .setDesc('Select the icon to display on the button')
+        .addButton(button => button
+          .setButtonText(iconName || 'Select icon...')
+          .onClick(() => {
+            const modal = new IconPickerModal(plugin.app, async (iconId) => {
+              if (!plugin.settings.helpButtonReplacement) {
+                plugin.settings.helpButtonReplacement = {
+                  enabled: true,
+                  commandId: '',
+                  iconId: 'wrench',
+                };
+              }
+              plugin.settings.helpButtonReplacement.iconId = iconId;
+              await plugin.saveData(plugin.settings);
+              // Trigger help button replacement update immediately
+              if ((plugin as any).updateHelpButton) {
+                await (plugin as any).updateHelpButton();
+              }
+              // Re-render settings tab to show updated icon name
+              if (plugin.settingsTab) {
+                plugin.settingsTab.display();
+              }
+            });
+            modal.open();
+          })
+        );
+    }
+  }
 
   // Hide vault name
   new Setting(containerEl)

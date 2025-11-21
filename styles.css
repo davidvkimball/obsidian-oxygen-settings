@@ -1199,7 +1199,7 @@ body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mo
 	height: 100%;
 	z-index: -1;
 	pointer-events: none;
-	mask: linear-gradient(to top, hsl(0, 0%, 0%) 0%, hsla(0, 0%, 0%, 0.99) 18.4%, hsla(0, 0%, 0%, 0.963) 33.7%, hsla(0, 0%, 0%, 0.92) 46.4%, hsla(0, 0%, 0%, 0.864) 56.7%, hsla(0, 0%, 0%, 0.796) 64.8%, hsla(0, 0%, 0%, 0.72) 71.2%, hsla(0, 0%, 0%, 0.637) 76.1%, hsla(0, 0%, 0%, 0.55) 79.9%, hsla(0, 0%, 0%, 0.46) 82.8%, hsla(0, 0%, 0%, 0.37) 85.2%, hsla(0, 0%, 0%, 0.283) 87.3%, hsla(0, 0%, 0%, 0.2) 89.6%, hsla(0, 0%, 0%, 0.124) 92.3%, hsla(0, 0%, 0%, 0.056) 95.6%, hsla(0, 0%, 0%, 0) 100%);
+	mask: var(--auto-hide-vault-switcher-mask, linear-gradient(to top, hsl(0, 0%, 0%) 0%, hsla(0, 0%, 0%, 0.99) 18.4%, hsla(0, 0%, 0%, 0.963) 33.7%, hsla(0, 0%, 0%, 0.92) 46.4%, hsla(0, 0%, 0%, 0.864) 56.7%, hsla(0, 0%, 0%, 0.796) 64.8%, hsla(0, 0%, 0%, 0.72) 71.2%, hsla(0, 0%, 0%, 0.637) 76.1%, hsla(0, 0%, 0%, 0.55) 79.9%, hsla(0, 0%, 0%, 0.46) 82.8%, hsla(0, 0%, 0%, 0.37) 85.2%, hsla(0, 0%, 0%, 0.283) 87.3%, hsla(0, 0%, 0%, 0.2) 89.6%, hsla(0, 0%, 0%, 0.124) 92.3%, hsla(0, 0%, 0%, 0.056) 95.6%, hsla(0, 0%, 0%, 0) 100%));
 	background-color: var(--background-secondary);
 }
 
@@ -1207,10 +1207,8 @@ body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mo
 	background-color: var(--interactive-normal);
 }
 
-body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile:not(:hover) {
-	pointer-events: none;
-}
-
+/* Make the whole vault profile area hoverable - remove pointer-events: none so entire area can be hovered */
+/* Hide vault switcher content when not hovered */
 body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile:not(:hover) .workspace-drawer-vault-switcher:not(.has-active-menu) {
 	opacity: 0;
 	filter: blur(4px);
@@ -1219,13 +1217,26 @@ body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mo
 }
 
 body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile:not(:hover)::before {
-	opacity: 0;
+	opacity: var(--auto-hide-vault-switcher-bg-transparency, 0);
+}
+
+/* Reveal vault switcher content on hover anywhere over the profile area */
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile:hover .workspace-drawer-vault-switcher:not(.has-active-menu) {
+	opacity: 1;
+	filter: blur(0);
+	pointer-events: auto;
+	transform: scale(1);
+}
+
+/* Reveal background on hover - fully opaque */
+body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile:hover::before {
+	opacity: 1;
+	mask: none;
 }
 
 body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-drawer-vault-switcher,
 body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-drawer-vault-actions .clickable-icon {
 	transition: var(--anim-duration-moderate) var(--anim-motion-baseline);
-	pointer-events: visible;
 }
 
 body:not(.is-mobile):not(.hider-vault).auto-hide-vault-switcher .mod-sidedock.mod-left-split .workspace-leaf-content > .node-insert-event,

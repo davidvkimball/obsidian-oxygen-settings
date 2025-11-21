@@ -61,6 +61,7 @@ export interface MinimalSettings {
   hideAddPropertyButton: boolean;
   deemphasizeProperties: boolean;
   autoHideVaultSwitcher: boolean;
+  autoHideVaultSwitcherBgTransparency: number; // 0-1, default 0
   hideHelpButton: boolean;
   autoHideSettingsButton: boolean;
   collapseFileExplorerButtons: boolean; // Deprecated: use autoHideFileExplorerNavHeader and collapseOtherNavHeaders instead
@@ -104,6 +105,14 @@ export interface MinimalSettings {
   // Animation settings
   animationPersonality: 'default' | 'playful' | 'off';
   animationSpeed: number; // 0-2, default 1
+  // Help button replacement
+  helpButtonReplacement?: HelpButtonReplacementSettings;
+}
+
+export interface HelpButtonReplacementSettings {
+  enabled: boolean;
+  commandId: string;
+  iconId: string;
 }
 
 export const DEFAULT_SETTINGS: MinimalSettings = {
@@ -163,6 +172,7 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   hideAddPropertyButton: false,
   deemphasizeProperties: false,
   autoHideVaultSwitcher: false,
+  autoHideVaultSwitcherBgTransparency: 0.9,
   hideHelpButton: false,
   autoHideSettingsButton: false,
   collapseFileExplorerButtons: false,
@@ -206,5 +216,11 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   // Animation settings
   animationPersonality: 'default',
   animationSpeed: 1,
+  // Help button replacement
+  helpButtonReplacement: {
+    enabled: false,
+    commandId: 'oxygen-settings:open-settings',
+    iconId: 'settings-2',
+  },
 };
 

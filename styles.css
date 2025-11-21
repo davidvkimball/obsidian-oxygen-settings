@@ -1269,6 +1269,22 @@ body .mod-sidedock .workspace-leaf-content > .view-content > .nav-header .cmdr.c
 	justify-content: center;
 }
 
+/* Ensure cmdr buttons in view-actions are treated the same as regular view-action buttons */
+/* This makes cmdr buttons in view headers match the normal color of other view-action buttons */
+/* Override inline styles and ensure they use the same color/opacity as default view-action buttons */
+body .view-header .view-actions .cmdr.clickable-icon.view-action,
+body .view-header .view-actions .cmdr-page-header.clickable-icon.view-action {
+	opacity: var(--icon-opacity) !important;
+	color: var(--icon-color) !important;
+}
+
+/* Also target the SVG inside cmdr buttons to ensure stroke color matches */
+body .view-header .view-actions .cmdr.clickable-icon.view-action svg,
+body .view-header .view-actions .cmdr-page-header.clickable-icon.view-action svg {
+	color: var(--icon-color) !important;
+	stroke: currentColor !important;
+}
+
 /* Auto-hide file explorer nav header (Meridian style - completely hidden until hover) */
 body:not(.is-mobile).auto-hide-file-explorer-nav-header .workspace-leaf-content[data-type=file-explorer] .nav-header {
 	max-height: 0;

@@ -247,8 +247,8 @@ export default class MinimalTheme extends Plugin {
   
   // Help button replacement methods
   private setupHelpButtonReplacement() {
-    // Only proceed if help button is hidden and replacement is enabled
-    if (!this.settings.hideHelpButton || !this.settings.helpButtonReplacement?.enabled) {
+    // Only proceed if replacement is enabled (works independently of hideHelpButton)
+    if (!this.settings.helpButtonReplacement?.enabled) {
       return;
     }
     
@@ -257,7 +257,7 @@ export default class MinimalTheme extends Plugin {
     
     // Wait for the DOM to be ready
     const trySetup = () => {
-      if (this.settings.hideHelpButton && this.settings.helpButtonReplacement?.enabled) {
+      if (this.settings.helpButtonReplacement?.enabled) {
         this.updateHelpButton();
       }
     };
@@ -274,14 +274,16 @@ export default class MinimalTheme extends Plugin {
     }, 1000);
   }
 
-  private updateHelpButtonCSS() {
+  public updateHelpButtonCSS() {
     // Remove existing style if any
     if (this.helpButtonStyleEl) {
       this.helpButtonStyleEl.remove();
     }
 
-    // Only add CSS if help button is hidden and replacement is enabled
-    if (this.settings.hideHelpButton && this.settings.helpButtonReplacement?.enabled) {
+    // Hide help button if either hideHelpButton OR replacement is enabled
+    const shouldHideHelpButton = this.settings.hideHelpButton || this.settings.helpButtonReplacement?.enabled;
+    
+    if (shouldHideHelpButton) {
       // Create style element to hide help button globally
       this.helpButtonStyleEl = document.createElement('style');
       this.helpButtonStyleEl.id = 'oxygen-settings-hide-help-button';
@@ -295,8 +297,8 @@ export default class MinimalTheme extends Plugin {
   }
 
   public async updateHelpButton() {
-    // Only proceed if help button is hidden and replacement is enabled
-    if (!this.settings.hideHelpButton || !this.settings.helpButtonReplacement?.enabled) {
+    // Only proceed if replacement is enabled (works independently of hideHelpButton)
+    if (!this.settings.helpButtonReplacement?.enabled) {
       this.restoreHelpButton();
       return;
     }
@@ -314,7 +316,7 @@ export default class MinimalTheme extends Plugin {
 
     try {
       // Check if replacement is still enabled
-      if (!this.settings.hideHelpButton || !this.settings.helpButtonReplacement?.enabled) {
+      if (!this.settings.helpButtonReplacement?.enabled) {
         this.restoreHelpButton();
         return;
       }
@@ -345,15 +347,19 @@ export default class MinimalTheme extends Plugin {
       this.helpButtonElement = helpButton;
 
       // Remove existing custom button if it exists (always recreate to update icon/command)
-      if (this.customHelpButton && this.customHelpButton.parentElement) {
+      // Check if it's actually in the DOM before trying to remove it
+      if (this.customHelpButton && this.customHelpButton.parentElement && document.body.contains(this.customHelpButton)) {
         this.customHelpButton.remove();
-        this.customHelpButton = undefined;
       }
+      this.customHelpButton = undefined;
 
       // Create a new custom button
       const customButton = helpButton.cloneNode(true) as HTMLElement;
       customButton.style.display = '';
       customButton.removeAttribute('aria-label'); // Remove any existing aria-label
+      // Add unique identifier to avoid conflicts with other plugins
+      customButton.setAttribute('data-oxygen-settings-help-replacement', 'true');
+      customButton.classList.add('oxygen-settings-help-replacement');
       
       // Clear any existing click handlers
       customButton.onclick = null;
@@ -390,7 +396,7 @@ export default class MinimalTheme extends Plugin {
     } finally {
       // Reconnect observer after a delay
       setTimeout(() => {
-        if (this.settings.hideHelpButton && this.settings.helpButtonReplacement?.enabled) {
+        if (this.settings.helpButtonReplacement?.enabled) {
           this.setupHelpButtonObserver();
         }
       }, 1000);
@@ -403,8 +409,8 @@ export default class MinimalTheme extends Plugin {
       this.helpButtonObserver.disconnect();
     }
 
-    // Only set up observer if help button is hidden and replacement is enabled
-    if (!this.settings.hideHelpButton || !this.settings.helpButtonReplacement?.enabled) {
+    // Only set up observer if replacement is enabled (works independently of hideHelpButton)
+    if (!this.settings.helpButtonReplacement?.enabled) {
       return;
     }
 
@@ -420,8 +426,19 @@ export default class MinimalTheme extends Plugin {
         const vaultActions = document.querySelector('.workspace-drawer-vault-actions');
         if (!vaultActions) return;
         
-        // Check if we have a custom button, if not, inject it
-        if (!this.customHelpButton) {
+        // Check if we have a custom button AND it's still in the DOM
+        // The reference might exist but the button could have been removed
+        // Also check for our unique identifier to avoid conflicts with other plugins
+        const customButtonExists = this.customHelpButton && 
+          this.customHelpButton.parentElement && 
+          document.body.contains(this.customHelpButton) &&
+          this.customHelpButton.hasAttribute('data-oxygen-settings-help-replacement');
+        
+        if (!customButtonExists) {
+          // Clear stale reference if button was removed
+          if (this.customHelpButton && !document.body.contains(this.customHelpButton)) {
+            this.customHelpButton = undefined;
+          }
           this.updateHelpButton();
         }
       }, 100); // Shorter debounce for better responsiveness
@@ -447,20 +464,26 @@ export default class MinimalTheme extends Plugin {
   }
 
   private restoreHelpButton() {
-    // Remove CSS that hides help button
-    if (this.helpButtonStyleEl) {
+    // Only remove CSS if neither hideHelpButton nor replacement is enabled
+    const shouldHideHelpButton = this.settings.hideHelpButton || this.settings.helpButtonReplacement?.enabled;
+    if (!shouldHideHelpButton && this.helpButtonStyleEl) {
       this.helpButtonStyleEl.remove();
       this.helpButtonStyleEl = undefined;
     }
 
-    // Remove the custom button
-    if (this.customHelpButton) {
-      this.customHelpButton.remove();
+    // Remove the custom button (only if replacement is disabled)
+    if (!this.settings.helpButtonReplacement?.enabled && this.customHelpButton) {
+      // Check if it's actually in the DOM before trying to remove it
+      if (document.body.contains(this.customHelpButton)) {
+        this.customHelpButton.remove();
+      }
       this.customHelpButton = undefined;
     }
 
-    // Clear stored references
-    this.helpButtonElement = undefined;
+    // Clear stored references if replacement is disabled
+    if (!this.settings.helpButtonReplacement?.enabled) {
+      this.helpButtonElement = undefined;
+    }
   }
 }
 

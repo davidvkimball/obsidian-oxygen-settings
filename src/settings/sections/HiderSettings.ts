@@ -165,33 +165,32 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
         plugin.settings.hideHelpButton = value;
         void plugin.saveData(plugin.settings);
         plugin.refresh();
-        // Trigger help button replacement update
-        if ((plugin as any).updateHelpButton) {
-          void (plugin as any).updateHelpButton();
+        // Update CSS to reflect hideHelpButton state
+        if ((plugin as any).updateHelpButtonCSS) {
+          (plugin as any).updateHelpButtonCSS();
         }
-        // Re-render settings tab to show/hide replacement options
-        if (plugin.settingsTab) {
-          plugin.settingsTab.display();
+        // Trigger help button replacement update if replacement is enabled
+        if (plugin.settings.helpButtonReplacement?.enabled && (plugin as any).updateHelpButton) {
+          void (plugin as any).updateHelpButton();
         }
       })
     );
 
-  // Replace help button with custom action (only shown when hideHelpButton is enabled)
-  if (plugin.settings.hideHelpButton) {
-    // Initialize helpButtonReplacement if it doesn't exist
-    if (!plugin.settings.helpButtonReplacement) {
-      plugin.settings.helpButtonReplacement = {
-        enabled: false,
-        commandId: 'oxygen-settings:open-settings',
-        iconId: 'settings-2',
-      };
-    }
+  // Replace help button with custom action (works independently of hideHelpButton)
+  // Initialize helpButtonReplacement if it doesn't exist
+  if (!plugin.settings.helpButtonReplacement) {
+    plugin.settings.helpButtonReplacement = {
+      enabled: false,
+      commandId: 'oxygen-settings:open-settings',
+      iconId: 'settings-2',
+    };
+  }
 
-    // Toggle for enabling replacement
-    new Setting(containerEl)
-      .setName('Replace help button with custom action')
-      .setDesc('Replace the hidden help button with a custom icon and command. Requires "Hide help button" to be enabled.')
-      .addToggle(toggle => toggle.setValue(plugin.settings.helpButtonReplacement?.enabled ?? false)
+  // Toggle for enabling replacement
+  new Setting(containerEl)
+    .setName('Replace help button with custom action')
+    .setDesc('Replace the help button with a custom icon and command. This will hide the original help button and show your custom button instead.')
+    .addToggle(toggle => toggle.setValue(plugin.settings.helpButtonReplacement?.enabled ?? false)
         .onChange(async (value) => {
           if (!plugin.settings.helpButtonReplacement) {
             plugin.settings.helpButtonReplacement = {
@@ -301,7 +300,6 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
           })
         );
     }
-  }
 
   // Hide vault name
   new Setting(containerEl)

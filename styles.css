@@ -1063,18 +1063,19 @@ body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-side
 }
 
 /* Auto-hide tab bar when single tab (Meridian Theme style - exact implementation) */
+/* Base transition properties - apply to all tab bars when feature is enabled */
 body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
   .mod-root
   .workspace-tabs:not(.mod-stacked)
   .workspace-tab-header-container {
   max-height: 3em;
   opacity: 1;
-  overflow: hidden;
   transition:
     opacity 0.3s ease,
     max-height 0.3s ease;
 }
 
+/* Only apply overflow: hidden when there's actually a single tab (to avoid clipping divider line) */
 body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
   .mod-root
   .workspace-tabs:not(.mod-stacked):not(
@@ -1083,6 +1084,7 @@ body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
   .workspace-tab-header-container {
   max-height: 0;
   opacity: 0;
+  overflow: hidden;
 }
 
 /* Hide sidebar buttons */

@@ -623,6 +623,21 @@ export class StyleManagerImpl {
           const rightWidth = getSidebarWidth(rightSidebarEl);
           
           
+          // CRITICAL: Always clean up inline styles first to prevent them from persisting
+          // This ensures that CSS classes control visibility, not stuck inline styles
+          // Clean up synchronously before adding/removing classes
+          const viewActions = modRoot.querySelectorAll('.view-header .view-actions');
+          viewActions.forEach((el) => {
+            const htmlEl = el as HTMLElement;
+            // Remove any inline display styles that might have been set previously
+            // Check if display is set to 'none' with important priority
+            const displayValue = htmlEl.style.getPropertyValue('display');
+            const displayPriority = htmlEl.style.getPropertyPriority('display');
+            if (displayValue === 'none' && displayPriority === 'important') {
+              htmlEl.style.removeProperty('display');
+            }
+          });
+          
           // Remove all single-tab related classes first
           modRoot.classList.remove(
             'has-single-tab',
@@ -640,40 +655,10 @@ export class StyleManagerImpl {
             }
             
             // Only hide view-actions if right sidebar is NOT expanded (is collapsed)
+            // Let CSS handle the hiding - no inline styles needed
             if (rightSidebarCollapsed) {
               modRoot.classList.add('has-single-tab-right-collapsed');
-              
-              // JavaScript fallback: directly apply style if CSS doesn't work
-              // Use requestAnimationFrame to ensure DOM is ready
-              requestAnimationFrame(() => {
-                const viewActions = modRoot.querySelectorAll('.view-header .view-actions');
-                viewActions.forEach((el) => {
-                  (el as HTMLElement).style.setProperty('display', 'none', 'important');
-                });
-              });
-            } else {
-              // Remove inline style when sidebar is expanded
-              // Use requestAnimationFrame and explicitly set display back to empty string to remove !important
-              requestAnimationFrame(() => {
-                const viewActions = modRoot.querySelectorAll('.view-header .view-actions');
-                viewActions.forEach((el) => {
-                  const htmlEl = el as HTMLElement;
-                  // First set to empty string to remove !important, then remove the property
-                  htmlEl.style.setProperty('display', '', 'important');
-                  htmlEl.style.removeProperty('display');
-                });
-              });
             }
-          } else {
-            // Remove inline styles when not single tab
-            requestAnimationFrame(() => {
-              const viewActions = modRoot.querySelectorAll('.view-header .view-actions');
-              viewActions.forEach((el) => {
-                const htmlEl = el as HTMLElement;
-                htmlEl.style.setProperty('display', '', 'important');
-                htmlEl.style.removeProperty('display');
-              });
-            });
           }
         }
       });

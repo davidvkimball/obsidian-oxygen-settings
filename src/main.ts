@@ -324,6 +324,14 @@ export default class MinimalTheme extends Plugin {
       // Find the help button
       const vaultActions = document.querySelector('.workspace-drawer-vault-actions');
       if (!vaultActions) {
+        // Set up observer to catch it when it appears
+        this.setupHelpButtonObserver();
+        // Also retry after a short delay
+        setTimeout(() => {
+          if (this.settings.helpButtonReplacement?.enabled) {
+            this.updateHelpButton();
+          }
+        }, 500);
         return;
       }
 
@@ -340,6 +348,14 @@ export default class MinimalTheme extends Plugin {
       }
       
       if (!helpButton) {
+        // Set up observer to catch it when it appears
+        this.setupHelpButtonObserver();
+        // Also retry after a short delay
+        setTimeout(() => {
+          if (this.settings.helpButtonReplacement?.enabled) {
+            this.updateHelpButton();
+          }
+        }, 500);
         return;
       }
 
@@ -394,7 +410,8 @@ export default class MinimalTheme extends Plugin {
       // Store reference to custom button
       this.customHelpButton = customButton;
     } finally {
-      // Reconnect observer after a delay
+      // Always set up observer after attempting to create button (even if elements weren't found)
+      // This ensures we catch the button when it appears later
       setTimeout(() => {
         if (this.settings.helpButtonReplacement?.enabled) {
           this.setupHelpButtonObserver();
@@ -460,6 +477,23 @@ export default class MinimalTheme extends Plugin {
         childList: true,
         subtree: false,
       });
+    }
+    
+    // Add fallback observers if the specific elements don't exist yet
+    if (!vaultActions && !vaultProfile) {
+      const workspace = document.querySelector('.workspace-split');
+      if (workspace) {
+        this.helpButtonObserver.observe(workspace, {
+          childList: true,
+          subtree: true,
+        });
+      } else {
+        // Last resort: observe document body
+        this.helpButtonObserver.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+      }
     }
   }
 

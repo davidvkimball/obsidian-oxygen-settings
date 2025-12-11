@@ -169,5 +169,22 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
         void plugin.saveData(plugin.settings);
         plugin.refresh();
       }));
+
+  // Enable background blur
+  new Setting(containerEl)
+    .setName('Enable background blur')
+    .setDesc('Applies blur effect to menus, modals, popups, and graph control panels. Disable if scrolling becomes laggy. Not available on mobile devices.')
+    .addToggle(toggle => {
+      // Ensure enableBlur exists on settings object
+      if (!('enableBlur' in plugin.settings)) {
+        (plugin.settings as any).enableBlur = false;
+      }
+      toggle.setValue(plugin.settings.enableBlur)
+        .onChange((value) => {
+          plugin.settings.enableBlur = value;
+          void plugin.saveData(plugin.settings);
+          plugin.refresh();
+        });
+    });
 }
 

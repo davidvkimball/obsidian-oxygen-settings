@@ -105,6 +105,8 @@ export interface MinimalSettings {
   // Animation settings
   animationPersonality: 'default' | 'playful' | 'off';
   animationSpeed: number; // 0-2, default 1
+  // Blur background
+  enableBlur: boolean;
   // Help button replacement
   helpButtonReplacement?: HelpButtonReplacementSettings;
 }
@@ -216,6 +218,8 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   // Animation settings
   animationPersonality: 'default',
   animationSpeed: 1,
+  // Blur background
+  enableBlur: false,
   // Help button replacement
   helpButtonReplacement: {
     enabled: false,

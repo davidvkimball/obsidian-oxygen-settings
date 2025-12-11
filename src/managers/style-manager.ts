@@ -145,6 +145,7 @@ export class StyleManagerImpl {
     document.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
     document.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
     document.body.classList.toggle('minimal-focus-mode', this.plugin.settings.focusMode);
+    document.body.classList.toggle('enable-blur', this.plugin.settings.enableBlur);
     document.body.classList.toggle('links-int-on', this.plugin.settings.underlineInternal);
     document.body.classList.toggle('links-ext-on', this.plugin.settings.underlineExternal);
     document.body.classList.toggle('full-width-media', this.plugin.settings.fullWidthMedia);
@@ -507,6 +508,7 @@ export class StyleManagerImpl {
       'auto-collapse-ribbon',
       'collapse-other-nav-headers',
       'auto-hide-tab-bar-when-single-tab',
+      'enable-blur',
       'animations-refined',
       'animations-default',
       'animations-playful',

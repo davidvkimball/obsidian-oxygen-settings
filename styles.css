@@ -1047,15 +1047,83 @@ body.minimal-theme.borders-none .tabs-modern .mod-root .workspace-tabs:not(.mod-
    Hider Plugin Styles
    ======================================== */
 
-/* Hides vault name */
-.hider-vault .workspace-sidedock-vault-profile,
-body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile {
+/* Hides vault name with gradient fade background */
+/* Hide the vault switcher content (vault name) but keep the container for the help button */
+body.hider-vault:not(.is-mobile) .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile .workspace-drawer-vault-switcher,
+body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile .workspace-drawer-vault-switcher {
 	display: none;
 }
 
+/* Add gradient fade background that transitions from transparent to opaque before help button */
+body.hider-vault:not(.is-mobile) .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile,
+body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile {
+	position: relative;
+	background-color: transparent !important;
+	background: transparent !important;
+}
+
+/* Pseudo-element with gradient mask for the fade effect */
+body.hider-vault:not(.is-mobile) .mod-sidedock.mod-left-split .workspace-sidedock-vault-profile::before,
+body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	pointer-events: none;
+	background-color: var(--background-secondary);
+	/* Gradient mask: transparent at top, fully opaque at bottom (where help button is) */
+	mask: linear-gradient(to bottom, 
+		transparent 0%, 
+		transparent 30%,
+		hsla(0, 0%, 0%, 0.1) 50%,
+		hsla(0, 0%, 0%, 0.3) 60%,
+		hsla(0, 0%, 0%, 0.5) 70%,
+		hsla(0, 0%, 0%, 0.7) 80%,
+		hsla(0, 0%, 0%, 0.85) 85%,
+		hsla(0, 0%, 0%, 0.95) 90%,
+		black 95%,
+		black 100%);
+	-webkit-mask: linear-gradient(to bottom, 
+		transparent 0%, 
+		transparent 30%,
+		hsla(0, 0%, 0%, 0.1) 50%,
+		hsla(0, 0%, 0%, 0.3) 60%,
+		hsla(0, 0%, 0%, 0.5) 70%,
+		hsla(0, 0%, 0%, 0.7) 80%,
+		hsla(0, 0%, 0%, 0.85) 85%,
+		hsla(0, 0%, 0%, 0.95) 90%,
+		black 95%,
+		black 100%);
+}
+
+/* Ensure help button area has fully opaque background */
+body.hider-vault:not(.is-mobile) .mod-sidedock.mod-left-split .workspace-drawer-vault-actions,
+body.hider-vault:not(.is-mobile) .workspace-split.mod-left-split .workspace-drawer-vault-actions {
+	position: relative;
+	z-index: 1;
+	background-color: var(--background-secondary) !important;
+}
+
 /* Hide tabs */
-.hider-tabs .mod-root .workspace-tabs .workspace-tab-header-container {
-	display: none;
+/* Use !important and high specificity to override theme-specific rules */
+.hider-tabs .mod-root .workspace-tabs .workspace-tab-header-container,
+body.hider-tabs .mod-root .workspace-tabs .workspace-tab-header-container,
+body.hider-tabs.minimal-theme .mod-root .workspace-tabs .workspace-tab-header-container,
+body.hider-tabs.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .workspace-tab-header-container,
+body.hider-tabs.minimal-theme:not(.borders-on):not(.borders-none):not(.colorful-frame) .workspace .mod-root .workspace-tab-header-container {
+	display: none !important;
+}
+
+/* Hide view-header when tabs are hidden (matches original Hider plugin behavior) */
+.hider-tabs .mod-root .view-header,
+body.hider-tabs .mod-root .view-header,
+body.hider-tabs.minimal-theme .mod-root .view-header,
+body.hider-tabs.minimal-theme:not(.borders-on):not(.borders-none) .workspace .mod-root .view-header,
+body.hider-tabs.minimal-theme:not(.borders-on):not(.borders-none):not(.colorful-frame) .workspace .mod-root .view-header {
+	display: none !important;
 }
 
 .hider-tabs .mod-top-left-space .view-header {
@@ -1777,5 +1845,30 @@ body.collapse-other-nav-headers .mod-sidedock .workspace-leaf-content:not([data-
 
 .order-navbar-button-nth-child-6-6 .mobile-navbar-action:nth-child(6) {
 	order: 6;
+}
+
+/* ========================================
+   Background Blur Effect
+   ======================================== */
+
+/* Base modal-bg styling (matches Maple theme) */
+body.minimal-theme:not(.is-mobile) .modal-bg {
+	opacity: 1 !important;
+	background-color: hsla(var(--background-secondary-hsl, 220 13% 18%), 0.6) !important;
+}
+
+/* Apply blur effect to menus, modals, popups, and graph control panels */
+/* Only applies on desktop (not mobile) and when Oxygen theme is active */
+body.minimal-theme:not(.is-mobile).enable-blur :is(.menu, .suggestion-container, .graph-control-section) {
+	background-color: hsla(var(--background-secondary-hsl, 220 13% 18%), 0.7) !important;
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	will-change: backdrop-filter;
+}
+
+body.minimal-theme:not(.is-mobile).enable-blur .modal-bg {
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+	transform: translateZ(0);
 }
 

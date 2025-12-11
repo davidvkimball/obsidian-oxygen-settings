@@ -35,3 +35,4 @@ Oxygen Theme Settings is not yet available in the Community plugins section. Ins
 - [Meridian](https://github.com/mvahaste/meridian) theme for the auto-hide animations for the file explorer icons and nav bar auto-hide reveal.
 - [Adrenaline](github.com/Spekulucius/obsidian-adrenaline) theme for the auto-collapsing sidebar treatment.
 - [Lumines](https://github.com/danielkhmara/obsidian-lumines) theme for the additional hiding elements logic.
+- [Maple](https://github.com/subframe7536/obsidian-theme-maple) theme for the background blur effect.

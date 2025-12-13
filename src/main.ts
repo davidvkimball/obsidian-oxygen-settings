@@ -3,7 +3,7 @@
  * Main plugin file - lifecycle management only
  */
 
-import { Plugin, setIcon, Notice } from 'obsidian';
+import { Plugin } from 'obsidian';
 import { MinimalSettings, DEFAULT_SETTINGS } from './settings/settings-interface';
 import { MinimalSettingsTab } from './settings';
 import { StyleManagerImpl } from './managers/style-manager';
@@ -25,12 +25,6 @@ export default class MinimalTheme extends Plugin {
   // Cache theme state to avoid repeated vault config calls (performance optimization)
   private _isOxygenActive: boolean = false;
   private _isInitialized: boolean = false;
-  
-  // Help button replacement
-  private helpButtonObserver?: MutationObserver;
-  private helpButtonElement?: HTMLElement;
-  private customHelpButton?: HTMLElement;
-  private helpButtonStyleEl?: HTMLStyleElement;
 
   async onload() {
     await this.loadSettings();
@@ -72,9 +66,6 @@ export default class MinimalTheme extends Plugin {
     // Register all commands
     registerAllCommands(this);
     
-    // Setup help button replacement
-    this.setupHelpButtonReplacement();
-    
     // Watch for theme changes with debouncing for performance
     // css-change fires very frequently, so we debounce and cache the theme state
     let debounceTimer: number;
@@ -115,21 +106,6 @@ export default class MinimalTheme extends Plugin {
     this.themeManager.cleanupSidebarTheme();
     this.styleManager.cleanup();
     this.settingsSyncManager.cleanup();
-    
-    // Cleanup help button replacement
-    if (this.helpButtonObserver) {
-      this.helpButtonObserver.disconnect();
-      this.helpButtonObserver = undefined;
-    }
-    
-    // Remove CSS style that hides help button
-    if (this.helpButtonStyleEl) {
-      this.helpButtonStyleEl.remove();
-      this.helpButtonStyleEl = undefined;
-    }
-    
-    // Restore original help button if we modified it
-    this.restoreHelpButton();
   }
 
   async loadSettings() {
@@ -179,16 +155,6 @@ export default class MinimalTheme extends Plugin {
       this.settings.animationPersonality = 'default';
     }
     
-    // Migration for sidebar buttons: convert old hideSidebarButtons to separate left/right settings
-    if (loadedData && loadedData.hideSidebarButtons !== undefined) {
-      // Only migrate if new settings haven't been set yet
-      if (loadedData.hideLeftSidebarButton === undefined && loadedData.hideRightSidebarButton === undefined) {
-        this.settings.hideLeftSidebarButton = loadedData.hideSidebarButtons;
-        this.settings.hideRightSidebarButton = loadedData.hideSidebarButtons;
-        // Save migrated settings
-        await this.saveData(this.settings);
-      }
-    }
   }
 
   async saveSettings() {
@@ -243,281 +209,6 @@ export default class MinimalTheme extends Plugin {
   private checkOxygenTheme(): boolean {
     const cssTheme = getVaultConfig(this.app, 'cssTheme');
     return cssTheme === OXYGEN_THEME_NAME;
-  }
-  
-  // Help button replacement methods
-  private setupHelpButtonReplacement() {
-    // Only proceed if replacement is enabled (works independently of hideHelpButton)
-    if (!this.settings.helpButtonReplacement?.enabled) {
-      return;
-    }
-    
-    // Update CSS and button
-    this.updateHelpButtonCSS();
-    
-    // Wait for the DOM to be ready
-    const trySetup = () => {
-      if (this.settings.helpButtonReplacement?.enabled) {
-        this.updateHelpButton();
-      }
-    };
-
-    // Try immediately
-    trySetup();
-
-    // Also try after a short delay to ensure DOM is ready
-    setTimeout(trySetup, 500);
-
-    // Set up observer after initial setup to watch for button recreation
-    setTimeout(() => {
-      this.setupHelpButtonObserver();
-    }, 1000);
-  }
-
-  public updateHelpButtonCSS() {
-    // Remove existing style if any
-    if (this.helpButtonStyleEl) {
-      this.helpButtonStyleEl.remove();
-    }
-
-    // Hide help button if either hideHelpButton OR replacement is enabled
-    const shouldHideHelpButton = this.settings.hideHelpButton || this.settings.helpButtonReplacement?.enabled;
-    
-    if (shouldHideHelpButton) {
-      // Create style element to hide help button globally
-      this.helpButtonStyleEl = document.createElement('style');
-      this.helpButtonStyleEl.id = 'oxygen-settings-hide-help-button';
-      this.helpButtonStyleEl.textContent = `
-        .workspace-drawer-vault-actions .clickable-icon:has(svg.help) {
-          display: none !important;
-        }
-      `;
-      document.head.appendChild(this.helpButtonStyleEl);
-    }
-  }
-
-  public async updateHelpButton() {
-    // Only proceed if replacement is enabled (works independently of hideHelpButton)
-    if (!this.settings.helpButtonReplacement?.enabled) {
-      this.restoreHelpButton();
-      return;
-    }
-    
-    // Temporarily disconnect observer to prevent infinite loops
-    if (this.helpButtonObserver) {
-      this.helpButtonObserver.disconnect();
-    }
-
-    // Ensure we have the latest settings
-    await this.loadSettings();
-
-    // Update CSS first (this will hide the help button globally)
-    this.updateHelpButtonCSS();
-
-    try {
-      // Check if replacement is still enabled
-      if (!this.settings.helpButtonReplacement?.enabled) {
-        this.restoreHelpButton();
-        return;
-      }
-
-      // Find the help button
-      const vaultActions = document.querySelector('.workspace-drawer-vault-actions');
-      if (!vaultActions) {
-        // Set up observer to catch it when it appears
-        this.setupHelpButtonObserver();
-        // Also retry after a short delay
-        setTimeout(() => {
-          if (this.settings.helpButtonReplacement?.enabled) {
-            this.updateHelpButton();
-          }
-        }, 500);
-        return;
-      }
-
-      // Find the help button - it's the first clickable-icon that contains an SVG with class "help"
-      const clickableIcons = Array.from(vaultActions.querySelectorAll('.clickable-icon'));
-      let helpButton: HTMLElement | null = null;
-      
-      for (const icon of clickableIcons) {
-        const svg = icon.querySelector('svg.help');
-        if (svg) {
-          helpButton = icon as HTMLElement;
-          break;
-        }
-      }
-      
-      if (!helpButton) {
-        // Set up observer to catch it when it appears
-        this.setupHelpButtonObserver();
-        // Also retry after a short delay
-        setTimeout(() => {
-          if (this.settings.helpButtonReplacement?.enabled) {
-            this.updateHelpButton();
-          }
-        }, 500);
-        return;
-      }
-
-      // Store reference to the button
-      this.helpButtonElement = helpButton;
-
-      // Remove existing custom button if it exists (always recreate to update icon/command)
-      // Check if it's actually in the DOM before trying to remove it
-      if (this.customHelpButton && this.customHelpButton.parentElement && document.body.contains(this.customHelpButton)) {
-        this.customHelpButton.remove();
-      }
-      this.customHelpButton = undefined;
-
-      // Create a new custom button
-      const customButton = helpButton.cloneNode(true) as HTMLElement;
-      customButton.style.display = '';
-      customButton.removeAttribute('aria-label'); // Remove any existing aria-label
-      // Add unique identifier to avoid conflicts with other plugins
-      customButton.setAttribute('data-oxygen-settings-help-replacement', 'true');
-      customButton.classList.add('oxygen-settings-help-replacement');
-      
-      // Clear any existing click handlers
-      customButton.onclick = null;
-      
-      // Replace the icon using Obsidian's setIcon function
-      const iconContainer = customButton.querySelector('svg')?.parentElement || customButton;
-      try {
-        setIcon(iconContainer as HTMLElement, this.settings.helpButtonReplacement.iconId);
-      } catch (error) {
-        console.warn('[Oxygen Settings] Error setting icon:', error);
-      }
-
-      // Add our custom click handler
-      customButton.addEventListener('click', async (evt: MouseEvent) => {
-        evt.preventDefault();
-        evt.stopPropagation();
-        
-        const commandId = this.settings.helpButtonReplacement?.commandId;
-        if (commandId) {
-          try {
-            await (this.app as any).commands.executeCommandById(commandId);
-          } catch (error) {
-            console.warn('[Oxygen Settings] Error executing command:', error);
-            new Notice(`Failed to execute command: ${commandId}`);
-          }
-        }
-      }, true); // Use capture phase to ensure we handle it first
-
-      // Insert the custom button right after the original (hidden) button
-      helpButton.parentElement?.insertBefore(customButton, helpButton.nextSibling);
-      
-      // Store reference to custom button
-      this.customHelpButton = customButton;
-    } finally {
-      // Always set up observer after attempting to create button (even if elements weren't found)
-      // This ensures we catch the button when it appears later
-      setTimeout(() => {
-        if (this.settings.helpButtonReplacement?.enabled) {
-          this.setupHelpButtonObserver();
-        }
-      }, 1000);
-    }
-  }
-
-  private setupHelpButtonObserver() {
-    // Disconnect existing observer if any
-    if (this.helpButtonObserver) {
-      this.helpButtonObserver.disconnect();
-    }
-
-    // Only set up observer if replacement is enabled (works independently of hideHelpButton)
-    if (!this.settings.helpButtonReplacement?.enabled) {
-      return;
-    }
-
-    // Watch for changes to the vault profile area only (more targeted)
-    let updateTimeout: number | null = null;
-    this.helpButtonObserver = new MutationObserver(() => {
-      // Debounce updates to prevent infinite loops
-      if (updateTimeout) {
-        clearTimeout(updateTimeout);
-      }
-      updateTimeout = window.setTimeout(() => {
-        // Check if help button was recreated (CSS will hide it, but we need to inject our custom button)
-        const vaultActions = document.querySelector('.workspace-drawer-vault-actions');
-        if (!vaultActions) return;
-        
-        // Check if we have a custom button AND it's still in the DOM
-        // The reference might exist but the button could have been removed
-        // Also check for our unique identifier to avoid conflicts with other plugins
-        const customButtonExists = this.customHelpButton && 
-          this.customHelpButton.parentElement && 
-          document.body.contains(this.customHelpButton) &&
-          this.customHelpButton.hasAttribute('data-oxygen-settings-help-replacement');
-        
-        if (!customButtonExists) {
-          // Clear stale reference if button was removed
-          if (this.customHelpButton && !document.body.contains(this.customHelpButton)) {
-            this.customHelpButton = undefined;
-          }
-          this.updateHelpButton();
-        }
-      }, 100); // Shorter debounce for better responsiveness
-    });
-
-    // Observe the vault actions area more specifically
-    const vaultActions = document.querySelector('.workspace-drawer-vault-actions');
-    if (vaultActions) {
-      this.helpButtonObserver.observe(vaultActions, {
-        childList: true,
-        subtree: true, // Watch subtree to catch when buttons are recreated
-      });
-    }
-    
-    // Also observe the parent vault profile area
-    const vaultProfile = document.querySelector('.workspace-sidedock-vault-profile');
-    if (vaultProfile) {
-      this.helpButtonObserver.observe(vaultProfile, {
-        childList: true,
-        subtree: false,
-      });
-    }
-    
-    // Add fallback observers if the specific elements don't exist yet
-    if (!vaultActions && !vaultProfile) {
-      const workspace = document.querySelector('.workspace-split');
-      if (workspace) {
-        this.helpButtonObserver.observe(workspace, {
-          childList: true,
-          subtree: true,
-        });
-      } else {
-        // Last resort: observe document body
-        this.helpButtonObserver.observe(document.body, {
-          childList: true,
-          subtree: true,
-        });
-      }
-    }
-  }
-
-  private restoreHelpButton() {
-    // Only remove CSS if neither hideHelpButton nor replacement is enabled
-    const shouldHideHelpButton = this.settings.hideHelpButton || this.settings.helpButtonReplacement?.enabled;
-    if (!shouldHideHelpButton && this.helpButtonStyleEl) {
-      this.helpButtonStyleEl.remove();
-      this.helpButtonStyleEl = undefined;
-    }
-
-    // Remove the custom button (only if replacement is disabled)
-    if (!this.settings.helpButtonReplacement?.enabled && this.customHelpButton) {
-      // Check if it's actually in the DOM before trying to remove it
-      if (document.body.contains(this.customHelpButton)) {
-        this.customHelpButton.remove();
-      }
-      this.customHelpButton = undefined;
-    }
-
-    // Clear stored references if replacement is disabled
-    if (!this.settings.helpButtonReplacement?.enabled) {
-      this.helpButtonElement = undefined;
-    }
   }
 }
 

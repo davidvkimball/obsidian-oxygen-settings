@@ -27,12 +27,18 @@ Oxygen Theme Settings is not yet available in the Community plugins section. Ins
 - [Oxygen theme](https://github.com/davidvkimball/obsidian-oxygen)
 - Optional: [Style Settings plugin](https://github.com/mgmeyers/obsidian-style-settings) for more specific tweaks if desired
 
+## Migration Notice
+
+**Important:** All previous hider-related settings have been migrated to the **[UI Tweaker](https://github.com/davidvkimball/obsidian-ui-tweaker)** plugin. Please install UI Tweaker to continue using these features. Your settings will need to be reconfigured in the new plugin.
+
+The following features remain in Oxygen Settings (not available in UI Tweaker):
+- **Focus mode** - Hide tab bar and status bar, hover to display
+- **Deemphasize properties** - Softens visual prominence of file properties
+- **Auto-hide tab bar when single tab** - Hide the tab bar automatically when only 1 tab is open
+
 ## Credits
 
 - [Minimal Theme Settings](https://github.com/kepano/obsidian-minimal-settings) - the plugin upon which this one is based.
-- [Hider](https://github.com/kepano/obsidian-hider) - most "hide" features in this plugin are based on this plugin.
 - [Baseline](https://github.com/aaaaalexis/obsidian-baseline) theme for the animation effects and some feature ideas.
 - [Meridian](https://github.com/mvahaste/meridian) theme for the auto-hide animations for the file explorer icons and nav bar auto-hide reveal.
-- [Adrenaline](github.com/Spekulucius/obsidian-adrenaline) theme for the auto-collapsing sidebar treatment.
-- [Lumines](https://github.com/danielkhmara/obsidian-lumines) theme for the additional hiding elements logic.
 - [Maple](https://github.com/subframe7536/obsidian-theme-maple) theme for the background blur effect.

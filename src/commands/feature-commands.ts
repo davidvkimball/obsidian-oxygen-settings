@@ -83,26 +83,6 @@ export function registerFeatureCommands(plugin: PluginContext): void {
     }
   });
 
-  // Hider commands
-  plugin.addCommand({
-    id: COMMAND_IDS.TOGGLE_TAB_BAR,
-    name: 'Toggle tab bar',
-    callback: () => {
-      plugin.settings.hideTabs = !plugin.settings.hideTabs;
-      void plugin.saveData(plugin.settings);
-      refresh(plugin);
-    }
-  });
-
-  plugin.addCommand({
-    id: COMMAND_IDS.TOGGLE_STATUS_BAR,
-    name: 'Toggle status bar',
-    callback: () => {
-      plugin.settings.hideStatus = !plugin.settings.hideStatus;
-      void plugin.saveData(plugin.settings);
-      refresh(plugin);
-    }
-  });
 
   // Open settings command
   plugin.addCommand({

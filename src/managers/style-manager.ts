@@ -156,45 +156,8 @@ export class StyleManagerImpl {
     document.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
     document.body.classList.toggle('minimal-folding', this.plugin.settings.folding);
 
-    // Hider classes
-    document.body.classList.toggle('hider-status', this.plugin.settings.hideStatus);
-    document.body.classList.toggle('hider-tabs', this.plugin.settings.hideTabs);
-    document.body.classList.toggle('hider-scroll', this.plugin.settings.hideScroll);
-    // Support both old combined setting and new separate settings
-    const hideLeft = this.plugin.settings.hideLeftSidebarButton ?? this.plugin.settings.hideSidebarButtons;
-    const hideRight = this.plugin.settings.hideRightSidebarButton ?? this.plugin.settings.hideSidebarButtons;
-    document.body.classList.toggle('hider-sidebar-buttons', this.plugin.settings.hideSidebarButtons);
-    document.body.classList.toggle('hider-left-sidebar-button', hideLeft);
-    document.body.classList.toggle('hider-right-sidebar-button', hideRight);
-    document.body.classList.toggle('hider-tooltips', this.plugin.settings.hideTooltips);
-    document.body.classList.toggle('hider-search-suggestions', this.plugin.settings.hideSearchSuggestions);
-    document.body.classList.toggle('hider-file-nav-header', this.plugin.settings.hideFileNavButtons);
-    document.body.classList.toggle('hider-search-counts', this.plugin.settings.hideSearchCounts);
-    document.body.classList.toggle('hider-instructions', this.plugin.settings.hideInstructions);
-    document.body.classList.toggle('hider-meta', this.plugin.settings.hidePropertiesReading);
-    document.body.classList.toggle('hider-vault', this.plugin.settings.hideVault);
-    document.body.classList.toggle('metadata-heading-off', this.plugin.settings.hidePropertiesHeading);
-    document.body.classList.toggle('metadata-add-property-off', this.plugin.settings.hideAddPropertyButton);
+    // Focus classes (only features not in UI Tweaker)
     document.body.classList.toggle('deemphasize-properties', this.plugin.settings.deemphasizeProperties);
-    document.body.classList.toggle('auto-hide-vault-switcher', this.plugin.settings.autoHideVaultSwitcher);
-    // Set background transparency CSS variable for auto-hide vault switcher
-    document.body.style.setProperty('--auto-hide-vault-switcher-bg-transparency', 
-      this.plugin.settings.autoHideVaultSwitcherBgTransparency.toString());
-    // Remove mask when fully opaque (transparency = 1) to ensure full opacity
-    if (this.plugin.settings.autoHideVaultSwitcherBgTransparency >= 1) {
-      document.body.style.setProperty('--auto-hide-vault-switcher-mask', 'none');
-    } else {
-      document.body.style.setProperty('--auto-hide-vault-switcher-mask', 
-        'linear-gradient(to top, hsl(0, 0%, 0%) 0%, hsla(0, 0%, 0%, 0.99) 18.4%, hsla(0, 0%, 0%, 0.963) 33.7%, hsla(0, 0%, 0%, 0.92) 46.4%, hsla(0, 0%, 0%, 0.864) 56.7%, hsla(0, 0%, 0%, 0.796) 64.8%, hsla(0, 0%, 0%, 0.72) 71.2%, hsla(0, 0%, 0%, 0.637) 76.1%, hsla(0, 0%, 0%, 0.55) 79.9%, hsla(0, 0%, 0%, 0.46) 82.8%, hsla(0, 0%, 0%, 0.37) 85.2%, hsla(0, 0%, 0%, 0.283) 87.3%, hsla(0, 0%, 0%, 0.2) 89.6%, hsla(0, 0%, 0%, 0.124) 92.3%, hsla(0, 0%, 0%, 0.056) 95.6%, hsla(0, 0%, 0%, 0) 100%)');
-    }
-    document.body.classList.toggle('auto-hide-settings-button', this.plugin.settings.autoHideSettingsButton);
-    document.body.classList.toggle('hider-help-button', this.plugin.settings.hideHelpButton);
-    document.body.classList.toggle('auto-hide-file-explorer-nav-header', this.plugin.settings.autoHideFileExplorerNavHeader);
-    document.body.classList.toggle('auto-hide-other-nav-headers', this.plugin.settings.autoHideOtherNavHeaders);
-    document.body.classList.toggle('auto-hide-left-tab-headers', this.plugin.settings.autoHideLeftTabHeaders);
-    document.body.classList.toggle('auto-hide-right-tab-headers', this.plugin.settings.autoHideRightTabHeaders);
-    document.body.classList.toggle('auto-collapse-ribbon', this.plugin.settings.autoCollapseRibbon);
-    document.body.classList.toggle('collapse-other-nav-headers', this.plugin.settings.collapseOtherNavHeaders);
     document.body.classList.toggle('auto-hide-tab-bar-when-single-tab', this.plugin.settings.autoHideTabBarWhenSingleTab);
     
     // Setup or cleanup tab observer based on setting
@@ -203,49 +166,6 @@ export class StyleManagerImpl {
     } else {
       this.cleanupTabObserver();
     }
-
-    // Tab icons
-    document.body.classList.toggle('hide-tab-list-icon', this.plugin.settings.hideTabListIcon);
-    document.body.classList.toggle('hide-new-tab-icon', this.plugin.settings.hideNewTabIcon);
-    document.body.classList.toggle('hide-tab-close-button', this.plugin.settings.hideTabCloseButton);
-
-    // Desktop hide buttons
-    document.body.classList.toggle('hide-button-new-note', this.plugin.settings.hideButtonNewNote);
-    document.body.classList.toggle('hide-button-new-folder', this.plugin.settings.hideButtonNewFolder);
-    document.body.classList.toggle('hide-button-sort-order', this.plugin.settings.hideButtonSortOrder);
-    document.body.classList.toggle('hide-button-auto-reveal', this.plugin.settings.hideButtonAutoReveal);
-    document.body.classList.toggle('hide-button-collapse-all', this.plugin.settings.hideButtonCollapseAll);
-    document.body.classList.toggle('hide-button-reading-mode', this.plugin.settings.hideButtonReadingMode);
-    document.body.classList.toggle('hide-button-search-settings', this.plugin.settings.hideButtonSearchSettings);
-
-    // Mobile hide icons
-    document.body.classList.toggle('hide-icon-mobile-chevrons', this.plugin.settings.hideIconMobileChevrons);
-
-    // Mobile hide buttons
-    document.body.classList.toggle('hide-button-mobile-navbar-action-back', this.plugin.settings.hideButtonMobileNavbarActionBack);
-    document.body.classList.toggle('hide-button-mobile-navbar-action-forward', this.plugin.settings.hideButtonMobileNavbarActionForward);
-    document.body.classList.toggle('hide-button-mobile-navbar-action-quick-switcher', this.plugin.settings.hideButtonMobileNavbarActionQuickSwitcher);
-    document.body.classList.toggle('hide-button-mobile-navbar-action-new-tab', this.plugin.settings.hideButtonMobileNavbarActionNewTab);
-    document.body.classList.toggle('hide-button-mobile-navbar-action-tabs', this.plugin.settings.hideButtonMobileNavbarActionTabs);
-    document.body.classList.toggle('hide-button-mobile-navbar-action-menu', this.plugin.settings.hideButtonMobileNavbarActionMenu);
-
-    // Mobile swap button icon
-    document.body.classList.toggle('swap-mobile-new-tab-icon', this.plugin.settings.swapMobileNewTabIcon);
-
-    // Mobile navigation menu ordering
-    // Remove all existing order classes first
-    const orderClasses = Array.from(document.body.classList).filter(cls => 
-      cls.startsWith('order-navbar-button-nth-child-')
-    );
-    orderClasses.forEach(cls => document.body.classList.remove(cls));
-    
-    // Add the selected order classes
-    document.body.classList.add(this.plugin.settings.orderNavbarButton1);
-    document.body.classList.add(this.plugin.settings.orderNavbarButton2);
-    document.body.classList.add(this.plugin.settings.orderNavbarButton3);
-    document.body.classList.add(this.plugin.settings.orderNavbarButton4);
-    document.body.classList.add(this.plugin.settings.orderNavbarButton5);
-    document.body.classList.add(this.plugin.settings.orderNavbarButton6);
 
     // Add width classes
     document.body.addClass(
@@ -288,16 +208,6 @@ export class StyleManagerImpl {
     
     setCssProps(document.body, cssProps);
     
-    // Title bar hover behavior - use CSS custom property to control visibility
-    // When hideTitleBarOnHover is false (always show), set a custom property
-    // The CSS will use this to override the theme's default behavior
-    if (!this.plugin.settings.hideTitleBarOnHover) {
-      setCssProps(document.body, { '--title-bar-always-visible': '1' });
-      document.body.classList.add('always-show-title-bar');
-    } else {
-      document.body.style.removeProperty('--title-bar-always-visible');
-      document.body.classList.remove('always-show-title-bar');
-    }
     
     // Apply animation settings
     // Remove all animation classes first (including old 'animations-refined' for migration)
@@ -482,31 +392,7 @@ export class StyleManagerImpl {
       'full-file-names',
       'labeled-nav',
       'minimal-folding',
-      'hider-status',
-      'hider-tabs',
-      'hider-scroll',
-      'hider-sidebar-buttons',
-      'hider-left-sidebar-button',
-      'hider-right-sidebar-button',
-      'hider-tooltips',
-      'hider-search-suggestions',
-      'hider-file-nav-header',
-      'hider-search-counts',
-      'hider-instructions',
-      'hider-meta',
-      'hider-vault',
-      'metadata-heading-off',
-      'metadata-add-property-off',
       'deemphasize-properties',
-      'auto-hide-vault-switcher',
-      'auto-hide-settings-button',
-      'hider-help-button',
-      'auto-hide-file-explorer-nav-header',
-      'auto-hide-other-nav-headers',
-      'auto-hide-left-tab-headers',
-      'auto-hide-right-tab-headers',
-      'auto-collapse-ribbon',
-      'collapse-other-nav-headers',
       'auto-hide-tab-bar-when-single-tab',
       'enable-blur',
       'animations-refined',
@@ -568,7 +454,6 @@ export class StyleManagerImpl {
     document.body.style.removeProperty('--anim-speed-modifier');
     
     document.body.classList.remove(CSS_CLASSES.PLUGIN_THEME);
-    document.body.classList.remove('always-show-title-bar');
   }
 
   /**

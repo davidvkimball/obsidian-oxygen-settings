@@ -10,15 +10,4 @@ data.json
 *.js.map
 main.js
 /.DS_Store
-.temp/
-.minimal-reference/
-.style-settings-reference/
-.minimal-settings-reference/
-.oxygen-reference/
-.baseline-reference/
-.hider-reference/
-.meridian-reference/
-.adrenaline-reference/
-.lumines-reference/
-.astro-modular-settings-reference/
-.maple-reference/
+.ref/

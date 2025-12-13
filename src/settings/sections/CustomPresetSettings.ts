@@ -11,6 +11,7 @@ import { PresetEditorModal } from '../../modals/PresetEditorModal';
 import { PresetImportModal } from '../../modals/PresetImportModal';
 import { ConfirmationModal } from '../../modals/ConfirmationModal';
 import { generateColorSwatch } from '../../utils/color-utils';
+import { createSettingsGroup } from '../../utils/settings-compat';
 
 export function buildCustomPresetSettings(
   containerEl: HTMLElement, 
@@ -18,59 +19,74 @@ export function buildCustomPresetSettings(
   app: App,
   refreshCallback: () => void
 ): void {
+  const customPresetsGroup = createSettingsGroup(containerEl, 'Custom color schemes');
+
   // Enable/Disable Custom Presets
-  new Setting(containerEl)
-    .setName('Enable custom presets')
-    .setDesc('Allow creation and use of custom color presets')
-    .addToggle(toggle => toggle
-      .setValue(plugin.settings.enableCustomPresets)
-      .onChange(async (value) => {
-        plugin.settings.enableCustomPresets = value;
-        
-        // If disabling, reset any active custom preset schemes to default
-        if (!value) {
-          let needsUpdate = false;
-          
-          if (plugin.settings.lightScheme.startsWith('minimal-custom-')) {
-            plugin.settings.lightScheme = 'minimal-oxygen-light';
-            needsUpdate = true;
+  customPresetsGroup.addSetting((setting) =>
+    setting
+      .setName('Enable custom presets')
+      .setDesc('Allow creation and use of custom color presets')
+      .addToggle((toggle) =>
+        toggle.setValue(plugin.settings.enableCustomPresets).onChange(async (value) => {
+          plugin.settings.enableCustomPresets = value;
+
+          // If disabling, reset any active custom preset schemes to default
+          if (!value) {
+            let needsUpdate = false;
+
+            if (plugin.settings.lightScheme.startsWith('minimal-custom-')) {
+              plugin.settings.lightScheme = 'minimal-oxygen-light';
+              needsUpdate = true;
+            }
+
+            if (plugin.settings.darkScheme.startsWith('minimal-custom-')) {
+              plugin.settings.darkScheme = 'minimal-oxygen-dark';
+              needsUpdate = true;
+            }
+
+            if (needsUpdate) {
+              plugin.updateStyle();
+              plugin.updateCustomPresetCSS();
+            }
           }
-          
-          if (plugin.settings.darkScheme.startsWith('minimal-custom-')) {
-            plugin.settings.darkScheme = 'minimal-oxygen-dark';
-            needsUpdate = true;
-          }
-          
-          if (needsUpdate) {
-            plugin.updateStyle();
-            plugin.updateCustomPresetCSS();
-          }
-        }
-        
-        await plugin.saveData(plugin.settings);
-        refreshCallback(); // Refresh the settings tab
-      }));
+
+          await plugin.saveData(plugin.settings);
+          refreshCallback(); // Refresh the settings tab
+        })
+      )
+  );
 
   if (!plugin.settings.enableCustomPresets) {
     return;
   }
 
   // Action buttons
-  new Setting(containerEl)
-    .setName('Create new preset')
-    .setDesc('Design a custom color scheme from scratch')
-    .addExtraButton(button => button
-      .setIcon('plus')
-      .setTooltip('Create new preset')
-      .onClick(() => openPresetEditor(app, plugin, null, refreshCallback)));
+  customPresetsGroup.addSetting((setting) =>
+    setting
+      .setName('Create new preset')
+      .setDesc('Design a custom color scheme from scratch')
+      .addExtraButton((button) =>
+        button
+          .setIcon('plus')
+          .setTooltip('Create new preset')
+          .onClick(() => openPresetEditor(app, plugin, null, refreshCallback))
+      )
+  );
 
-  new Setting(containerEl)
-    .setName('Import preset')
-    .setDesc('Import a preset from JSON data')
-    .addExtraButton(button => button
-      .setIcon('download')
-      .setTooltip('Import preset')
-      .onClick(() => openPresetImporter(app, plugin, refreshCallback)));
+  customPresetsGroup.addSetting((setting) =>
+    setting
+      .setName('Import preset')
+      .setDesc('Import a preset from JSON data')
+      .addExtraButton((button) =>
+        button
+          .setIcon('download')
+          .setTooltip('Import preset')
+          .onClick(() => openPresetImporter(app, plugin, refreshCallback))
+      )
+  );
+
+  // Add spacing before preset list to separate from the group
+  containerEl.createEl('br');
 
   // Presets list
   if (plugin.settings.customPresets.length > 0) {
@@ -88,6 +104,9 @@ export function buildCustomPresetSettings(
       cls: 'empty-message'
     });
   }
+
+  // Add spacing after preset list/empty state for consistent spacing before next section
+  containerEl.createEl('br');
 }
 
 function addPresetListItem(

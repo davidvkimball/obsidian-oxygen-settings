@@ -73,10 +73,10 @@ function updateLightStyle(plugin: PluginContext): void {
   
   document.body.removeClass(
     'theme-dark',
-    'minimal-light',
-    'minimal-light-tonal',
-    'minimal-light-contrast',
-    'minimal-light-white'
+    'oxygen-light',
+    'oxygen-light-tonal',
+    'oxygen-light-contrast',
+    'oxygen-light-white'
   );
   document.body.addClass('theme-light', plugin.settings.lightStyle);
   
@@ -96,9 +96,9 @@ function updateDarkStyle(plugin: PluginContext): void {
   
   document.body.removeClass(
     'theme-light',
-    'minimal-dark',
-    'minimal-dark-tonal',
-    'minimal-dark-black'
+    'oxygen-dark',
+    'oxygen-dark-tonal',
+    'oxygen-dark-black'
   );
   document.body.addClass('theme-dark', plugin.settings.darkStyle);
   

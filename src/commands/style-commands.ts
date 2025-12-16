@@ -39,8 +39,8 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.LIGHT_DEFAULT,
     name: 'Use light mode (default)',
     callback: () => {
-      plugin.settings.lightStyle = 'minimal-light';
-      plugin.settings.lightScheme = 'minimal-oxygen-light';
+      plugin.settings.lightStyle = 'oxygen-light';
+      plugin.settings.lightScheme = 'oxygen-oxygen-light';
       void plugin.saveData(plugin.settings);
       updateLightScheme(plugin);
       updateLightStyle(plugin);
@@ -51,7 +51,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.LIGHT_WHITE,
     name: 'Use light mode (all white)',
     callback: () => {
-      plugin.settings.lightStyle = 'minimal-light-white';
+      plugin.settings.lightStyle = 'oxygen-light-white';
       void plugin.saveData(plugin.settings);
       updateLightStyle(plugin);
     }
@@ -61,7 +61,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.LIGHT_TONAL,
     name: 'Use light mode (low contrast)',
     callback: () => {
-      plugin.settings.lightStyle = 'minimal-light-tonal';
+      plugin.settings.lightStyle = 'oxygen-light-tonal';
       void plugin.saveData(plugin.settings);
       updateLightStyle(plugin);
     }
@@ -71,7 +71,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.LIGHT_CONTRAST,
     name: 'Use light mode (high contrast)',
     callback: () => {
-      plugin.settings.lightStyle = 'minimal-light-contrast';
+      plugin.settings.lightStyle = 'oxygen-light-contrast';
       void plugin.saveData(plugin.settings);
       updateLightStyle(plugin);
     }
@@ -82,8 +82,8 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.DARK_DEFAULT,
     name: 'Use dark mode (default)',
     callback: () => {
-      plugin.settings.darkStyle = 'minimal-dark';
-      plugin.settings.darkScheme = 'minimal-oxygen-dark';
+      plugin.settings.darkStyle = 'oxygen-dark';
+      plugin.settings.darkScheme = 'oxygen-oxygen-dark';
       void plugin.saveData(plugin.settings);
       updateDarkScheme(plugin);
       updateDarkStyle(plugin);
@@ -94,7 +94,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.DARK_TONAL,
     name: 'Use dark mode (low contrast)',
     callback: () => {
-      plugin.settings.darkStyle = 'minimal-dark-tonal';
+      plugin.settings.darkStyle = 'oxygen-dark-tonal';
       void plugin.saveData(plugin.settings);
       updateDarkStyle(plugin);
     }
@@ -104,7 +104,7 @@ export function registerStyleCommands(plugin: PluginContext): void {
     id: COMMAND_IDS.DARK_BLACK,
     name: 'Use dark mode (true black)',
     callback: () => {
-      plugin.settings.darkStyle = 'minimal-dark-black';
+      plugin.settings.darkStyle = 'oxygen-dark-black';
       void plugin.saveData(plugin.settings);
       updateDarkStyle(plugin);
     }
@@ -119,10 +119,10 @@ function updateLightStyle(plugin: PluginContext): void {
   
   document.body.removeClass(
     'theme-dark',
-    'minimal-light',
-    'minimal-light-tonal',
-    'minimal-light-contrast',
-    'minimal-light-white'
+    'oxygen-light',
+    'oxygen-light-tonal',
+    'oxygen-light-contrast',
+    'oxygen-light-white'
   );
   document.body.addClass('theme-light', plugin.settings.lightStyle);
   
@@ -142,9 +142,9 @@ function updateDarkStyle(plugin: PluginContext): void {
   
   document.body.removeClass(
     'theme-light',
-    'minimal-dark',
-    'minimal-dark-tonal',
-    'minimal-dark-black'
+    'oxygen-dark',
+    'oxygen-dark-tonal',
+    'oxygen-dark-black'
   );
   document.body.addClass('theme-dark', plugin.settings.darkStyle);
   

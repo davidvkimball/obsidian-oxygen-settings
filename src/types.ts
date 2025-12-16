@@ -31,8 +31,8 @@ export type CommandCallback = () => void;
 export type SettingsChangeHandler = () => void;
 
 // CSS class list types
-export type LightStyle = 'minimal-light' | 'minimal-light-tonal' | 'minimal-light-contrast' | 'minimal-light-white';
-export type DarkStyle = 'minimal-dark' | 'minimal-dark-tonal' | 'minimal-dark-black';
+export type LightStyle = 'oxygen-light' | 'oxygen-light-tonal' | 'oxygen-light-contrast' | 'oxygen-light-white';
+export type DarkStyle = 'oxygen-dark' | 'oxygen-dark-tonal' | 'oxygen-dark-black';
 export type ThemeMode = 'light' | 'dark';
 
 // Width style types

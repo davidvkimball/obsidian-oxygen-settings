@@ -18,28 +18,28 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
       .addDropdown((dropdown) => {
       // Built-in schemes
       dropdown
-        .addOption('minimal-oxygen-light','Oxygen')
-        .addOption('minimal-minimal-light','Minimal')
-        .addOption('minimal-atom-light','Atom')
-        .addOption('minimal-ayu-light','Ayu')
-        .addOption('minimal-catppuccin-light','Catppuccin')
-        .addOption('minimal-eink-light','E-ink (beta)')
-        .addOption('minimal-everforest-light','Everforest')
-        .addOption('minimal-flexoki-light','Flexoki')
-        .addOption('minimal-gruvbox-light','Gruvbox')
-        .addOption('minimal-macos-light','macOS')
-        .addOption('minimal-nord-light','Nord')
-        .addOption('minimal-rose-pine-light','Rosé Pine')
-        .addOption('minimal-notion-light','Sky')
-        .addOption('minimal-solarized-light','Solarized')
-        .addOption('minimal-things-light','Things');
+        .addOption('oxygen-oxygen-light','Oxygen')
+        .addOption('oxygen-minimal-light','Minimal')
+        .addOption('oxygen-atom-light','Atom')
+        .addOption('oxygen-ayu-light','Ayu')
+        .addOption('oxygen-catppuccin-light','Catppuccin')
+        .addOption('oxygen-eink-light','E-ink (beta)')
+        .addOption('oxygen-everforest-light','Everforest')
+        .addOption('oxygen-flexoki-light','Flexoki')
+        .addOption('oxygen-gruvbox-light','Gruvbox')
+        .addOption('oxygen-macos-light','macOS')
+        .addOption('oxygen-nord-light','Nord')
+        .addOption('oxygen-rose-pine-light','Rosé Pine')
+        .addOption('oxygen-notion-light','Sky')
+        .addOption('oxygen-solarized-light','Solarized')
+        .addOption('oxygen-things-light','Things');
 
       // Add custom presets if enabled and any exist
       if (plugin.settings.enableCustomPresets && plugin.settings.customPresets.length > 0) {
         plugin.settings.customPresets
           .sort((a, b) => a.name.localeCompare(b.name))
           .forEach(preset => {
-            dropdown.addOption(`minimal-custom-${preset.id}`, preset.name);
+            dropdown.addOption(`oxygen-custom-${preset.id}`, preset.name);
           });
       }
 
@@ -62,10 +62,10 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
       .setDesc('Level of contrast between sidebar and main content.')
       .addDropdown((dropdown) =>
         dropdown
-          .addOption('minimal-light', 'Default')
-          .addOption('minimal-light-white', 'All white')
-          .addOption('minimal-light-tonal', 'Low contrast')
-          .addOption('minimal-light-contrast', 'High contrast')
+          .addOption('oxygen-light', 'Default')
+          .addOption('oxygen-light-white', 'All white')
+          .addOption('oxygen-light-tonal', 'Low contrast')
+          .addOption('oxygen-light-contrast', 'High contrast')
           .setValue(plugin.settings.lightStyle)
           .onChange(async (value) => {
             plugin.settings.lightStyle = value;
@@ -86,29 +86,29 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
       .addDropdown((dropdown) => {
       // Built-in schemes
       dropdown
-        .addOption('minimal-oxygen-dark','Oxygen')
-        .addOption('minimal-minimal-dark','Minimal')
-        .addOption('minimal-atom-dark','Atom')
-        .addOption('minimal-ayu-dark','Ayu')
-        .addOption('minimal-catppuccin-dark','Catppuccin')
-        .addOption('minimal-dracula-dark','Dracula')
-        .addOption('minimal-eink-dark','E-ink (beta)')
-        .addOption('minimal-everforest-dark','Everforest')
-        .addOption('minimal-flexoki-dark','Flexoki')
-        .addOption('minimal-gruvbox-dark','Gruvbox')
-        .addOption('minimal-macos-dark','macOS')
-        .addOption('minimal-nord-dark','Nord')
-        .addOption('minimal-rose-pine-dark','Rosé Pine')
-        .addOption('minimal-notion-dark','Sky')
-        .addOption('minimal-solarized-dark','Solarized')
-        .addOption('minimal-things-dark','Things');
+        .addOption('oxygen-oxygen-dark','Oxygen')
+        .addOption('oxygen-minimal-dark','Minimal')
+        .addOption('oxygen-atom-dark','Atom')
+        .addOption('oxygen-ayu-dark','Ayu')
+        .addOption('oxygen-catppuccin-dark','Catppuccin')
+        .addOption('oxygen-dracula-dark','Dracula')
+        .addOption('oxygen-eink-dark','E-ink (beta)')
+        .addOption('oxygen-everforest-dark','Everforest')
+        .addOption('oxygen-flexoki-dark','Flexoki')
+        .addOption('oxygen-gruvbox-dark','Gruvbox')
+        .addOption('oxygen-macos-dark','macOS')
+        .addOption('oxygen-nord-dark','Nord')
+        .addOption('oxygen-rose-pine-dark','Rosé Pine')
+        .addOption('oxygen-notion-dark','Sky')
+        .addOption('oxygen-solarized-dark','Solarized')
+        .addOption('oxygen-things-dark','Things');
 
       // Add custom presets if enabled and any exist
       if (plugin.settings.enableCustomPresets && plugin.settings.customPresets.length > 0) {
         plugin.settings.customPresets
           .sort((a, b) => a.name.localeCompare(b.name))
           .forEach(preset => {
-            dropdown.addOption(`minimal-custom-${preset.id}`, preset.name);
+            dropdown.addOption(`oxygen-custom-${preset.id}`, preset.name);
           });
       }
 
@@ -131,9 +131,9 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
       .setDesc('Level of contrast between sidebar and main content.')
       .addDropdown((dropdown) =>
         dropdown
-          .addOption('minimal-dark', 'Default')
-          .addOption('minimal-dark-tonal', 'Low contrast')
-          .addOption('minimal-dark-black', 'True black')
+          .addOption('oxygen-dark', 'Default')
+          .addOption('oxygen-dark-tonal', 'Low contrast')
+          .addOption('oxygen-dark-black', 'True black')
           .setValue(plugin.settings.darkStyle)
           .onChange(async (value) => {
             plugin.settings.darkStyle = value;

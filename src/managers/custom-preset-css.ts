@@ -48,7 +48,7 @@ export class CustomPresetCSS {
     
     // Remove all custom preset classes from body
     const allPresetClasses = Array.from(document.body.classList).filter(cls => 
-      cls.startsWith('minimal-custom-')
+      cls.startsWith('oxygen-custom-')
     );
     allPresetClasses.forEach(cls => document.body.classList.remove(cls));
     
@@ -74,10 +74,10 @@ export class CustomPresetCSS {
     
     // Find active presets
     const activeLightPreset = this.plugin.settings.customPresets.find(p => 
-      this.plugin.settings.lightScheme === `minimal-custom-${p.id}`
+      this.plugin.settings.lightScheme === `oxygen-custom-${p.id}`
     );
     const activeDarkPreset = this.plugin.settings.customPresets.find(p => 
-      this.plugin.settings.darkScheme === `minimal-custom-${p.id}`
+      this.plugin.settings.darkScheme === `oxygen-custom-${p.id}`
     );
     
     // Determine current theme mode
@@ -86,7 +86,7 @@ export class CustomPresetCSS {
     
     // Apply properties for the active preset
     if (activePreset) {
-      const presetClass = `minimal-custom-${activePreset.id}`;
+      const presetClass = `oxygen-custom-${activePreset.id}`;
       document.body.classList.add(presetClass);
       
       const mode = isLightMode ? 'light' : 'dark';
@@ -107,7 +107,7 @@ export class CustomPresetCSS {
   cleanup(): void {
     // Remove all custom preset classes
     const allPresetClasses = Array.from(document.body.classList).filter(cls => 
-      cls.startsWith('minimal-custom-')
+      cls.startsWith('oxygen-custom-')
     );
     allPresetClasses.forEach(cls => document.body.classList.remove(cls));
     

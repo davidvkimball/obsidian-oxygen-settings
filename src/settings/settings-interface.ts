@@ -50,13 +50,15 @@ export interface MinimalSettings {
   animationSpeed: number; // 0-2, default 1
   // Blur background
   enableBlur: boolean;
+  // Migration tracking (internal use)
+  _migrationVersions?: string[];
 }
 
 export const DEFAULT_SETTINGS: MinimalSettings = {
-  lightStyle: 'minimal-light',
-  darkStyle: 'minimal-dark',
-  lightScheme: 'minimal-oxygen-light',
-  darkScheme: 'minimal-oxygen-dark',
+  lightStyle: 'oxygen-light',
+  darkStyle: 'oxygen-dark',
+  lightScheme: 'oxygen-oxygen-light',
+  darkScheme: 'oxygen-oxygen-dark',
   editorFont: '',
   lineHeight: 1.5,
   lineWidth: 40,

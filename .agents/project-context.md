@@ -54,7 +54,12 @@ If this project references specific plugins or themes that are relevant to its d
 
 **Note**: The 5 core Obsidian projects (obsidian-api, obsidian-sample-plugin, obsidian-developer-docs, obsidian-plugin-docs, obsidian-sample-theme) are always relevant and should be in every project's `.ref` folder. Only document project-specific plugins/themes here.
 
-**Current project-specific references**: None currently.
+**Current project-specific references**:
+
+- **`.ref/plugins/obsidian-ui-tweaker/`** - UI Tweaker plugin reference
+  - Source: Local project at `C:\Users\david\Development\obsidian-ui-tweaker`
+  - Location: Symlinked directly to working copy (local development)
+  - Purpose: Reference for UI customization patterns and integration
 
 ## Overrides (Optional)
 

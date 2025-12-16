@@ -186,7 +186,7 @@ export class PresetCSSGenerator {
   static generateCSS(preset: CustomColorPreset, mode: 'light' | 'dark'): string {
     const palette = mode === 'light' ? preset.light : preset.dark;
     const themeClass = mode === 'light' ? 'theme-light' : 'theme-dark';
-    const className = `minimal-custom-${preset.id}`;
+    const className = `oxygen-custom-${preset.id}`;
     
     // Use simpler selector - modifies Oxygen custom variables, not Obsidian native
     let css = `.${themeClass}.${className} {\n`;

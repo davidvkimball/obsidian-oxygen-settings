@@ -112,12 +112,48 @@ export default class MinimalTheme extends Plugin {
     const loadedData = await this.loadData();
     this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
     
+    // Migration for minimal- to oxygen- prefix (run once per user)
+    const migrationVersion = 'minimal-to-oxygen-prefix-v1';
+    if (!loadedData || !loadedData._migrationVersions || !loadedData._migrationVersions.includes(migrationVersion)) {
+      let migrated = false;
+      
+      // Migrate style settings
+      if (this.settings.lightStyle && this.settings.lightStyle.startsWith('minimal-')) {
+        this.settings.lightStyle = this.settings.lightStyle.replace(/^minimal-/, 'oxygen-');
+        migrated = true;
+      }
+      if (this.settings.darkStyle && this.settings.darkStyle.startsWith('minimal-')) {
+        this.settings.darkStyle = this.settings.darkStyle.replace(/^minimal-/, 'oxygen-');
+        migrated = true;
+      }
+      
+      // Migrate color scheme settings
+      if (this.settings.lightScheme && this.settings.lightScheme.startsWith('minimal-')) {
+        this.settings.lightScheme = this.settings.lightScheme.replace(/^minimal-/, 'oxygen-');
+        migrated = true;
+      }
+      if (this.settings.darkScheme && this.settings.darkScheme.startsWith('minimal-')) {
+        this.settings.darkScheme = this.settings.darkScheme.replace(/^minimal-/, 'oxygen-');
+        migrated = true;
+      }
+      
+      // Mark migration as complete
+      if (migrated) {
+        if (!this.settings._migrationVersions) {
+          this.settings._migrationVersions = [];
+        }
+        this.settings._migrationVersions.push(migrationVersion);
+        await this.saveData(this.settings);
+        console.log('[Oxygen Settings] Migrated settings from minimal- to oxygen- prefix');
+      }
+    }
+    
     // Migration for renamed default schemes
     if (this.settings.lightScheme === 'minimal-default-light') {
-      this.settings.lightScheme = 'minimal-minimal-light';
+      this.settings.lightScheme = 'oxygen-minimal-light';
     }
     if (this.settings.darkScheme === 'minimal-default-dark') {
-      this.settings.darkScheme = 'minimal-minimal-dark';
+      this.settings.darkScheme = 'oxygen-minimal-dark';
     }
     
     // Migration for workspace borders: convert old bordersToggle + workspaceBordersEnhanced to new workspaceBorders dropdown

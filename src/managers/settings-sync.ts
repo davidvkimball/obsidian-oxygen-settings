@@ -55,10 +55,10 @@ export class SettingsSyncManager {
 
     // Update body classes
     const bodyClassList = document.body.classList;
-    bodyClassList.toggle('minimal-folding', this.plugin.settings.folding);
-    bodyClassList.toggle('minimal-line-nums', this.plugin.settings.lineNumbers);
-    bodyClassList.toggle('minimal-readable', this.plugin.settings.readableLineLength);
-    bodyClassList.toggle('minimal-readable-off', !this.plugin.settings.readableLineLength);
+    bodyClassList.toggle('oxygen-folding', this.plugin.settings.folding);
+    bodyClassList.toggle('oxygen-line-nums', this.plugin.settings.lineNumbers);
+    bodyClassList.toggle('oxygen-readable', this.plugin.settings.readableLineLength);
+    bodyClassList.toggle('oxygen-readable-off', !this.plugin.settings.readableLineLength);
 
     // Save updated settings (skip during initial load to avoid unnecessary I/O)
     if (!skipSave) {
@@ -85,7 +85,7 @@ export class SettingsSyncManager {
       sidebarEl && 
       ribbonEl && 
       document.body.classList.contains('theme-light') && 
-      this.plugin.settings.lightStyle === 'minimal-light-contrast'
+      this.plugin.settings.lightStyle === 'oxygen-light-contrast'
     ) {
       sidebarEl.addClass('theme-dark');
       ribbonEl.addClass('theme-dark');

@@ -9,65 +9,65 @@ export const PLUGIN_NAME = 'Oxygen Theme Settings';
 
 // CSS class names
 export const CSS_CLASSES = {
-  PLUGIN_THEME: 'minimal-theme',
+  PLUGIN_THEME: 'oxygen-theme',
   THEME_LIGHT: 'theme-light',
   THEME_DARK: 'theme-dark',
-  CUSTOM_PRESETS_STYLE: 'minimal-custom-presets',
+  CUSTOM_PRESETS_STYLE: 'oxygen-custom-presets',
   THEME_OVERRIDE: 'data-theme-override',
 } as const;
 
 // Light mode styles
 export const LIGHT_STYLES = [
-  'minimal-light',
-  'minimal-light-tonal',
-  'minimal-light-contrast',
-  'minimal-light-white'
+  'oxygen-light',
+  'oxygen-light-tonal',
+  'oxygen-light-contrast',
+  'oxygen-light-white'
 ] as const;
 
 // Dark mode styles
 export const DARK_STYLES = [
-  'minimal-dark',
-  'minimal-dark-tonal',
-  'minimal-dark-black'
+  'oxygen-dark',
+  'oxygen-dark-tonal',
+  'oxygen-dark-black'
 ] as const;
 
 // Light color schemes (built-in)
 export const LIGHT_SCHEMES = [
-  'minimal-oxygen-light',
-  'minimal-minimal-light',
-  'minimal-atom-light',
-  'minimal-ayu-light',
-  'minimal-catppuccin-light',
-  'minimal-eink-light',
-  'minimal-everforest-light',
-  'minimal-flexoki-light',
-  'minimal-gruvbox-light',
-  'minimal-macos-light',
-  'minimal-nord-light',
-  'minimal-rose-pine-light',
-  'minimal-notion-light',
-  'minimal-solarized-light',
-  'minimal-things-light'
+  'oxygen-oxygen-light',
+  'oxygen-minimal-light',
+  'oxygen-atom-light',
+  'oxygen-ayu-light',
+  'oxygen-catppuccin-light',
+  'oxygen-eink-light',
+  'oxygen-everforest-light',
+  'oxygen-flexoki-light',
+  'oxygen-gruvbox-light',
+  'oxygen-macos-light',
+  'oxygen-nord-light',
+  'oxygen-rose-pine-light',
+  'oxygen-notion-light',
+  'oxygen-solarized-light',
+  'oxygen-things-light'
 ] as const;
 
 // Dark color schemes (built-in)
 export const DARK_SCHEMES = [
-  'minimal-oxygen-dark',
-  'minimal-minimal-dark',
-  'minimal-atom-dark',
-  'minimal-ayu-dark',
-  'minimal-catppuccin-dark',
-  'minimal-dracula-dark',
-  'minimal-eink-dark',
-  'minimal-everforest-dark',
-  'minimal-flexoki-dark',
-  'minimal-gruvbox-dark',
-  'minimal-macos-dark',
-  'minimal-nord-dark',
-  'minimal-rose-pine-dark',
-  'minimal-notion-dark',
-  'minimal-solarized-dark',
-  'minimal-things-dark'
+  'oxygen-oxygen-dark',
+  'oxygen-minimal-dark',
+  'oxygen-atom-dark',
+  'oxygen-ayu-dark',
+  'oxygen-catppuccin-dark',
+  'oxygen-dracula-dark',
+  'oxygen-eink-dark',
+  'oxygen-everforest-dark',
+  'oxygen-flexoki-dark',
+  'oxygen-gruvbox-dark',
+  'oxygen-macos-dark',
+  'oxygen-nord-dark',
+  'oxygen-rose-pine-dark',
+  'oxygen-notion-dark',
+  'oxygen-solarized-dark',
+  'oxygen-things-dark'
 ] as const;
 
 // Image grid styles
@@ -199,43 +199,43 @@ export const OBSIDIAN_THEMES = {
 export const OXYGEN_THEME_NAME = 'Oxygen';
 
 // Custom preset prefix
-export const CUSTOM_PRESET_PREFIX = 'minimal-custom-';
+export const CUSTOM_PRESET_PREFIX = 'oxygen-custom-';
 
 
 // Scheme display names for dropdowns
 export const SCHEME_DISPLAY_NAMES: Record<string, string> = {
   // Light schemes
-  'minimal-oxygen-light': 'Oxygen',
-  'minimal-minimal-light': 'Minimal',
-  'minimal-atom-light': 'Atom',
-  'minimal-ayu-light': 'Ayu',
-  'minimal-catppuccin-light': 'Catppuccin',
-  'minimal-eink-light': 'E-ink (beta)',
-  'minimal-everforest-light': 'Everforest',
-  'minimal-flexoki-light': 'Flexoki',
-  'minimal-gruvbox-light': 'Gruvbox',
-  'minimal-macos-light': 'macOS',
-  'minimal-nord-light': 'Nord',
-  'minimal-rose-pine-light': 'Rosé Pine',
-  'minimal-notion-light': 'Sky',
-  'minimal-solarized-light': 'Solarized',
-  'minimal-things-light': 'Things',
+  'oxygen-oxygen-light': 'Oxygen',
+  'oxygen-minimal-light': 'Minimal',
+  'oxygen-atom-light': 'Atom',
+  'oxygen-ayu-light': 'Ayu',
+  'oxygen-catppuccin-light': 'Catppuccin',
+  'oxygen-eink-light': 'E-ink (beta)',
+  'oxygen-everforest-light': 'Everforest',
+  'oxygen-flexoki-light': 'Flexoki',
+  'oxygen-gruvbox-light': 'Gruvbox',
+  'oxygen-macos-light': 'macOS',
+  'oxygen-nord-light': 'Nord',
+  'oxygen-rose-pine-light': 'Rosé Pine',
+  'oxygen-notion-light': 'Sky',
+  'oxygen-solarized-light': 'Solarized',
+  'oxygen-things-light': 'Things',
   // Dark schemes
-  'minimal-oxygen-dark': 'Oxygen',
-  'minimal-minimal-dark': 'Minimal',
-  'minimal-atom-dark': 'Atom',
-  'minimal-ayu-dark': 'Ayu',
-  'minimal-catppuccin-dark': 'Catppuccin',
-  'minimal-dracula-dark': 'Dracula',
-  'minimal-eink-dark': 'E-ink (beta)',
-  'minimal-everforest-dark': 'Everforest',
-  'minimal-flexoki-dark': 'Flexoki',
-  'minimal-gruvbox-dark': 'Gruvbox',
-  'minimal-macos-dark': 'macOS',
-  'minimal-nord-dark': 'Nord',
-  'minimal-rose-pine-dark': 'Rosé Pine',
-  'minimal-notion-dark': 'Sky',
-  'minimal-solarized-dark': 'Solarized',
-  'minimal-things-dark': 'Things',
+  'oxygen-oxygen-dark': 'Oxygen',
+  'oxygen-minimal-dark': 'Minimal',
+  'oxygen-atom-dark': 'Atom',
+  'oxygen-ayu-dark': 'Ayu',
+  'oxygen-catppuccin-dark': 'Catppuccin',
+  'oxygen-dracula-dark': 'Dracula',
+  'oxygen-eink-dark': 'E-ink (beta)',
+  'oxygen-everforest-dark': 'Everforest',
+  'oxygen-flexoki-dark': 'Flexoki',
+  'oxygen-gruvbox-dark': 'Gruvbox',
+  'oxygen-macos-dark': 'macOS',
+  'oxygen-nord-dark': 'Nord',
+  'oxygen-rose-pine-dark': 'Rosé Pine',
+  'oxygen-notion-dark': 'Sky',
+  'oxygen-solarized-dark': 'Solarized',
+  'oxygen-things-dark': 'Things',
 } as const;
 

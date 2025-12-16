@@ -188,8 +188,8 @@ export class PresetManager {
    * Check if preset is currently active
    */
   static isPresetActive(presetId: string, lightScheme: string, darkScheme: string): boolean {
-    return lightScheme === `minimal-custom-${presetId}` || 
-           darkScheme === `minimal-custom-${presetId}`;
+    return lightScheme === `oxygen-custom-${presetId}` || 
+           darkScheme === `oxygen-custom-${presetId}`;
   }
 
   /**

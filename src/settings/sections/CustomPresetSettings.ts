@@ -34,13 +34,13 @@ export function buildCustomPresetSettings(
           if (!value) {
             let needsUpdate = false;
 
-            if (plugin.settings.lightScheme.startsWith('minimal-custom-')) {
-              plugin.settings.lightScheme = 'minimal-oxygen-light';
+            if (plugin.settings.lightScheme.startsWith('oxygen-custom-')) {
+              plugin.settings.lightScheme = 'oxygen-oxygen-light';
               needsUpdate = true;
             }
 
-            if (plugin.settings.darkScheme.startsWith('minimal-custom-')) {
-              plugin.settings.darkScheme = 'minimal-oxygen-dark';
+            if (plugin.settings.darkScheme.startsWith('oxygen-custom-')) {
+              plugin.settings.darkScheme = 'oxygen-oxygen-dark';
               needsUpdate = true;
             }
 
@@ -174,7 +174,7 @@ function openPresetEditor(
     void plugin.saveData(plugin.settings);
     
     // Update styles if this preset is currently active
-    const presetSchemeId = `minimal-custom-${updatedPreset.id}`;
+    const presetSchemeId = `oxygen-custom-${updatedPreset.id}`;
     if (plugin.settings.lightScheme === presetSchemeId || plugin.settings.darkScheme === presetSchemeId) {
       plugin.updateStyle();
       plugin.updateCustomPresetCSS();
@@ -239,11 +239,11 @@ async function deletePreset(
     }
     
     // Switch to default schemes
-    if (plugin.settings.lightScheme === `minimal-custom-${preset.id}`) {
-      plugin.settings.lightScheme = 'minimal-oxygen-light';
+    if (plugin.settings.lightScheme === `oxygen-custom-${preset.id}`) {
+      plugin.settings.lightScheme = 'oxygen-oxygen-light';
     }
-    if (plugin.settings.darkScheme === `minimal-custom-${preset.id}`) {
-      plugin.settings.darkScheme = 'minimal-oxygen-dark';
+    if (plugin.settings.darkScheme === `oxygen-custom-${preset.id}`) {
+      plugin.settings.darkScheme = 'oxygen-oxygen-dark';
     }
   }
   

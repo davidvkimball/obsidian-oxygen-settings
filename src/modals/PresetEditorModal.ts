@@ -276,7 +276,7 @@ export class PresetEditorModal extends Modal {
       this.plugin.settings.customPresets[presetIndex] = this.preset;
       
       // Apply changes if this preset is currently active
-      const presetSchemeId = `minimal-custom-${this.preset.id}`;
+      const presetSchemeId = `oxygen-custom-${this.preset.id}`;
       if (this.plugin.settings.lightScheme === presetSchemeId || this.plugin.settings.darkScheme === presetSchemeId) {
         this.plugin.updateStyle();
         this.plugin.updateCustomPresetCSS();

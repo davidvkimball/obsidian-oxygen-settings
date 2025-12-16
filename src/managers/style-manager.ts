@@ -12,6 +12,7 @@ import {
 } from '../constants';
 import { setTheme, getVaultConfig, setVaultConfig } from '../types/obsidian-extensions';
 import { setCssProps } from '../utils/css-props';
+import { Platform } from 'obsidian';
 
 export class StyleManagerImpl {
   private plugin: PluginContext;
@@ -23,6 +24,19 @@ export class StyleManagerImpl {
   constructor(plugin: PluginContext) {
     this.plugin = plugin;
     this.customPresetCSS = new CustomPresetCSS(plugin);
+  }
+
+  /**
+   * Detect OS for OS-specific styling
+   */
+  private detectOS(): 'windows' | 'macos' | 'neutral' {
+    if (Platform.isMacOS) {
+      return 'macos';
+    }
+    if (Platform.isWin) {
+      return 'windows';
+    }
+    return 'neutral';
   }
 
   /**
@@ -144,17 +158,17 @@ export class StyleManagerImpl {
     document.body.classList.toggle('colorful-headings', this.plugin.settings.colorfulHeadings);
     document.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
     document.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
-    document.body.classList.toggle('minimal-focus-mode', this.plugin.settings.focusMode);
+    document.body.classList.toggle('oxygen-focus-mode', this.plugin.settings.focusMode);
     document.body.classList.toggle('enable-blur', this.plugin.settings.enableBlur);
     document.body.classList.toggle('links-int-on', this.plugin.settings.underlineInternal);
     document.body.classList.toggle('links-ext-on', this.plugin.settings.underlineExternal);
     document.body.classList.toggle('full-width-media', this.plugin.settings.fullWidthMedia);
     document.body.classList.toggle('img-grid', this.plugin.settings.imgGrid);
-    document.body.classList.toggle('minimal-dev-block-width', this.plugin.settings.devBlockWidth);
-    document.body.classList.toggle('minimal-status-off', !this.plugin.settings.minimalStatus);
+    document.body.classList.toggle('oxygen-dev-block-width', this.plugin.settings.devBlockWidth);
+    document.body.classList.toggle('oxygen-status-off', !this.plugin.settings.minimalStatus);
     document.body.classList.toggle('full-file-names', !this.plugin.settings.trimNames);
     document.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
-    document.body.classList.toggle('minimal-folding', this.plugin.settings.folding);
+    document.body.classList.toggle('oxygen-folding', this.plugin.settings.folding);
 
     // Focus classes (only features not in UI Tweaker)
     document.body.classList.toggle('deemphasize-properties', this.plugin.settings.deemphasizeProperties);
@@ -163,8 +177,14 @@ export class StyleManagerImpl {
     // Setup or cleanup tab observer based on setting
     if (this.plugin.settings.autoHideTabBarWhenSingleTab) {
       this.setupTabObserver();
+      // Add OS-specific class for styling
+      const os = this.detectOS();
+      document.body.classList.remove('auto-hide-tab-bar-windows', 'auto-hide-tab-bar-macos', 'auto-hide-tab-bar-neutral');
+      document.body.classList.add(`auto-hide-tab-bar-${os}`);
     } else {
       this.cleanupTabObserver();
+      // Remove OS-specific classes
+      document.body.classList.remove('auto-hide-tab-bar-windows', 'auto-hide-tab-bar-macos', 'auto-hide-tab-bar-neutral');
     }
 
     // Add width classes
@@ -338,13 +358,13 @@ export class StyleManagerImpl {
    */
   removeStyle(): void {
     document.body.removeClass(
-      'minimal-light',
-      'minimal-light-tonal',
-      'minimal-light-contrast',
-      'minimal-light-white',
-      'minimal-dark',
-      'minimal-dark-tonal',
-      'minimal-dark-black'
+      'oxygen-light',
+      'oxygen-light-tonal',
+      'oxygen-light-contrast',
+      'oxygen-light-white',
+      'oxygen-dark',
+      'oxygen-dark-tonal',
+      'oxygen-dark-black'
     );
   }
 
@@ -356,7 +376,7 @@ export class StyleManagerImpl {
     
     // Remove custom preset classes
     this.plugin.settings.customPresets.forEach(preset => {
-      document.body.removeClass(`minimal-custom-${preset.id}`);
+      document.body.removeClass(`oxygen-custom-${preset.id}`);
     });
   }
 
@@ -368,7 +388,7 @@ export class StyleManagerImpl {
     
     // Remove custom preset classes
     this.plugin.settings.customPresets.forEach(preset => {
-      document.body.removeClass(`minimal-custom-${preset.id}`);
+      document.body.removeClass(`oxygen-custom-${preset.id}`);
     });
   }
 
@@ -382,16 +402,16 @@ export class StyleManagerImpl {
       'colorful-headings',
       'colorful-frame',
       'colorful-active',
-      'minimal-focus-mode',
+      'oxygen-focus-mode',
       'links-int-on',
       'links-ext-on',
       'full-width-media',
       'img-grid',
-      'minimal-dev-block-width',
-      'minimal-status-off',
+      'oxygen-dev-block-width',
+      'oxygen-status-off',
       'full-file-names',
       'labeled-nav',
-      'minimal-folding',
+      'oxygen-folding',
       'deemphasize-properties',
       'auto-hide-tab-bar-when-single-tab',
       'enable-blur',
@@ -640,6 +660,9 @@ export class StyleManagerImpl {
         'has-single-tab-right-collapsed'
       );
     });
+    
+    // Remove OS-specific classes
+    document.body.classList.remove('auto-hide-tab-bar-windows', 'auto-hide-tab-bar-macos', 'auto-hide-tab-bar-neutral');
   }
 
 }

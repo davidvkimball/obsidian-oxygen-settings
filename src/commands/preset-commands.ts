@@ -39,12 +39,12 @@ export function registerPresetCommands(plugin: PluginContext): void {
       if (plugin.settings.customPresets.length === 0) return;
       
       const currentIndex = plugin.settings.customPresets.findIndex(p => 
-        plugin.settings.lightScheme === `minimal-custom-${p.id}`
+        plugin.settings.lightScheme === `oxygen-custom-${p.id}`
       );
       const nextIndex = (currentIndex + 1) % plugin.settings.customPresets.length;
       const nextPreset = plugin.settings.customPresets[nextIndex];
       
-      plugin.settings.lightScheme = `minimal-custom-${nextPreset.id}`;
+      plugin.settings.lightScheme = `oxygen-custom-${nextPreset.id}`;
       void plugin.saveData(plugin.settings);
       updateLightScheme(plugin);
     }
@@ -57,12 +57,12 @@ export function registerPresetCommands(plugin: PluginContext): void {
       if (plugin.settings.customPresets.length === 0) return;
       
       const currentIndex = plugin.settings.customPresets.findIndex(p => 
-        plugin.settings.darkScheme === `minimal-custom-${p.id}`
+        plugin.settings.darkScheme === `oxygen-custom-${p.id}`
       );
       const nextIndex = (currentIndex + 1) % plugin.settings.customPresets.length;
       const nextPreset = plugin.settings.customPresets[nextIndex];
       
-      plugin.settings.darkScheme = `minimal-custom-${nextPreset.id}`;
+      plugin.settings.darkScheme = `oxygen-custom-${nextPreset.id}`;
       void plugin.saveData(plugin.settings);
       updateDarkScheme(plugin);
     }

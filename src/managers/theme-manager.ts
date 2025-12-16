@@ -105,7 +105,7 @@ export class ThemeManagerImpl {
       sidebarEl && 
       ribbonEl && 
       document.body.classList.contains('theme-light') && 
-      this.plugin.settings.lightStyle === 'minimal-light-contrast'
+      this.plugin.settings.lightStyle === 'oxygen-light-contrast'
     ) {
       sidebarEl.addClass('theme-dark');
       ribbonEl.addClass('theme-dark');

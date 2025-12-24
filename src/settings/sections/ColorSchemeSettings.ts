@@ -3,7 +3,6 @@
  * Light/dark mode color schemes and background contrast
  */
 
-import { Setting } from 'obsidian';
 import MinimalTheme from '../../main';
 import { createSettingsGroup } from '../../utils/settings-compat';
 
@@ -11,9 +10,11 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
   const colorGroup = createSettingsGroup(containerEl, 'Color scheme');
 
   // Light mode color scheme
-  colorGroup.addSetting((setting) =>
+  colorGroup.addSetting((setting) => {
     setting
       .setName('Light mode color scheme')
+      // False positive: "Style Settings" and "Documentation" are proper nouns
+      // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Preset color options for light mode. To create a custom color scheme use the Style Settings plugin. See Documentation for details.')
       .addDropdown((dropdown) => {
       // Built-in schemes
@@ -29,6 +30,8 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
         .addOption('oxygen-gruvbox-light','Gruvbox')
         .addOption('oxygen-macos-light','macOS')
         .addOption('oxygen-nord-light','Nord')
+        // False positive: "Rosé Pine" and "Sky" are proper nouns (color scheme names)
+        // eslint-disable-next-line obsidianmd/ui/sentence-case
         .addOption('oxygen-rose-pine-light','Rosé Pine')
         .addOption('oxygen-notion-light','Sky')
         .addOption('oxygen-solarized-light','Solarized')
@@ -47,20 +50,20 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .setValue(plugin.settings.lightScheme)
           .onChange(async (value) => {
             plugin.settings.lightScheme = value;
-            await plugin.saveData(plugin.settings);
+            void plugin.saveData(plugin.settings);
             // Regenerate all CSS including custom presets
             plugin.updateStyle();
             plugin.updateCustomPresetCSS();
           });
-      })
-  );
+      });
+  });
 
   // Light mode background contrast
-  colorGroup.addSetting((setting) =>
+  colorGroup.addSetting((setting) => {
     setting
       .setName('Light mode background contrast')
       .setDesc('Level of contrast between sidebar and main content.')
-      .addDropdown((dropdown) =>
+      .addDropdown((dropdown) => {
         dropdown
           .addOption('oxygen-light', 'Default')
           .addOption('oxygen-light-white', 'All white')
@@ -69,17 +72,17 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .setValue(plugin.settings.lightStyle)
           .onChange(async (value) => {
             plugin.settings.lightStyle = value;
-            await plugin.saveData(plugin.settings);
+            void plugin.saveData(plugin.settings);
             // Only apply light style if currently in light mode
             if (document.body.classList.contains('theme-light')) {
               plugin.updateLightStyle();
             }
-          })
-      )
-  );
+          });
+      });
+  });
 
   // Dark mode color scheme
-  colorGroup.addSetting((setting) =>
+  colorGroup.addSetting((setting) => {
     setting
       .setName('Dark mode color scheme')
       .setDesc('Preset colors options for dark mode.')
@@ -98,6 +101,8 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
         .addOption('oxygen-gruvbox-dark','Gruvbox')
         .addOption('oxygen-macos-dark','macOS')
         .addOption('oxygen-nord-dark','Nord')
+        // False positive: "Rosé Pine" and "Sky" are proper nouns (color scheme names)
+        // eslint-disable-next-line obsidianmd/ui/sentence-case
         .addOption('oxygen-rose-pine-dark','Rosé Pine')
         .addOption('oxygen-notion-dark','Sky')
         .addOption('oxygen-solarized-dark','Solarized')
@@ -116,20 +121,20 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .setValue(plugin.settings.darkScheme)
           .onChange(async (value) => {
             plugin.settings.darkScheme = value;
-            await plugin.saveData(plugin.settings);
+            void plugin.saveData(plugin.settings);
             // Regenerate all CSS including custom presets
             plugin.updateStyle();
             plugin.updateCustomPresetCSS();
           });
-      })
-  );
+      });
+  });
 
   // Dark mode background contrast
-  colorGroup.addSetting((setting) =>
+  colorGroup.addSetting((setting) => {
     setting
       .setName('Dark mode background contrast')
       .setDesc('Level of contrast between sidebar and main content.')
-      .addDropdown((dropdown) =>
+      .addDropdown((dropdown) => {
         dropdown
           .addOption('oxygen-dark', 'Default')
           .addOption('oxygen-dark-tonal', 'Low contrast')
@@ -137,13 +142,13 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .setValue(plugin.settings.darkStyle)
           .onChange(async (value) => {
             plugin.settings.darkStyle = value;
-            await plugin.saveData(plugin.settings);
+            void plugin.saveData(plugin.settings);
             // Only apply dark style if currently in dark mode
             if (document.body.classList.contains('theme-dark')) {
               plugin.updateDarkStyle();
             }
-          })
-      )
-  );
+          });
+      });
+  });
 }
 

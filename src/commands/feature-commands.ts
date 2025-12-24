@@ -2,6 +2,7 @@
  * Feature toggle commands (borders, headings, focus mode, etc.)
  */
 
+import { App } from 'obsidian';
 import { PluginContext } from '../types';
 import { COMMAND_IDS } from '../constants';
 import { getVaultConfig, setTheme, setVaultConfig } from '../types/obsidian-extensions';
@@ -87,12 +88,19 @@ export function registerFeatureCommands(plugin: PluginContext): void {
   // Open settings command
   plugin.addCommand({
     id: COMMAND_IDS.OPEN_SETTINGS,
-    name: 'Open Oxygen Theme Settings',
+    name: 'Open settings',
     icon: 'settings-2',
     callback: () => {
       // Open settings and navigate to this plugin's tab
-      (plugin.app as any).setting.open();
-      (plugin.app as any).setting.openTabById(plugin.manifest.id);
+      // Using type-safe access to internal Obsidian API
+      const appWithSettings = plugin.app as App & {
+        setting: {
+          open: () => void;
+          openTabById: (id: string) => void;
+        };
+      };
+      appWithSettings.setting.open();
+      appWithSettings.setting.openTabById(plugin.manifest.id);
     }
   });
 }

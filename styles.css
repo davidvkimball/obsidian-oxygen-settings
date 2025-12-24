@@ -753,13 +753,59 @@ body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.auto-hide-tab-bar-macos
 }
 
 /* Make view-header draggable when tab bar is hidden (single tab) */
+/* Only make draggable when sidebars are open (OS buttons not covered) or use selective dragging */
 body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
   .mod-root.has-single-tab
   .view-header {
+  position: relative;
   -webkit-app-region: drag !important;
 }
 
-/* Make interactive elements in view-header non-draggable */
+/* Windows: Exclude right side from dragging when right sidebar is collapsed (OS buttons area) */
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.auto-hide-tab-bar-windows
+  .mod-root.has-single-tab-right-collapsed
+  .view-header {
+  -webkit-app-region: no-drag !important;
+}
+
+/* Create draggable pseudo-element for Windows (excludes OS button area on right) */
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.auto-hide-tab-bar-windows
+  .mod-root.has-single-tab-right-collapsed
+  .view-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: var(--view-actions-right-offset);
+  height: 100%;
+  -webkit-app-region: drag !important;
+  z-index: 0;
+  pointer-events: auto;
+}
+
+/* macOS: Exclude left side from dragging when left sidebar is collapsed (OS buttons area) */
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.auto-hide-tab-bar-macos
+  .mod-root.has-single-tab-left-collapsed
+  .view-header {
+  -webkit-app-region: no-drag !important;
+}
+
+/* Create draggable pseudo-element for macOS (excludes OS button area on left) */
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab.auto-hide-tab-bar-macos
+  .mod-root.has-single-tab-left-collapsed
+  .view-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--view-header-left-offset);
+  right: 0;
+  height: 100%;
+  -webkit-app-region: drag !important;
+  z-index: 0;
+  pointer-events: auto;
+}
+
+/* Make interactive elements in view-header non-draggable and above pseudo-element */
 body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
   .mod-root.has-single-tab
   .view-header
@@ -775,7 +821,17 @@ body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
 body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
   .mod-root.has-single-tab
   .view-header
-  .clickable-icon {
+  .clickable-icon,
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
+  .mod-root.has-single-tab
+  .view-header
+  .view-header-left,
+body:not(.is-mobile).auto-hide-tab-bar-when-single-tab
+  .mod-root.has-single-tab
+  .view-header
+  .view-actions {
+  position: relative;
+  z-index: 1;
   -webkit-app-region: no-drag !important;
 }
 

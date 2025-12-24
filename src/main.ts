@@ -109,12 +109,15 @@ export default class MinimalTheme extends Plugin {
   }
 
   async loadSettings() {
-    const loadedData = await this.loadData();
+    const loadedData = await this.loadData() as Partial<MinimalSettings> | null;
     this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
     
     // Migration for minimal- to oxygen- prefix (run once per user)
     const migrationVersion = 'minimal-to-oxygen-prefix-v1';
-    if (!loadedData || !loadedData._migrationVersions || !loadedData._migrationVersions.includes(migrationVersion)) {
+    const migrationVersions = loadedData && typeof loadedData === 'object' && '_migrationVersions' in loadedData 
+      ? (loadedData as { _migrationVersions?: string[] })._migrationVersions 
+      : undefined;
+    if (!loadedData || !migrationVersions || !migrationVersions.includes(migrationVersion)) {
       let migrated = false;
       
       // Migrate style settings
@@ -144,7 +147,7 @@ export default class MinimalTheme extends Plugin {
         }
         this.settings._migrationVersions.push(migrationVersion);
         await this.saveData(this.settings);
-        console.log('[Oxygen Settings] Migrated settings from minimal- to oxygen- prefix');
+        console.debug('[Oxygen Settings] Migrated settings from minimal- to oxygen- prefix');
       }
     }
     
@@ -158,18 +161,21 @@ export default class MinimalTheme extends Plugin {
     
     // Migration for workspace borders: convert old bordersToggle + workspaceBordersEnhanced to new workspaceBorders dropdown
     // Only migrate if workspaceBorders hasn't been explicitly set by the user yet
-    if (loadedData && (loadedData.bordersToggle !== undefined || loadedData.workspaceBordersEnhanced !== undefined)) {
-      if (loadedData.workspaceBorders === undefined) {
-        // Only migrate if workspaceBorders hasn't been set yet (not in saved data)
-        if (loadedData.bordersToggle === false) {
-          this.settings.workspaceBorders = 'none';
-        } else if (loadedData.workspaceBordersEnhanced === true) {
-          this.settings.workspaceBorders = 'enhanced';
-        } else {
-          this.settings.workspaceBorders = 'default';
+    if (loadedData && typeof loadedData === 'object') {
+      const legacyData = loadedData as { bordersToggle?: boolean; workspaceBordersEnhanced?: boolean; workspaceBorders?: string };
+      if (legacyData.bordersToggle !== undefined || legacyData.workspaceBordersEnhanced !== undefined) {
+        if (legacyData.workspaceBorders === undefined) {
+          // Only migrate if workspaceBorders hasn't been set yet (not in saved data)
+          if (legacyData.bordersToggle === false) {
+            this.settings.workspaceBorders = 'none';
+          } else if (legacyData.workspaceBordersEnhanced === true) {
+            this.settings.workspaceBorders = 'enhanced';
+          } else {
+            this.settings.workspaceBorders = 'default';
+          }
+          // Save migrated settings
+          await this.saveData(this.settings);
         }
-        // Save migrated settings
-        await this.saveData(this.settings);
       }
     }
     
@@ -182,9 +188,12 @@ export default class MinimalTheme extends Plugin {
     }
     
     // Migration for animation personality: convert 'refined' to 'default'
-    if (loadedData && loadedData.animationPersonality === 'refined') {
-      this.settings.animationPersonality = 'default';
-      await this.saveData(this.settings);
+    if (loadedData && typeof loadedData === 'object' && 'animationPersonality' in loadedData) {
+      const legacyData = loadedData as { animationPersonality?: string };
+      if (legacyData.animationPersonality === 'refined') {
+        this.settings.animationPersonality = 'default';
+        await this.saveData(this.settings);
+      }
     }
     // Ensure animationPersonality is set (default to 'default' if missing)
     if (!this.settings.animationPersonality) {

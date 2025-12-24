@@ -22,11 +22,11 @@ export function buildCustomPresetSettings(
   const customPresetsGroup = createSettingsGroup(containerEl, 'Custom color schemes');
 
   // Enable/Disable Custom Presets
-  customPresetsGroup.addSetting((setting) =>
+  customPresetsGroup.addSetting((setting) => {
     setting
       .setName('Enable custom presets')
       .setDesc('Allow creation and use of custom color presets')
-      .addToggle((toggle) =>
+      .addToggle((toggle) => {
         toggle.setValue(plugin.settings.enableCustomPresets).onChange(async (value) => {
           plugin.settings.enableCustomPresets = value;
 
@@ -50,40 +50,40 @@ export function buildCustomPresetSettings(
             }
           }
 
-          await plugin.saveData(plugin.settings);
+          void plugin.saveData(plugin.settings);
           refreshCallback(); // Refresh the settings tab
-        })
-      )
-  );
+        });
+      });
+  });
 
   if (!plugin.settings.enableCustomPresets) {
     return;
   }
 
   // Action buttons
-  customPresetsGroup.addSetting((setting) =>
+  customPresetsGroup.addSetting((setting) => {
     setting
       .setName('Create new preset')
       .setDesc('Design a custom color scheme from scratch')
-      .addExtraButton((button) =>
+      .addExtraButton((button) => {
         button
           .setIcon('plus')
           .setTooltip('Create new preset')
-          .onClick(() => openPresetEditor(app, plugin, null, refreshCallback))
-      )
-  );
+          .onClick(() => openPresetEditor(app, plugin, null, refreshCallback));
+      });
+  });
 
-  customPresetsGroup.addSetting((setting) =>
+  customPresetsGroup.addSetting((setting) => {
     setting
       .setName('Import preset')
       .setDesc('Import a preset from JSON data')
-      .addExtraButton((button) =>
+      .addExtraButton((button) => {
         button
           .setIcon('download')
           .setTooltip('Import preset')
-          .onClick(() => openPresetImporter(app, plugin, refreshCallback))
-      )
-  );
+          .onClick(() => openPresetImporter(app, plugin, refreshCallback));
+      });
+  });
 
   // Add spacing before preset list to separate from the group
   containerEl.createEl('br');

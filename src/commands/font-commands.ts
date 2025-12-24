@@ -4,7 +4,7 @@
 
 import { PluginContext } from '../types';
 import { COMMAND_IDS, DEFAULTS } from '../constants';
-import { setVaultConfig } from '../types/obsidian-extensions';
+import { setVaultConfig, updateFontSize } from '../types/obsidian-extensions';
 
 export function registerFontCommands(plugin: PluginContext): void {
   plugin.addCommand({
@@ -30,7 +30,6 @@ export function registerFontCommands(plugin: PluginContext): void {
 
 function setFontSize(plugin: PluginContext): void {
   setVaultConfig(plugin.app, 'baseFontSize', plugin.settings.textNormal);
-  // @ts-ignore - updateFontSize is an internal Obsidian API
-  plugin.app.updateFontSize();
+  updateFontSize(plugin.app);
 }
 

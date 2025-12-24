@@ -514,20 +514,18 @@ export class StyleManagerImpl {
           const rightSidebarCollapsed = rightSidebarEl ? rightSidebarEl.classList.contains('is-sidedock-collapsed') : false;
           
           
-          // Also check API and width for debugging
-          const leftSplit = this.plugin.app.workspace.leftSplit;
-          const rightSplit = this.plugin.app.workspace.rightSplit;
-          const leftSidebarCollapsedAPI = leftSplit.collapsed;
-          const rightSidebarCollapsedAPI = rightSplit.collapsed;
-          
-          const getSidebarWidth = (el: Element | null): number => {
-            if (!el) return 0;
-            const rect = (el as HTMLElement).getBoundingClientRect();
-            return rect.width;
-          };
-          
-          const leftWidth = getSidebarWidth(leftSidebarEl);
-          const rightWidth = getSidebarWidth(rightSidebarEl);
+          // Debug variables removed - uncomment if needed for debugging
+          // const leftSplit = this.plugin.app.workspace.leftSplit;
+          // const rightSplit = this.plugin.app.workspace.rightSplit;
+          // const leftSidebarCollapsedAPI = leftSplit.collapsed;
+          // const rightSidebarCollapsedAPI = rightSplit.collapsed;
+          // const getSidebarWidth = (el: Element | null): number => {
+          //   if (!el) return 0;
+          //   const rect = (el as HTMLElement).getBoundingClientRect();
+          //   return rect.width;
+          // };
+          // const leftWidth = getSidebarWidth(leftSidebarEl);
+          // const rightWidth = getSidebarWidth(rightSidebarEl);
           
           
           // CRITICAL: Always clean up inline styles first to prevent them from persisting

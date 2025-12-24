@@ -17,8 +17,10 @@ export function buildAnimationSettings(containerEl: HTMLElement, plugin: Minimal
   animationGroup.addSetting((setting) => {
     setting
       .setName('Animation personality')
+      // False positive: Text is already in sentence case; "Default", "Playful", and "Off" are option labels
+      // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Choose the animation style: Default (smooth), Playful (bouncy), or Off (disabled).')
-      .addDropdown((dropdown) =>
+      .addDropdown((dropdown) => {
         dropdown
           .addOption('default', 'Default')
           .addOption('playful', 'Playful')
@@ -26,15 +28,19 @@ export function buildAnimationSettings(containerEl: HTMLElement, plugin: Minimal
           .setValue(plugin.settings.animationPersonality || 'default')
           .onChange(async (value) => {
             plugin.settings.animationPersonality = value as 'default' | 'playful' | 'off';
-            await plugin.saveData(plugin.settings);
+            void plugin.saveData(plugin.settings);
             plugin.refresh();
 
-            // Update speed slider visibility
-            if (speedSetting) {
-              speedSetting.settingEl.style.display = value === 'off' ? 'none' : '';
+            // Update speed slider visibility using CSS class
+            if (speedSetting !== undefined) {
+              if (value === 'off') {
+                speedSetting.settingEl.addClass('hidden');
+              } else {
+                speedSetting.settingEl.removeClass('hidden');
+              }
             }
-          })
-      );
+          });
+      });
   });
 
   // Animation Speed slider
@@ -43,21 +49,21 @@ export function buildAnimationSettings(containerEl: HTMLElement, plugin: Minimal
     setting
       .setName('Animation speed')
       .setDesc('Control the speed of animations. Range: 0 (disabled) to 2 (half speed / slower). Default: 1 (normal speed). Lower values = faster animations, higher values = slower animations.')
-      .addSlider((slider) =>
+      .addSlider((slider) => {
         slider
           .setLimits(0, 2, 0.1)
           .setValue(plugin.settings.animationSpeed)
           .setDynamicTooltip()
           .onChange(async (value) => {
             plugin.settings.animationSpeed = value;
-            await plugin.saveData(plugin.settings);
+            void plugin.saveData(plugin.settings);
             plugin.refresh();
-          })
-      );
+          });
+      });
 
-    // Hide speed slider if animations are off
+    // Hide speed slider if animations are off using CSS class
     if (plugin.settings.animationPersonality === 'off') {
-      speedSetting.settingEl.style.display = 'none';
+      speedSetting.settingEl.addClass('hidden');
     }
   });
 }

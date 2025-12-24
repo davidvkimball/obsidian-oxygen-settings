@@ -3,40 +3,7 @@
  * These are not part of the public API but are commonly used
  */
 
-import { App, Setting } from 'obsidian';
-
-/**
- * SettingGroup was added in API 1.11.0
- * Type declaration for module augmentation
- */
-declare module 'obsidian' {
-  /**
-   * @public
-   * @since 1.11.0
-   */
-  export class SettingGroup {
-    /**
-     * @public
-     * @since 1.11.0
-     */
-    constructor(containerEl: HTMLElement);
-    /**
-     * @public
-     * @since 1.11.0
-     */
-    setHeading(text: string | DocumentFragment): this;
-    /**
-     * @public
-     * @since 1.11.0
-     */
-    addClass(cls: string): this;
-    /**
-     * @public
-     * @since 1.11.0
-     */
-    addSetting(cb: (setting: Setting) => void): this;
-  }
-}
+import { App } from 'obsidian';
 
 /**
  * Extended App interface with internal vault methods

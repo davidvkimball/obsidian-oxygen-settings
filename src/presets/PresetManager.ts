@@ -2,7 +2,7 @@
  * Preset management and CRUD operations
  */
 
-import { CustomColorPreset } from './CustomPreset';
+import { CustomColorPreset, HSLColor } from './CustomPreset';
 import { 
   validatePresetId, 
   isPresetIdUnique, 
@@ -10,6 +10,28 @@ import {
   generatePresetId,
   hslToHex 
 } from '../utils/color-utils';
+
+/**
+ * Interface for parsed JSON preset data (before validation)
+ */
+interface ParsedPresetJSON {
+  id?: unknown;
+  name?: unknown;
+  author?: unknown;
+  version?: unknown;
+  light?: {
+    base?: unknown;
+    accent?: unknown;
+    colors?: unknown;
+    frameLightnessOffset?: unknown;
+  };
+  dark?: {
+    base?: unknown;
+    accent?: unknown;
+    colors?: unknown;
+    frameLightnessOffset?: unknown;
+  };
+}
 
 export class PresetManager {
 
@@ -119,48 +141,91 @@ export class PresetManager {
    */
   static importPresetFromJSON(json: string): CustomColorPreset {
     try {
-      const parsed = JSON.parse(json);
+      const parsed = JSON.parse(json) as unknown;
+      
+      // Type guard: check if parsed is an object
+      if (typeof parsed !== 'object' || parsed === null) {
+        throw new Error('Invalid preset format: not an object');
+      }
+      
+      const data = parsed as ParsedPresetJSON;
       
       // Validate required fields
-      if (!parsed.id || !parsed.name || !parsed.light || !parsed.dark) {
+      if (!data.id || !data.name || !data.light || !data.dark) {
         throw new Error('Invalid preset format: missing required fields');
       }
 
       // Validate structure
-      if (!parsed.light.base || !parsed.light.accent || !parsed.dark.base || !parsed.dark.accent) {
+      if (!data.light.base || !data.light.accent || !data.dark.base || !data.dark.accent) {
         throw new Error('Invalid preset format: missing base or accent colors');
       }
 
       // Validate HSL ranges
-      const validateHSL = (hsl: { h?: unknown; s?: unknown; l?: unknown }) => {
-        return hsl && 
-               typeof hsl.h === 'number' && hsl.h >= 0 && hsl.h <= 360 &&
-               typeof hsl.s === 'number' && hsl.s >= 0 && hsl.s <= 100 &&
-               typeof hsl.l === 'number' && hsl.l >= 0 && hsl.l <= 100;
+      const validateHSL = (hsl: unknown): hsl is HSLColor => {
+        if (typeof hsl !== 'object' || hsl === null) return false;
+        const h = (hsl as { h?: unknown }).h;
+        const s = (hsl as { s?: unknown }).s;
+        const l = (hsl as { l?: unknown }).l;
+        return typeof h === 'number' && h >= 0 && h <= 360 &&
+               typeof s === 'number' && s >= 0 && s <= 100 &&
+               typeof l === 'number' && l >= 0 && l <= 100;
       };
 
-      if (!validateHSL(parsed.light.base) || !validateHSL(parsed.light.accent) ||
-          !validateHSL(parsed.dark.base) || !validateHSL(parsed.dark.accent)) {
+      if (!validateHSL(data.light.base) || !validateHSL(data.light.accent) ||
+          !validateHSL(data.dark.base) || !validateHSL(data.dark.accent)) {
         throw new Error('Invalid preset format: HSL values out of range');
       }
 
-      // Sanitize and validate
+      // Validate and extract colors
+      const extractColors = (colors: unknown): Record<string, string> => {
+        if (typeof colors === 'object' && colors !== null) {
+          const result: Record<string, string> = {};
+          for (const [key, value] of Object.entries(colors)) {
+            if (typeof value === 'string') {
+              result[key] = value;
+            }
+          }
+          return result;
+        }
+        return {};
+      };
+
+      // Validate frameLightnessOffset
+      const extractFrameOffset = (offset: unknown): number | undefined => {
+        if (typeof offset === 'number') {
+          return offset;
+        }
+        return undefined;
+      };
+
+      // Sanitize and validate - ensure id and name are strings
+      if (typeof data.id !== 'string') {
+        throw new Error('Invalid preset format: id must be a string');
+      }
+      if (typeof data.name !== 'string') {
+        throw new Error('Invalid preset format: name must be a string');
+      }
+      const idStr = data.id;
+      const nameStr = data.name;
+      const authorStr = typeof data.author === 'string' ? data.author : '';
+      const versionStr = typeof data.version === 'string' ? data.version : '1.0.0';
+
       const preset: CustomColorPreset = {
-        id: this.sanitizePresetName(parsed.id),
-        name: this.sanitizePresetName(parsed.name),
-        author: parsed.author || '',
-        version: parsed.version || '1.0.0',
+        id: this.sanitizePresetName(idStr),
+        name: this.sanitizePresetName(nameStr),
+        author: authorStr,
+        version: versionStr,
         light: {
-          base: parsed.light.base,
-          accent: parsed.light.accent,
-          colors: parsed.light.colors || {},
-          frameLightnessOffset: parsed.light.frameLightnessOffset
+          base: data.light.base,
+          accent: data.light.accent,
+          colors: extractColors(data.light.colors),
+          frameLightnessOffset: extractFrameOffset(data.light.frameLightnessOffset)
         },
         dark: {
-          base: parsed.dark.base,
-          accent: parsed.dark.accent,
-          colors: parsed.dark.colors || {},
-          frameLightnessOffset: parsed.dark.frameLightnessOffset
+          base: data.dark.base,
+          accent: data.dark.accent,
+          colors: extractColors(data.dark.colors),
+          frameLightnessOffset: extractFrameOffset(data.dark.frameLightnessOffset)
         }
       };
 

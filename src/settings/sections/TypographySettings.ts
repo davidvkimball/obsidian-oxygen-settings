@@ -7,7 +7,7 @@ import MinimalTheme from '../../main';
 import { createSettingsGroup } from '../../utils/settings-compat';
 
 export function buildTypographySettings(containerEl: HTMLElement, plugin: MinimalTheme): void {
-  const typographyGroup = createSettingsGroup(containerEl, 'Typography');
+  const typographyGroup = createSettingsGroup(containerEl, 'Typography', 'oxygen-settings');
 
   typographyGroup.addSetting((setting) => {
     setting

@@ -7,7 +7,7 @@ import MinimalTheme from '../../main';
 import { createSettingsGroup } from '../../utils/settings-compat';
 
 export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalTheme): void {
-  const layoutGroup = createSettingsGroup(containerEl, 'Layout');
+  const layoutGroup = createSettingsGroup(containerEl, 'Layout', 'oxygen-settings');
 
   layoutGroup.addSetting((setting) => {
     setting

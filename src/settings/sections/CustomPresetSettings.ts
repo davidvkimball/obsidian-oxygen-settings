@@ -19,7 +19,7 @@ export function buildCustomPresetSettings(
   app: App,
   refreshCallback: () => void
 ): void {
-  const customPresetsGroup = createSettingsGroup(containerEl, 'Custom color schemes');
+  const customPresetsGroup = createSettingsGroup(containerEl, 'Custom color schemes', 'oxygen-settings');
 
   // Enable/Disable Custom Presets
   customPresetsGroup.addSetting((setting) => {

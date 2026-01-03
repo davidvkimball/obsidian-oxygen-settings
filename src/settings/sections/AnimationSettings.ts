@@ -8,7 +8,7 @@ import MinimalTheme from '../../main';
 import { createSettingsGroup } from '../../utils/settings-compat';
 
 export function buildAnimationSettings(containerEl: HTMLElement, plugin: MinimalTheme): void {
-  const animationGroup = createSettingsGroup(containerEl, 'Animations');
+  const animationGroup = createSettingsGroup(containerEl, 'Animations', 'oxygen-settings');
 
   // Declare speedSetting variable first so it can be referenced in personality onChange
   let speedSetting: Setting;

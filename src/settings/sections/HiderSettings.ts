@@ -8,7 +8,7 @@ import MinimalTheme from '../../main';
 import { createSettingsGroup } from '../../utils/settings-compat';
 
 export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalTheme): void {
-  const focusGroup = createSettingsGroup(containerEl, 'Focus');
+  const focusGroup = createSettingsGroup(containerEl, 'Focus', 'oxygen-settings');
 
   focusGroup.addSetting((setting) => {
     setting

@@ -8,7 +8,7 @@ import { MinimalSettings } from '../settings-interface';
 import { createSettingsGroup } from '../../utils/settings-compat';
 
 export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTheme): void {
-  const featuresGroup = createSettingsGroup(containerEl, 'Features');
+  const featuresGroup = createSettingsGroup(containerEl, 'Features', 'oxygen-settings');
 
   featuresGroup.addSetting((setting) => {
     setting

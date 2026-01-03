@@ -7,7 +7,7 @@ import MinimalTheme from '../../main';
 import { createSettingsGroup } from '../../utils/settings-compat';
 
 export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: MinimalTheme): void {
-  const colorGroup = createSettingsGroup(containerEl, 'Color scheme');
+  const colorGroup = createSettingsGroup(containerEl, 'Color scheme', 'oxygen-settings');
 
   // Light mode color scheme
   colorGroup.addSetting((setting) => {

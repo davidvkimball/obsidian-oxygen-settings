@@ -50,6 +50,8 @@ export interface MinimalSettings {
   animationSpeed: number; // 0-2, default 1
   // Blur background
   enableBlur: boolean;
+  // Folder icon
+  useDefaultFolderIcon: boolean;
   // Migration tracking (internal use)
   _migrationVersions?: string[];
 }
@@ -100,5 +102,7 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   animationSpeed: 1,
   // Blur background
   enableBlur: false,
+  // Folder icon
+  useDefaultFolderIcon: false,
 };
 

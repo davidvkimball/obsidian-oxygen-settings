@@ -27,7 +27,7 @@ export function buildCustomPresetSettings(
       .setName('Enable custom presets')
       .setDesc('Allow creation and use of custom color presets')
       .addToggle((toggle) => {
-        toggle.setValue(plugin.settings.enableCustomPresets).onChange(async (value) => {
+        toggle.setValue(plugin.settings.enableCustomPresets).onChange( (value) => {
           plugin.settings.enableCustomPresets = value;
 
           // If disabling, reset any active custom preset schemes to default

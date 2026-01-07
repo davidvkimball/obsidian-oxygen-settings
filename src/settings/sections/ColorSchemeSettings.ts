@@ -48,7 +48,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
 
         dropdown
           .setValue(plugin.settings.lightScheme)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.lightScheme = value;
             void plugin.saveData(plugin.settings);
             // Regenerate all CSS including custom presets
@@ -70,7 +70,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .addOption('oxygen-light-tonal', 'Low contrast')
           .addOption('oxygen-light-contrast', 'High contrast')
           .setValue(plugin.settings.lightStyle)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.lightStyle = value;
             void plugin.saveData(plugin.settings);
             // Only apply light style if currently in light mode
@@ -119,7 +119,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
 
         dropdown
           .setValue(plugin.settings.darkScheme)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.darkScheme = value;
             void plugin.saveData(plugin.settings);
             // Regenerate all CSS including custom presets
@@ -140,7 +140,7 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .addOption('oxygen-dark-tonal', 'Low contrast')
           .addOption('oxygen-dark-black', 'True black')
           .setValue(plugin.settings.darkStyle)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.darkStyle = value;
             void plugin.saveData(plugin.settings);
             // Only apply dark style if currently in dark mode

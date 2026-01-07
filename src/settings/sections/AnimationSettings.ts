@@ -26,7 +26,7 @@ export function buildAnimationSettings(containerEl: HTMLElement, plugin: Minimal
           .addOption('playful', 'Playful')
           .addOption('off', 'Off')
           .setValue(plugin.settings.animationPersonality || 'default')
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.animationPersonality = value as 'default' | 'playful' | 'off';
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -54,7 +54,7 @@ export function buildAnimationSettings(containerEl: HTMLElement, plugin: Minimal
           .setLimits(0, 2, 0.1)
           .setValue(plugin.settings.animationSpeed)
           .setDynamicTooltip()
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.animationSpeed = value;
             void plugin.saveData(plugin.settings);
             plugin.refresh();

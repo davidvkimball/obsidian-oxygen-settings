@@ -169,6 +169,7 @@ export class StyleManagerImpl {
     document.body.classList.toggle('full-file-names', !this.plugin.settings.trimNames);
     document.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
     document.body.classList.toggle('oxygen-folding', this.plugin.settings.folding);
+    document.body.classList.toggle('use-default-folder-icon', this.plugin.settings.useDefaultFolderIcon);
 
     // Focus classes (only features not in UI Tweaker)
     document.body.classList.toggle('deemphasize-properties', this.plugin.settings.deemphasizeProperties);
@@ -415,6 +416,7 @@ export class StyleManagerImpl {
       'deemphasize-properties',
       'auto-hide-tab-bar-when-single-tab',
       'enable-blur',
+      'use-default-folder-icon',
       'animations-refined',
       'animations-default',
       'animations-playful',

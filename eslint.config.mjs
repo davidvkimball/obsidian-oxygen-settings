@@ -43,7 +43,11 @@ export default defineConfig([
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-empty-function": "off",
       "no-prototype-builtins": "off",
-      "@typescript-eslint/no-misused-promises": ["error",{"checksVoidReturn":{"attributes":false,"properties":false,"returns":false,"variables":false}}]
+      "@typescript-eslint/no-misused-promises": ["error",{"checksVoidReturn":{"attributes":false,"properties":false,"returns":false,"variables":false}}],
+      // Console rules: Match Obsidian bot requirements (only warn/error/debug allowed)
+      "no-console": ["error", { "allow": ["warn", "error", "debug"] }],
+      // Require await in async functions (matches Obsidian bot)
+      "@typescript-eslint/require-await": "error",
     },
   },
   {

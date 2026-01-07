@@ -16,7 +16,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
       // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Turn consecutive images into columns — to make a new row, add an extra line break between images. These options can also be defined on a per-file basis, see Documentation for details.')
       .addToggle((toggle) => {
-        toggle.setValue(plugin.settings.imgGrid).onChange(async (value) => {
+        toggle.setValue(plugin.settings.imgGrid).onChange( (value) => {
           plugin.settings.imgGrid = value;
           void plugin.saveData(plugin.settings);
           plugin.refresh();
@@ -35,7 +35,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
           .addOption('chart-max', 'Maximum line width')
           .addOption('chart-100', '100% pane width')
           .setValue(plugin.settings.chartWidth)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.chartWidth = value;
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -54,7 +54,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
           .addOption('iframe-max', 'Maximum line width')
           .addOption('iframe-100', '100% pane width')
           .setValue(plugin.settings.iframeWidth)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.iframeWidth = value;
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -73,7 +73,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
           .addOption('img-max', 'Maximum line width')
           .addOption('img-100', '100% pane width')
           .setValue(plugin.settings.imgWidth)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.imgWidth = value;
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -92,7 +92,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
           .addOption('map-max', 'Maximum line width')
           .addOption('map-100', '100% pane width')
           .setValue(plugin.settings.mapWidth)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.mapWidth = value;
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -113,7 +113,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
           .addOption('table-max', 'Maximum line width')
           .addOption('table-100', '100% pane width')
           .setValue(plugin.settings.tableWidth)
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.tableWidth = value;
             void plugin.saveData(plugin.settings);
             plugin.refresh();

@@ -15,7 +15,7 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       .setName('Focus mode')
       .setDesc('Hide tab bar and status bar, hover to display. Can be toggled via hotkey.')
       .addToggle((toggle) => {
-        toggle.setValue(plugin.settings.focusMode).onChange(async (value: boolean) => {
+        toggle.setValue(plugin.settings.focusMode).onChange( (value: boolean) => {
           plugin.settings.focusMode = value;
           void plugin.saveData(plugin.settings);
           plugin.refresh();
@@ -30,7 +30,7 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Hide the tab bar automatically when only 1 tab is open. Inspired by Meridian Theme.')
       .addToggle((toggle) => {
-        toggle.setValue(plugin.settings.autoHideTabBarWhenSingleTab).onChange(async (value: boolean) => {
+        toggle.setValue(plugin.settings.autoHideTabBarWhenSingleTab).onChange( (value: boolean) => {
           plugin.settings.autoHideTabBarWhenSingleTab = value;
           void plugin.saveData(plugin.settings);
           plugin.refresh();
@@ -43,7 +43,7 @@ export function buildHiderSettings(containerEl: HTMLElement, plugin: MinimalThem
       .setName('Deemphasize properties')
       .setDesc('Softens visual prominence of file properties. They become more visible on hover.')
       .addToggle((toggle) => {
-        toggle.setValue(plugin.settings.deemphasizeProperties).onChange(async (value: boolean) => {
+        toggle.setValue(plugin.settings.deemphasizeProperties).onChange( (value: boolean) => {
           plugin.settings.deemphasizeProperties = value;
           void plugin.saveData(plugin.settings);
           plugin.refresh();

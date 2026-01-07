@@ -17,7 +17,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
         text
           .setPlaceholder('16')
           .setValue((plugin.settings.textNormal || '') + '')
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.textNormal = parseFloat(value);
             void plugin.saveData(plugin.settings);
             plugin.setFontSize();
@@ -33,7 +33,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
         text
           .setPlaceholder('13')
           .setValue((plugin.settings.textSmall || '') + '')
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.textSmall = parseFloat(value);
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -49,7 +49,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
         text
           .setPlaceholder('1.5')
           .setValue((plugin.settings.lineHeight || '') + '')
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.lineHeight = parseFloat(value);
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -65,7 +65,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
         text
           .setPlaceholder('40')
           .setValue((plugin.settings.lineWidth || '') + '')
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.lineWidth = parseInt(value.trim());
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -81,7 +81,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
         text
           .setPlaceholder('50')
           .setValue((plugin.settings.lineWidthWide || '') + '')
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.lineWidthWide = parseInt(value.trim());
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -97,7 +97,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
         text
           .setPlaceholder('88')
           .setValue((plugin.settings.maxWidth || '') + '')
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.maxWidth = parseInt(value.trim());
             void plugin.saveData(plugin.settings);
             plugin.refresh();
@@ -113,7 +113,7 @@ export function buildTypographySettings(containerEl: HTMLElement, plugin: Minima
         text
           .setPlaceholder('')
           .setValue((plugin.settings.editorFont || '') + '')
-          .onChange(async (value) => {
+          .onChange( (value) => {
             plugin.settings.editorFont = value;
             void plugin.saveData(plugin.settings);
             plugin.refresh();

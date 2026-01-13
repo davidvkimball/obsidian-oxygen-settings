@@ -265,13 +265,8 @@ export class StyleManagerImpl {
       return;
     }
     
-    document.body.removeClass(
-      'theme-dark',
-      'minimal-light',
-      'minimal-light-tonal',
-      'minimal-light-contrast',
-      'minimal-light-white'
-    );
+    this.removeStyle();
+    document.body.removeClass('theme-dark');
     document.body.addClass('theme-light', this.plugin.settings.lightStyle);
     
     const theme = getVaultConfig(this.plugin.app, 'theme');
@@ -291,12 +286,8 @@ export class StyleManagerImpl {
       return;
     }
     
-    document.body.removeClass(
-      'theme-light',
-      'minimal-dark',
-      'minimal-dark-tonal',
-      'minimal-dark-black'
-    );
+    this.removeStyle();
+    document.body.removeClass('theme-light');
     document.body.addClass('theme-dark', this.plugin.settings.darkStyle);
     
     const theme = getVaultConfig(this.plugin.app, 'theme');
@@ -365,7 +356,15 @@ export class StyleManagerImpl {
       'oxygen-light-white',
       'oxygen-dark',
       'oxygen-dark-tonal',
-      'oxygen-dark-black'
+      'oxygen-dark-black',
+      // Legacy or mis-prefixed classes that might be sticking
+      'minimal-light',
+      'minimal-light-tonal',
+      'minimal-light-contrast',
+      'minimal-light-white',
+      'minimal-dark',
+      'minimal-dark-tonal',
+      'minimal-dark-black'
     );
   }
 

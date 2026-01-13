@@ -73,10 +73,8 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .onChange( (value) => {
             plugin.settings.lightStyle = value;
             void plugin.saveData(plugin.settings);
-            // Only apply light style if currently in light mode
-            if (document.body.classList.contains('theme-light')) {
-              plugin.updateLightStyle();
-            }
+            // Refresh all styles to apply the new contrast class and handle sticking
+            plugin.updateStyle();
           });
       });
   });
@@ -143,10 +141,8 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .onChange( (value) => {
             plugin.settings.darkStyle = value;
             void plugin.saveData(plugin.settings);
-            // Only apply dark style if currently in dark mode
-            if (document.body.classList.contains('theme-dark')) {
-              plugin.updateDarkStyle();
-            }
+            // Refresh all styles to apply the new contrast class and handle sticking
+            plugin.updateStyle();
           });
       });
   });

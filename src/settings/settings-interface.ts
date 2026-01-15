@@ -16,7 +16,6 @@ export interface MinimalSettings {
   trimNames: boolean;
   labeledNav: boolean;
   workspaceBorders: string;  // 'enhanced' | 'default' | 'none'
-  focusMode: boolean;
   lineHeight: number;
   lineWidth: number;
   lineWidthWide: number;
@@ -42,9 +41,6 @@ export interface MinimalSettings {
   // Sidebar indentation guides
   navIndentationGuideWidth: string;  // '0px' | '1px' | '2px' | '3px'
   navIndentationGuideColor: string;   // 'var(--ui1)' | 'var(--text-faint)' | 'var(--text-accent)'
-  // Focus settings (only features not in UI Tweaker)
-  deemphasizeProperties: boolean;
-  autoHideTabBarWhenSingleTab: boolean;
   // Animation settings
   animationPersonality: 'default' | 'playful' | 'off';
   animationSpeed: number; // 0-2, default 1
@@ -82,7 +78,6 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   fullWidthMedia: true,
   workspaceBorders: 'enhanced',
   minimalStatus: true,
-  focusMode: false,
   underlineInternal: true,
   underlineExternal: true,
   folding: true,
@@ -94,9 +89,6 @@ export const DEFAULT_SETTINGS: MinimalSettings = {
   // Sidebar indentation guides
   navIndentationGuideWidth: '0px',
   navIndentationGuideColor: 'rgba(var(--mono-rgb-100), 0.12)',
-  // Focus settings (only features not in UI Tweaker)
-  deemphasizeProperties: false,
-  autoHideTabBarWhenSingleTab: false,
   // Animation settings
   animationPersonality: 'default',
   animationSpeed: 1,

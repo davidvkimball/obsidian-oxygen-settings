@@ -126,7 +126,6 @@ export const COMMAND_IDS = {
   // Feature toggle commands
   TOGGLE_BORDERS: 'toggle-hidden-borders',
   TOGGLE_COLORFUL_HEADINGS: 'toggle-colorful-headings',
-  TOGGLE_FOCUS_MODE: 'toggle-minimal-focus-mode',
   TOGGLE_COLORFUL_FRAME: 'toggle-minimal-colorful-frame',
   TOGGLE_IMAGE_GRID: 'toggle-minimal-img-grid',
   TOGGLE_THEME: 'toggle-minimal-switch',

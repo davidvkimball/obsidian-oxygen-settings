@@ -37,16 +37,6 @@ export function registerFeatureCommands(plugin: PluginContext): void {
   });
 
   plugin.addCommand({
-    id: COMMAND_IDS.TOGGLE_FOCUS_MODE,
-    name: 'Toggle focus mode',
-    callback: () => {
-      plugin.settings.focusMode = !plugin.settings.focusMode;
-      void plugin.saveData(plugin.settings);
-      refresh(plugin);
-    }
-  });
-
-  plugin.addCommand({
     id: COMMAND_IDS.TOGGLE_COLORFUL_FRAME,
     name: 'Toggle colorful window frame',
     callback: () => {

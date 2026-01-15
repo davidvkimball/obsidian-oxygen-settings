@@ -18,8 +18,6 @@ export class StyleManagerImpl {
   private plugin: PluginContext;
   private cssObserver: MutationObserver | null = null;
   private customPresetCSS: CustomPresetCSS;
-  private tabObserver: MutationObserver | null = null;
-  private sidebarObserver: MutationObserver | null = null;
 
   constructor(plugin: PluginContext) {
     this.plugin = plugin;
@@ -46,11 +44,6 @@ export class StyleManagerImpl {
     this.loadRules();
     // CSS watcher removed - it was causing infinite loops
     // Custom preset CSS updates are handled by settings UI and theme switches
-    
-    // Watch for tab changes to toggle single-tab class
-    if (this.plugin.settings.autoHideTabBarWhenSingleTab) {
-      this.setupTabObserver();
-    }
   }
   
   /**
@@ -78,9 +71,6 @@ export class StyleManagerImpl {
       this.cssObserver.disconnect();
       this.cssObserver = null;
     }
-    
-    // Cleanup tab observer
-    this.cleanupTabObserver();
   }
 
   /**
@@ -158,7 +148,6 @@ export class StyleManagerImpl {
     document.body.classList.toggle('colorful-headings', this.plugin.settings.colorfulHeadings);
     document.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
     document.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
-    document.body.classList.toggle('oxygen-focus-mode', this.plugin.settings.focusMode);
     document.body.classList.toggle('enable-blur', this.plugin.settings.enableBlur);
     document.body.classList.toggle('links-int-on', this.plugin.settings.underlineInternal);
     document.body.classList.toggle('links-ext-on', this.plugin.settings.underlineExternal);
@@ -170,23 +159,6 @@ export class StyleManagerImpl {
     document.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
     document.body.classList.toggle('oxygen-folding', this.plugin.settings.folding);
     document.body.classList.toggle('use-default-folder-icon', this.plugin.settings.useDefaultFolderIcon);
-
-    // Focus classes (only features not in UI Tweaker)
-    document.body.classList.toggle('deemphasize-properties', this.plugin.settings.deemphasizeProperties);
-    document.body.classList.toggle('auto-hide-tab-bar-when-single-tab', this.plugin.settings.autoHideTabBarWhenSingleTab);
-    
-    // Setup or cleanup tab observer based on setting
-    if (this.plugin.settings.autoHideTabBarWhenSingleTab) {
-      this.setupTabObserver();
-      // Add OS-specific class for styling
-      const os = this.detectOS();
-      document.body.classList.remove('auto-hide-tab-bar-windows', 'auto-hide-tab-bar-macos', 'auto-hide-tab-bar-neutral');
-      document.body.classList.add(`auto-hide-tab-bar-${os}`);
-    } else {
-      this.cleanupTabObserver();
-      // Remove OS-specific classes
-      document.body.classList.remove('auto-hide-tab-bar-windows', 'auto-hide-tab-bar-macos', 'auto-hide-tab-bar-neutral');
-    }
 
     // Add width classes
     document.body.addClass(
@@ -402,7 +374,6 @@ export class StyleManagerImpl {
       'colorful-headings',
       'colorful-frame',
       'colorful-active',
-      'oxygen-focus-mode',
       'links-int-on',
       'links-ext-on',
       'full-width-media',
@@ -412,8 +383,6 @@ export class StyleManagerImpl {
       'full-file-names',
       'labeled-nav',
       'oxygen-folding',
-      'deemphasize-properties',
-      'auto-hide-tab-bar-when-single-tab',
       'enable-blur',
       'use-default-folder-icon',
       'animations-refined',
@@ -483,185 +452,6 @@ export class StyleManagerImpl {
   private setupCSSWatcher(): void {
     // CSS watcher disabled - was causing infinite loops
     // Custom preset CSS is now only updated when explicitly called
-  }
-
-  /**
-   * Setup observer to watch for tab changes and toggle single-tab class
-   * Also checks sidebar states to conditionally hide view-header-left and view-actions
-   */
-  private setupTabObserver(): void {
-    if (this.tabObserver) {
-      return; // Already set up
-    }
-
-    const checkTabs = () => {
-      const modRoots = document.querySelectorAll('.mod-root');
-      modRoots.forEach((modRoot) => {
-        const workspaceTabs = modRoot.querySelector('.workspace-tabs:not(.mod-stacked)');
-        if (workspaceTabs) {
-          const tabHeaders = workspaceTabs.querySelectorAll('.workspace-tab-header');
-          const hasSingleTab = tabHeaders.length === 1;
-          
-          // Check sidebar states using DOM classes - most reliable method
-          // Query fresh each time to ensure we get current state
-          // Try multiple selectors to find the right element
-          const leftSidebarEl = document.querySelector('.workspace-split.mod-left-split') || 
-                                document.querySelector('.mod-left-split');
-          const rightSidebarEl = document.querySelector('.workspace-split.mod-right-split') || 
-                                 document.querySelector('.mod-right-split');
-          
-          // Check for the is-sidedock-collapsed class - this is the most reliable indicator
-          const leftSidebarCollapsed = leftSidebarEl ? leftSidebarEl.classList.contains('is-sidedock-collapsed') : false;
-          const rightSidebarCollapsed = rightSidebarEl ? rightSidebarEl.classList.contains('is-sidedock-collapsed') : false;
-          
-          
-          // Debug variables removed - uncomment if needed for debugging
-          // const leftSplit = this.plugin.app.workspace.leftSplit;
-          // const rightSplit = this.plugin.app.workspace.rightSplit;
-          // const leftSidebarCollapsedAPI = leftSplit.collapsed;
-          // const rightSidebarCollapsedAPI = rightSplit.collapsed;
-          // const getSidebarWidth = (el: Element | null): number => {
-          //   if (!el) return 0;
-          //   const rect = (el as HTMLElement).getBoundingClientRect();
-          //   return rect.width;
-          // };
-          // const leftWidth = getSidebarWidth(leftSidebarEl);
-          // const rightWidth = getSidebarWidth(rightSidebarEl);
-          
-          
-          // CRITICAL: Always clean up inline styles first to prevent them from persisting
-          // This ensures that CSS classes control visibility, not stuck inline styles
-          // Clean up synchronously before adding/removing classes
-          const viewActions = modRoot.querySelectorAll('.view-header .view-actions');
-          viewActions.forEach((el) => {
-            const htmlEl = el as HTMLElement;
-            // Remove any inline display styles that might have been set previously
-            // Check if display is set to 'none' with important priority
-            const displayValue = htmlEl.style.getPropertyValue('display');
-            const displayPriority = htmlEl.style.getPropertyPriority('display');
-            if (displayValue === 'none' && displayPriority === 'important') {
-              htmlEl.style.removeProperty('display');
-            }
-          });
-          
-          // Remove all single-tab related classes first
-          modRoot.classList.remove(
-            'has-single-tab',
-            'has-single-tab-left-collapsed',
-            'has-single-tab-right-collapsed'
-          );
-          
-          if (hasSingleTab) {
-            modRoot.classList.add('has-single-tab');
-            
-            // Add specific classes based on sidebar states
-            // Only hide view-header-left if left sidebar is NOT expanded (is collapsed)
-            if (leftSidebarCollapsed) {
-              modRoot.classList.add('has-single-tab-left-collapsed');
-            }
-            
-            // Only hide view-actions if right sidebar is NOT expanded (is collapsed)
-            // Let CSS handle the hiding - no inline styles needed
-            if (rightSidebarCollapsed) {
-              modRoot.classList.add('has-single-tab-right-collapsed');
-            }
-          }
-        }
-      });
-    };
-
-    // Debounce function to avoid rapid toggling during animations
-    let checkTimeout: number | null = null;
-    const debouncedCheckTabs = () => {
-      if (checkTimeout) {
-        clearTimeout(checkTimeout);
-      }
-      checkTimeout = window.setTimeout(() => {
-        checkTabs();
-        checkTimeout = null;
-      }, 150); // 150ms debounce
-    };
-
-    // Initial check
-    setTimeout(checkTabs, 100);
-
-    // Watch for changes in workspace
-    this.tabObserver = new MutationObserver(() => {
-      debouncedCheckTabs();
-    });
-
-    // Observe the workspace container
-    const workspace = document.querySelector('.workspace');
-    if (workspace) {
-      this.tabObserver.observe(workspace, {
-        childList: true,
-        subtree: true
-      });
-    }
-
-    // Also listen to workspace layout changes (includes sidebar toggles)
-    this.plugin.registerEvent(
-      this.plugin.app.workspace.on('layout-change', () => {
-        debouncedCheckTabs();
-      })
-    );
-
-    // Watch for class changes on sidebar elements specifically
-    const leftSidebarEl = document.querySelector('.workspace-split.mod-left-split');
-    const rightSidebarEl = document.querySelector('.workspace-split.mod-right-split');
-    
-    if (leftSidebarEl) {
-      this.sidebarObserver = new MutationObserver((mutations) => {
-        let shouldCheck = false;
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            shouldCheck = true;
-          }
-        });
-        if (shouldCheck) {
-          debouncedCheckTabs();
-        }
-      });
-      
-      this.sidebarObserver.observe(leftSidebarEl, {
-        attributes: true,
-        attributeFilter: ['class']
-      });
-      
-      if (rightSidebarEl && rightSidebarEl !== leftSidebarEl) {
-        this.sidebarObserver.observe(rightSidebarEl, {
-          attributes: true,
-          attributeFilter: ['class']
-        });
-      }
-    }
-  }
-
-  /**
-   * Cleanup tab observer
-   */
-  private cleanupTabObserver(): void {
-    if (this.tabObserver) {
-      this.tabObserver.disconnect();
-      this.tabObserver = null;
-    }
-    
-    if (this.sidebarObserver) {
-      this.sidebarObserver.disconnect();
-      this.sidebarObserver = null;
-    }
-    
-    // Remove all single-tab related classes from all mod-roots
-    document.querySelectorAll('.mod-root').forEach((el) => {
-      el.classList.remove(
-        'has-single-tab',
-        'has-single-tab-left-collapsed',
-        'has-single-tab-right-collapsed'
-      );
-    });
-    
-    // Remove OS-specific classes
-    document.body.classList.remove('auto-hide-tab-bar-windows', 'auto-hide-tab-bar-macos', 'auto-hide-tab-bar-neutral');
   }
 
 }

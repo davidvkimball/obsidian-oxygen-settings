@@ -208,8 +208,6 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     }
     setting
       .setName('Use default Obsidian folder icon')
-      // False positive: "Obsidian" and "Lucide" are proper nouns (product names)
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Toggle to use Obsidian\'s default file explorer icon instead of the folder-closed icon.')
       .addToggle((toggle) => {
         toggle.setValue(plugin.settings.useDefaultFolderIcon).onChange( (value) => {

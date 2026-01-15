@@ -7,7 +7,6 @@ import { PluginSettingTab, App } from 'obsidian';
 import MinimalTheme from "./main";
 import { buildColorSchemeSettings } from './settings/sections/ColorSchemeSettings';
 import { buildFeatureSettings } from './settings/sections/FeatureSettings';
-import { buildHiderSettings } from './settings/sections/HiderSettings';
 import { buildLayoutSettings } from './settings/sections/LayoutSettings';
 import { buildTypographySettings } from './settings/sections/TypographySettings';
 import { buildCustomPresetSettings } from './settings/sections/CustomPresetSettings';
@@ -34,7 +33,6 @@ export class MinimalSettingsTab extends PluginSettingTab {
     buildCustomPresetSettings(containerEl, this.plugin, this.app, () => this.display());
     buildFeatureSettings(containerEl, this.plugin);
     buildAnimationSettings(containerEl, this.plugin);
-    buildHiderSettings(containerEl, this.plugin);
     buildLayoutSettings(containerEl, this.plugin);
     buildTypographySettings(containerEl, this.plugin);
   }

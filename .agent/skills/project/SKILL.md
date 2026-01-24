@@ -1,34 +1,33 @@
 ---
 name: project
-description: Project-specific architecture, maintenance tasks, and unique conventions for this repository. Load when performing project-wide maintenance or working with the core architecture.
+description: Project-specific architecture, maintenance tasks, and unique conventions for Oxygen Settings.
 ---
 
-# Project Context
+# Oxygen Settings Project Skill
 
-This skill provides the unique context and architectural details for the **Obsidian Sample Plugin Plus** repository.
+Configure advanced customization options in the Oxygen Theme. This plugin acts as the configuration layer for the companion Oxygen theme, providing a modular settings interface for theme-specific features.
 
-## Purpose
+## Core Architecture
 
-To provide guidance on project-specific structures and tasks that differ from general Obsidian development patterns.
-
-## When to Use
-
-Load this skill when:
-- Understanding the repository's unique architecture.
-- Performing recurring maintenance tasks.
-- Following project-specific coding conventions.
-
-## Project Overview
-
-- **Architecture**: Organized structure with main code in `src/main.ts` and settings in `src/settings.ts`.
-- **Reference Management**: Uses a `.ref` folder with symlinks to centralized Obsidian repositories for API and documentation.
-
-## Maintenance Tasks
-
-- **Sync References**: Run the setup scripts (`scripts/setup-ref-links.*`) to update symlinks to the 6 core Obsidian projects.
-- **Update Skills**: Use `node scripts/update-agents.mjs "Description"` after syncing or updating reference materials.
+- **Theme Liaison**: Systematically communicates with the Oxygen theme via CSS variables and body classes.
+- **Modular Settings**: Organizes theme features into manageable toggles and styling options.
+- **UI Management**: Uses a 15KB `styles.css` to provide a polished settings and configuration experience.
 
 ## Project-Specific Conventions
 
-- **Organized Source**: Prefer keeping logic separated into files within `src/` rather than bloating `main.ts`.
-- **Ref Symlinks**: Always use the `.ref/` path when looking up API documentation to ensure parity with the central reference store.
+- **Variable Injection**: Logic focused on mapping setting states to specific CSS variables defined in the theme.
+- **User-Centric Design**: Aims for a "Settings-as-Dashboard" experience for theme customization.
+- **Mobile/Desktop Parity**: Ensures customization options are accessible across all Obsidian platforms.
+
+## Key Files
+
+- `src/main.ts`: Main settings registration and theme communication logic.
+- `manifest.json`: Plugin identification and id (`oxygen-settings`).
+- `styles.css`: Theming for the customization interface and specialized UI modules.
+- `esbuild.config.mjs`: Build configuration for bundling settings modules.
+
+## Maintenance Tasks
+
+- **Variable Alignment**: audit injected variables against terminal updates in the Oxygen theme.
+- **Settings Hierarchy**: Maintain the logical grouping of theme settings (e.g., Typography, Colors, Layout).
+- **Performance**: Ensure settings injection doesn't cause UI flickering or layout shifts.

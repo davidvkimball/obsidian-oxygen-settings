@@ -18,14 +18,15 @@ export { DEFAULT_SETTINGS } from './settings/settings-interface';
 
 export class MinimalSettingsTab extends PluginSettingTab {
   plugin: MinimalTheme;
-  
+  public icon = 'lucide-swatch-book';
+
   constructor(app: App, plugin: MinimalTheme) {
     super(app, plugin);
     this.plugin = plugin;
   }
 
   display(): void {
-    const {containerEl} = this;
+    const { containerEl } = this;
     containerEl.empty();
 
     // Build all settings sections

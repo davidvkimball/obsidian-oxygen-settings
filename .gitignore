@@ -23,3 +23,5 @@ data.json
 
 # Reference materials
 .ref/
+# Lock files
+package-lock.json

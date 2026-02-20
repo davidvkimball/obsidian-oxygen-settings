@@ -9,6 +9,7 @@ import { PresetManager } from '../presets/PresetManager';
 import { hslToHex } from '../utils/color-utils';
 import { createHSLControls, createColorOverride } from './components/PresetColorControls';
 import { setCssProp } from '../utils/css-props';
+import { updateObsidianAccentColor } from '../utils/theme-utils';
 import MinimalTheme from '../main';
 
 export class PresetEditorModal extends Modal {
@@ -16,16 +17,16 @@ export class PresetEditorModal extends Modal {
   private isEditing: boolean;
   private onSave: (preset: CustomColorPreset) => void;
   private plugin: MinimalTheme;
-  
+
   // Form elements
   private nameInput: HTMLInputElement;
   private authorInput: HTMLInputElement;
   private previewSwatch: HTMLElement;
 
   constructor(
-    app: App, 
+    app: App,
     plugin: MinimalTheme,
-    preset: CustomColorPreset | null, 
+    preset: CustomColorPreset | null,
     onSave: (preset: CustomColorPreset) => void
   ) {
     super(app);
@@ -78,12 +79,12 @@ export class PresetEditorModal extends Modal {
 
     // Content area - show both modes linearly
     const contentArea = contentEl.createEl('div', { cls: 'modes-container' });
-    
+
     // Light mode section
     const lightSection = contentArea.createEl('div', { cls: 'mode-section' });
     lightSection.createEl('h3', { text: 'Light mode' });
     this.buildModeContent(lightSection, 'light');
-    
+
     // Dark mode section
     const darkSection = contentArea.createEl('div', { cls: 'mode-section' });
     darkSection.createEl('h3', { text: 'Dark mode' });
@@ -97,13 +98,13 @@ export class PresetEditorModal extends Modal {
 
     // Footer buttons
     const footer = contentEl.createEl('div', { cls: 'modal-footer' });
-    
+
     const cancelBtn = footer.createEl('button', { text: 'Cancel', cls: 'mod-cta' });
     cancelBtn.onclick = () => this.close();
-    
-    const saveBtn = footer.createEl('button', { 
-      text: this.isEditing ? 'Update' : 'Create', 
-      cls: 'mod-cta' 
+
+    const saveBtn = footer.createEl('button', {
+      text: this.isEditing ? 'Update' : 'Create',
+      cls: 'mod-cta'
     });
     saveBtn.onclick = () => this.savePreset();
   }
@@ -145,10 +146,10 @@ export class PresetEditorModal extends Modal {
     const frameSection = requiredSection.createEl('div', { cls: 'color-group' });
     frameSection.createEl('label', { text: 'Colorful frame lightness override (optional)', cls: 'frame-label' });
     const frameDesc = frameSection.createEl('div', { cls: 'setting-item-description frame-description' });
-    frameDesc.textContent = mode === 'dark' 
+    frameDesc.textContent = mode === 'dark'
       ? 'Offset from accent lightness for colorful frame. Default: -25 (darkens by 25%). Leave empty for default.'
       : 'Offset from accent lightness for colorful frame. Default: +30 (brightens by 30%). Leave empty for default.';
-    
+
     const frameInput = frameSection.createEl('input', { type: 'number', cls: 'frame-input' });
     frameInput.placeholder = mode === 'dark' ? '-25' : '+30';
     frameInput.min = '-100';
@@ -157,7 +158,7 @@ export class PresetEditorModal extends Modal {
     if (palette.frameLightnessOffset !== undefined) {
       frameInput.value = palette.frameLightnessOffset.toString();
     }
-    
+
     frameInput.oninput = () => {
       const value = frameInput.value.trim();
       if (value === '') {
@@ -184,8 +185,8 @@ export class PresetEditorModal extends Modal {
     const advancedSection = container.createEl('div', { cls: 'color-section' });
     const advancedHeader = advancedSection.createEl('div', { cls: 'collapsible-header' });
     advancedHeader.createEl('h4', { text: 'Advanced overrides (optional)' });
-    const advancedToggle = advancedHeader.createEl('button', { 
-      cls: 'collapse-toggle' 
+    const advancedToggle = advancedHeader.createEl('button', {
+      cls: 'collapse-toggle'
     });
     setIcon(advancedToggle, 'chevron-down');
 
@@ -199,20 +200,20 @@ export class PresetEditorModal extends Modal {
     const overrideKeys = ['bg1', 'bg2', 'bg3', 'ui1', 'ui2', 'ui3', 'tx1', 'tx2', 'tx3', 'tx4', 'hl1', 'hl2'];
     const overrideLabels = ['Background 1', 'Background 2', 'Background 3', 'UI 1', 'UI 2', 'UI 3', 'Text 1', 'Text 2', 'Text 3', 'Text 4', 'Highlight 1', 'Highlight 2'];
     const colors = palette.colors; // TypeScript now knows this is defined
-    
+
     overrideKeys.forEach((key, index) => {
       const item = createColorOverride(
-        advancedSection, 
-        overrideLabels[index], 
-        key, 
-        colors, 
+        advancedSection,
+        overrideLabels[index],
+        key,
+        colors,
         palette,
         () => this.updatePreview()
       );
       advancedItems.push(item);
       item.addClass('collapsible-content-item'); // Hide by default
     });
-    
+
     // Toggle visibility
     advancedToggle.onclick = () => {
       const isCollapsed = !advancedItems[0].classList.contains('expanded');
@@ -230,28 +231,28 @@ export class PresetEditorModal extends Modal {
     const syntaxSection = container.createEl('div', { cls: 'color-section' });
     const syntaxHeader = syntaxSection.createEl('div', { cls: 'collapsible-header' });
     syntaxHeader.createEl('h4', { text: 'Syntax colors (optional)' });
-    const syntaxToggle = syntaxHeader.createEl('button', { 
-      cls: 'collapse-toggle' 
+    const syntaxToggle = syntaxHeader.createEl('button', {
+      cls: 'collapse-toggle'
     });
     setIcon(syntaxToggle, 'chevron-down');
 
     // Create syntax color overrides
     const syntaxColors = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple', 'pink'];
     const syntaxItems: HTMLElement[] = [];
-    
+
     syntaxColors.forEach(color => {
       const item = createColorOverride(
-        syntaxSection, 
-        color.charAt(0).toUpperCase() + color.slice(1), 
-        color, 
-        colors, 
+        syntaxSection,
+        color.charAt(0).toUpperCase() + color.slice(1),
+        color,
+        colors,
         palette,
         () => this.updatePreview()
       );
       syntaxItems.push(item);
       item.addClass('collapsible-content-item'); // Hide by default
     });
-    
+
     // Toggle visibility
     syntaxToggle.onclick = () => {
       const isCollapsed = !syntaxItems[0].classList.contains('expanded');
@@ -268,30 +269,41 @@ export class PresetEditorModal extends Modal {
 
   private updatePreview() {
     this.previewSwatch.empty();
-    
+
     // Live preview: temporarily update the plugin's preset data to show changes in real-time
     const presetIndex = this.plugin.settings.customPresets.findIndex(p => p.id === this.preset.id);
     if (presetIndex !== -1) {
       // Temporarily update the preset in settings
       this.plugin.settings.customPresets[presetIndex] = this.preset;
-      
+
       // Apply changes if this preset is currently active
       const presetSchemeId = `oxygen-custom-${this.preset.id}`;
-      if (this.plugin.settings.lightScheme === presetSchemeId || this.plugin.settings.darkScheme === presetSchemeId) {
+      const isActiveLight = this.plugin.settings.lightScheme === presetSchemeId;
+      const isActiveDark = this.plugin.settings.darkScheme === presetSchemeId;
+
+      if (isActiveLight || isActiveDark) {
+        // Sync accent color if active
+        const isLightMode = document.body.classList.contains('theme-light');
+        if (isLightMode && isActiveLight) {
+          updateObsidianAccentColor(this.plugin.app, this.preset.light.accent);
+        } else if (!isLightMode && isActiveDark) {
+          updateObsidianAccentColor(this.plugin.app, this.preset.dark.accent);
+        }
+
         this.plugin.updateStyle();
         this.plugin.updateCustomPresetCSS();
       }
     }
-    
+
     // Get colors for both modes
     const lightPalette = this.preset.light;
     const darkPalette = this.preset.dark;
-    
+
     const lightBaseHex = hslToHex(lightPalette.base);
     const lightAccentHex = hslToHex(lightPalette.accent);
     const darkBaseHex = hslToHex(darkPalette.base);
     const darkAccentHex = hslToHex(darkPalette.accent);
-    
+
     // Create Light Mode section
     const lightRow = this.previewSwatch.createEl('div', { cls: 'preview-row' });
     lightRow.createEl('div', { text: 'Light mode', cls: 'preview-label' });
@@ -302,7 +314,7 @@ export class PresetEditorModal extends Modal {
     const lightAccentColor = lightColors.createEl('div', { cls: 'preview-color' });
     lightAccentColor.setAttribute('data-color', lightAccentHex);
     setCssProp(lightAccentColor, '--preview-color', lightAccentHex);
-    
+
     // Create Dark Mode section
     const darkRow = this.previewSwatch.createEl('div', { cls: 'preview-row' });
     darkRow.createEl('div', { text: 'Dark mode', cls: 'preview-label' });
@@ -325,8 +337,8 @@ export class PresetEditorModal extends Modal {
       // Generate ID if creating new preset
       if (!this.isEditing) {
         this.preset.id = PresetManager.createPreset(
-          this.preset.name, 
-          this.preset.author || '', 
+          this.preset.name,
+          this.preset.author || '',
           this.plugin.settings.customPresets
         ).id;
       }

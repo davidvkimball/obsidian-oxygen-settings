@@ -12,9 +12,10 @@ import { PresetImportModal } from '../../modals/PresetImportModal';
 import { ConfirmationModal } from '../../modals/ConfirmationModal';
 import { generateColorSwatch } from '../../utils/color-utils';
 import { createSettingsGroup } from '../../utils/settings-compat';
+import { updateObsidianAccentColor } from '../../utils/theme-utils';
 
 export function buildCustomPresetSettings(
-  containerEl: HTMLElement, 
+  containerEl: HTMLElement,
   plugin: MinimalTheme,
   app: App,
   refreshCallback: () => void
@@ -27,7 +28,7 @@ export function buildCustomPresetSettings(
       .setName('Enable custom presets')
       .setDesc('Allow creation and use of custom color presets')
       .addToggle((toggle) => {
-        toggle.setValue(plugin.settings.enableCustomPresets).onChange( (value) => {
+        toggle.setValue(plugin.settings.enableCustomPresets).onChange((value) => {
           plugin.settings.enableCustomPresets = value;
 
           // If disabling, reset any active custom preset schemes to default
@@ -99,7 +100,7 @@ export function buildCustomPresetSettings(
       });
   } else {
     const emptyState = containerEl.createEl('div', { cls: 'custom-presets-empty' });
-    emptyState.createEl('p', { 
+    emptyState.createEl('p', {
       text: 'No custom presets yet. Create your first preset to get started!',
       cls: 'empty-message'
     });
@@ -110,29 +111,29 @@ export function buildCustomPresetSettings(
 }
 
 function addPresetListItem(
-  container: HTMLElement, 
+  container: HTMLElement,
   preset: CustomColorPreset,
   app: App,
   plugin: MinimalTheme,
   refreshCallback: () => void
 ): void {
   const presetItem = container.createEl('div', { cls: 'custom-preset-item' });
-  
+
   // Preset info
   const presetInfo = presetItem.createEl('div', { cls: 'preset-info' });
-  
+
   // Color swatch
   const swatch = generateColorSwatch(preset);
   presetInfo.appendChild(swatch);
-  
+
   // Preset details
   const details = presetInfo.createEl('div', { cls: 'preset-details' });
   details.createEl('div', { text: preset.name, cls: 'preset-name' });
-  
+
   if (preset.author) {
     details.createEl('div', { text: `by ${preset.author}`, cls: 'preset-author' });
   }
-  
+
   details.createEl('div', { text: preset.id, cls: 'preset-id preset-id-display' });
 
   // Action buttons using proper Obsidian API
@@ -170,16 +171,27 @@ function openPresetEditor(
       // Add new preset
       plugin.settings.customPresets.push(updatedPreset);
     }
-    
+
     void plugin.saveData(plugin.settings);
-    
+
     // Update styles if this preset is currently active
     const presetSchemeId = `oxygen-custom-${updatedPreset.id}`;
-    if (plugin.settings.lightScheme === presetSchemeId || plugin.settings.darkScheme === presetSchemeId) {
+    const isActiveLight = plugin.settings.lightScheme === presetSchemeId;
+    const isActiveDark = plugin.settings.darkScheme === presetSchemeId;
+
+    if (isActiveLight || isActiveDark) {
+      // Sync accent color if active
+      const isLightMode = document.body.classList.contains('theme-light');
+      if (isLightMode && isActiveLight) {
+        updateObsidianAccentColor(plugin.app, updatedPreset.light.accent);
+      } else if (!isLightMode && isActiveDark) {
+        updateObsidianAccentColor(plugin.app, updatedPreset.dark.accent);
+      }
+
       plugin.updateStyle();
       plugin.updateCustomPresetCSS();
     }
-    
+
     refreshCallback(); // Refresh the settings tab
   });
   modal.open();
@@ -202,7 +214,7 @@ function exportPreset(preset: CustomColorPreset): void {
   const json = PresetManager.exportPresetAsJSON(preset);
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  
+
   const a = document.createElement('a');
   a.href = url;
   a.download = `${preset.id}.json`;
@@ -220,11 +232,11 @@ async function deletePreset(
 ): Promise<void> {
   // Check if preset is currently active
   const isActive = PresetManager.isPresetActive(
-    preset.id, 
-    plugin.settings.lightScheme, 
+    preset.id,
+    plugin.settings.lightScheme,
     plugin.settings.darkScheme
   );
-  
+
   if (isActive) {
     // Show warning modal
     const confirmed = await ConfirmationModal.show(
@@ -233,11 +245,11 @@ async function deletePreset(
       'This preset is currently active. Deleting it will switch to the default scheme. Continue?',
       'Delete'
     );
-    
+
     if (!confirmed) {
       return;
     }
-    
+
     // Switch to default schemes
     if (plugin.settings.lightScheme === `oxygen-custom-${preset.id}`) {
       plugin.settings.lightScheme = 'oxygen-oxygen-light';
@@ -246,15 +258,15 @@ async function deletePreset(
       plugin.settings.darkScheme = 'oxygen-oxygen-dark';
     }
   }
-  
+
   // Remove preset from settings
   plugin.settings.customPresets = plugin.settings.customPresets.filter(p => p.id !== preset.id);
   await plugin.saveData(plugin.settings);
-  
+
   // Update styles
   plugin.updateStyle();
   plugin.updateCustomPresetCSS();
-  
+
   refreshCallback(); // Refresh the settings tab
 }
 

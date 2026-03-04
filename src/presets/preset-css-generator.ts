@@ -96,10 +96,15 @@ export class PresetCSSGenerator {
     const textOnAccent = luminance > 0.5 ? 'black' : 'white';
 
     // Build properties object
+    // Accent HSL is set here so custom presets work like built-in schemes.
+    // The user can still override via Obsidian's native accent color picker.
     const props: Record<string, string> = {
       '--base-h': `${baseH}`,
       '--base-s': `${baseS}%`,
       '--base-l': `${baseL}%`,
+      '--accent-h': `${accentH}`,
+      '--accent-s': `${accentS}%`,
+      '--accent-l': `${accentL}%`,
       '--bg1': bg1,
       '--bg2': bg2,
       '--bg-tab': bg2,
@@ -114,6 +119,7 @@ export class PresetCSSGenerator {
       '--hl1': hl1,
       '--hl2': hl2,
       '--sp1': sp1,
+      '--text-on-accent': textOnAccent,
     };
 
     // Extended color palette
@@ -224,10 +230,6 @@ export class PresetCSSGenerator {
     const tx3 = `hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx3L}%)`;
     const tx4 = `hsl(${baseH}, ${Math.max(0, baseS - 10)}%, ${tx4L}%)`;
 
-    // Accent colors - Not calculated here anymore
-    // Let the Oxygen theme calculate ax1/ax2/ax3 from --accent-h/s/l
-    // This allows Obsidian's native accent picker to override properly
-
     // Highlight colors
     const hl1 = `hsla(${accentH}, 50%, 40%, 30%)`;
     const hl2 = `rgba(255, 177, 80, 0.3)`;
@@ -281,6 +283,13 @@ export class PresetCSSGenerator {
     css += `  --base-l: ${baseL}%;\n`;
     css += `\n`;
 
+    // === ACCENT HSL VALUES (drives ax1/ax2/ax3, colorful-frame, etc.) ===
+    css += `  --accent-h: ${accentH};\n`;
+    css += `  --accent-s: ${accentS}%;\n`;
+    css += `  --accent-l: ${accentL}%;\n`;
+    css += `  --text-on-accent: ${textOnAccent};\n`;
+    css += `\n`;
+
     // === OXYGEN CUSTOM VARIABLES (Core theme colors) ===
     // Backgrounds
     css += `  --bg1: ${bg1};\n`;
@@ -302,9 +311,7 @@ export class PresetCSSGenerator {
     css += `  --tx4: ${tx4};\n`;
     css += `\n`;
 
-    // Accent Colors - Don't set ax1/ax2/ax3 explicitly
-    // Let the Oxygen theme CSS calculate these from --accent-h/s/l
-    // This allows Obsidian's native accent color picker to work properly
+    // ax1/ax2/ax3 are derived from --accent-h/s/l by the theme CSS
     // css += `  --ax1: ${ax1};\n`;
     // css += `  --ax2: ${ax2};\n`;
     // css += `  --ax3: ${ax3};\n`;

@@ -3,7 +3,7 @@
  * Enable/disable, create, import, list, edit, export, delete presets
  */
 
-import { Setting, App } from 'obsidian';
+import { Setting, App , SettingGroup} from 'obsidian';
 import MinimalTheme from '../../main';
 import { CustomColorPreset } from '../../presets/CustomPreset';
 import { PresetManager } from '../../presets/PresetManager';
@@ -11,7 +11,7 @@ import { PresetEditorModal } from '../../modals/PresetEditorModal';
 import { PresetImportModal } from '../../modals/PresetImportModal';
 import { ConfirmationModal } from '../../modals/ConfirmationModal';
 import { generateColorSwatch } from '../../utils/color-utils';
-import { createSettingsGroup } from '../../utils/settings-compat';
+
 import { updateObsidianAccentColor } from '../../utils/theme-utils';
 
 export function buildCustomPresetSettings(
@@ -20,15 +20,15 @@ export function buildCustomPresetSettings(
   app: App,
   refreshCallback: () => void
 ): void {
-  const customPresetsGroup = createSettingsGroup(containerEl, 'Custom color schemes', 'oxygen-settings');
+  const customPresetsGroup = new SettingGroup(containerEl).setHeading('Custom color schemes');
 
   // Enable/Disable Custom Presets
-  customPresetsGroup.addSetting((setting) => {
+  customPresetsGroup.addSetting(setting => {
     setting
       .setName('Enable custom presets')
       .setDesc('Allow creation and use of custom color presets')
-      .addToggle((toggle) => {
-        toggle.setValue(plugin.settings.enableCustomPresets).onChange((value) => {
+      .addToggle(toggle => {
+        toggle.setValue(plugin.settings.enableCustomPresets).onChange(value => {
           plugin.settings.enableCustomPresets = value;
 
           // If disabling, reset any active custom preset schemes to default
@@ -62,7 +62,7 @@ export function buildCustomPresetSettings(
   }
 
   // Action buttons
-  customPresetsGroup.addSetting((setting) => {
+  customPresetsGroup.addSetting(setting => {
     setting
       .setName('Create new preset')
       .setDesc('Design a custom color scheme from scratch')
@@ -74,7 +74,7 @@ export function buildCustomPresetSettings(
       });
   });
 
-  customPresetsGroup.addSetting((setting) => {
+  customPresetsGroup.addSetting(setting => {
     setting
       .setName('Import preset')
       .setDesc('Import a preset from JSON data')

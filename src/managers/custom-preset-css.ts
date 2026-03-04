@@ -56,11 +56,12 @@ export class CustomPresetCSS {
     // List of all possible custom preset CSS properties
     const presetProperties = [
       '--base-h', '--base-s', '--base-l',
+      '--accent-h', '--accent-s', '--accent-l',
       '--bg1', '--bg2', '--bg-tab', '--bg3',
       '--ui1', '--ui2', '--ui3',
       '--tx1', '--tx2', '--tx3', '--tx4',
       '--hl1', '--hl2',
-      '--sp1',
+      '--sp1', '--text-on-accent',
       '--color-red', '--color-orange', '--color-yellow', '--color-green',
       '--color-cyan', '--color-blue', '--color-purple', '--color-pink',
       '--frame-background-l'
@@ -112,11 +113,12 @@ export class CustomPresetCSS {
     // Remove all custom preset CSS properties
     const presetProperties = [
       '--base-h', '--base-s', '--base-l',
+      '--accent-h', '--accent-s', '--accent-l',
       '--bg1', '--bg2', '--bg-tab', '--bg3',
       '--ui1', '--ui2', '--ui3',
       '--tx1', '--tx2', '--tx3', '--tx4',
       '--hl1', '--hl2',
-      '--sp1',
+      '--sp1', '--text-on-accent',
       '--color-red', '--color-orange', '--color-yellow', '--color-green',
       '--color-cyan', '--color-blue', '--color-purple', '--color-pink',
       '--frame-background-l'

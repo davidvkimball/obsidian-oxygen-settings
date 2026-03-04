@@ -1,23 +1,23 @@
+import { SettingGroup } from "obsidian";
 /**
  * Color scheme settings section
  * Light/dark mode color schemes and background contrast
  */
 
 import MinimalTheme from '../../main';
-import { createSettingsGroup } from '../../utils/settings-compat';
-import { updateObsidianAccentColor } from '../../utils/theme-utils';
+
 
 export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: MinimalTheme): void {
-  const colorGroup = createSettingsGroup(containerEl, 'Color scheme', 'oxygen-settings');
+  const colorGroup = new SettingGroup(containerEl).setHeading('Color scheme');
 
   // Light mode color scheme
-  colorGroup.addSetting((setting) => {
+  colorGroup.addSetting(setting => {
     setting
       .setName('Light mode color scheme')
       // False positive: "Style Settings" and "Documentation" are proper nouns
       // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Preset color options for light mode. To create a custom color scheme use the Style Settings plugin. See Documentation for details.')
-      .addDropdown((dropdown) => {
+      .addDropdown(dropdown => {
         // Built-in schemes
         dropdown
           .addOption('oxygen-oxygen-light', 'Oxygen')
@@ -49,18 +49,9 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
 
         dropdown
           .setValue(plugin.settings.lightScheme)
-          .onChange((value) => {
+          .onChange(value => {
             plugin.settings.lightScheme = value;
             void plugin.saveData(plugin.settings);
-
-            // If selecting a custom preset, sync its accent color to Obsidian
-            if (value.startsWith('oxygen-custom-')) {
-              const presetId = value.replace('oxygen-custom-', '');
-              const preset = plugin.settings.customPresets.find(p => p.id === presetId);
-              if (preset) {
-                updateObsidianAccentColor(plugin.app, preset.light.accent);
-              }
-            }
 
             // Regenerate all CSS including custom presets
             plugin.updateStyle();
@@ -70,18 +61,18 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
   });
 
   // Light mode background contrast
-  colorGroup.addSetting((setting) => {
+  colorGroup.addSetting(setting => {
     setting
       .setName('Light mode background contrast')
       .setDesc('Level of contrast between sidebar and main content.')
-      .addDropdown((dropdown) => {
+      .addDropdown(dropdown => {
         dropdown
           .addOption('oxygen-light', 'Default')
           .addOption('oxygen-light-white', 'All white')
           .addOption('oxygen-light-tonal', 'Low contrast')
           .addOption('oxygen-light-contrast', 'High contrast')
           .setValue(plugin.settings.lightStyle)
-          .onChange((value) => {
+          .onChange(value => {
             plugin.settings.lightStyle = value;
             void plugin.saveData(plugin.settings);
             // Refresh all styles to apply the new contrast class and handle sticking
@@ -91,11 +82,11 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
   });
 
   // Dark mode color scheme
-  colorGroup.addSetting((setting) => {
+  colorGroup.addSetting(setting => {
     setting
       .setName('Dark mode color scheme')
       .setDesc('Preset colors options for dark mode.')
-      .addDropdown((dropdown) => {
+      .addDropdown(dropdown => {
         // Built-in schemes
         dropdown
           .addOption('oxygen-oxygen-dark', 'Oxygen')
@@ -128,18 +119,9 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
 
         dropdown
           .setValue(plugin.settings.darkScheme)
-          .onChange((value) => {
+          .onChange(value => {
             plugin.settings.darkScheme = value;
             void plugin.saveData(plugin.settings);
-
-            // If selecting a custom preset, sync its accent color to Obsidian
-            if (value.startsWith('oxygen-custom-')) {
-              const presetId = value.replace('oxygen-custom-', '');
-              const preset = plugin.settings.customPresets.find(p => p.id === presetId);
-              if (preset) {
-                updateObsidianAccentColor(plugin.app, preset.dark.accent);
-              }
-            }
 
             // Regenerate all CSS including custom presets
             plugin.updateStyle();
@@ -149,17 +131,17 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
   });
 
   // Dark mode background contrast
-  colorGroup.addSetting((setting) => {
+  colorGroup.addSetting(setting => {
     setting
       .setName('Dark mode background contrast')
       .setDesc('Level of contrast between sidebar and main content.')
-      .addDropdown((dropdown) => {
+      .addDropdown(dropdown => {
         dropdown
           .addOption('oxygen-dark', 'Default')
           .addOption('oxygen-dark-tonal', 'Low contrast')
           .addOption('oxygen-dark-black', 'True black')
           .setValue(plugin.settings.darkStyle)
-          .onChange((value) => {
+          .onChange(value => {
             plugin.settings.darkStyle = value;
             void plugin.saveData(plugin.settings);
             // Refresh all styles to apply the new contrast class and handle sticking

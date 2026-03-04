@@ -95,6 +95,11 @@ export default class MinimalTheme extends Plugin {
           } else if (this._isOxygenActive && newThemeState && this._isInitialized && themeModeChanged) {
             // Still on Oxygen, but theme mode (light/dark) changed - refresh styles
             this.styleManager.updateStyle();
+            this.styleManager.updateCustomPresetCSS();
+          } else if (this._isOxygenActive && newThemeState && this._isInitialized) {
+            // Still on Oxygen, same mode - re-apply custom preset CSS
+            // (handles Obsidian's accent color reset clearing our inline properties)
+            this.styleManager.updateCustomPresetCSS();
           }
         }, 100); // 100ms debounce
       })

@@ -5,9 +5,9 @@
 
 import { PluginContext } from '../types';
 import { CustomPresetCSS } from './custom-preset-css';
-import { 
-  CSS_CLASSES, 
-  LIGHT_SCHEMES, 
+import {
+  CSS_CLASSES,
+  LIGHT_SCHEMES,
   DARK_SCHEMES
 } from '../constants';
 import { setTheme, getVaultConfig, setVaultConfig } from '../types/obsidian-extensions';
@@ -45,7 +45,7 @@ export class StyleManagerImpl {
     // CSS watcher removed - it was causing infinite loops
     // Custom preset CSS updates are handled by settings UI and theme switches
   }
-  
+
   /**
    * Initialize custom preset CSS (called after main load completes)
    */
@@ -62,10 +62,10 @@ export class StyleManagerImpl {
     this.removeSettings();
     this.removeLightScheme();
     this.removeDarkScheme();
-    
+
     // Cleanup custom preset CSS
     this.customPresetCSS.cleanup();
-    
+
     // Cleanup CSS observer
     if (this.cssObserver) {
       this.cssObserver.disconnect();
@@ -83,7 +83,7 @@ export class StyleManagerImpl {
     }
     this.updateStyle();
   }
-  
+
   /**
    * Update custom preset CSS (public interface)
    */
@@ -99,7 +99,7 @@ export class StyleManagerImpl {
     if (!this.plugin.isOxygenThemeActive()) {
       return;
     }
-    
+
     this.removeStyle();
     this.removeSettings();
 
@@ -144,7 +144,7 @@ export class StyleManagerImpl {
       document.body.classList.remove('borders-on');
       document.body.classList.add('borders-none');
     }
-    
+
     document.body.classList.toggle('colorful-headings', this.plugin.settings.colorfulHeadings);
     document.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
     document.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
@@ -178,37 +178,37 @@ export class StyleManagerImpl {
       '--max-width': `${this.plugin.settings.maxWidth}%`,
       '--font-editor-override': this.plugin.settings.editorFont
     };
-    
+
     // Only set indentation guide variables if they differ from default
     // Width: only set if not default (0px - theme now hides guides by default)
     // Color: only set if not "Subtle" (let theme use its default color)
     const isDefaultWidth = this.plugin.settings.navIndentationGuideWidth === '0px';
     const isDefaultColor = this.plugin.settings.navIndentationGuideColor === 'rgba(var(--mono-rgb-100), 0.12)';
-    
+
     if (!isDefaultWidth) {
       cssProps['--nav-indentation-guide-width'] = this.plugin.settings.navIndentationGuideWidth;
     } else {
       // Remove width variable to let theme use default
       document.body.style.removeProperty('--nav-indentation-guide-width');
     }
-    
+
     if (!isDefaultColor) {
       cssProps['--nav-indentation-guide-color'] = this.plugin.settings.navIndentationGuideColor;
     } else {
       // Remove color variable to let theme use its default color
       document.body.style.removeProperty('--nav-indentation-guide-color');
     }
-    
+
     setCssProps(document.body, cssProps);
-    
-    
+
+
     // Apply animation settings
     // Remove all animation classes first (including old 'animations-refined' for migration)
     document.body.classList.remove('animations-refined', 'animations-default', 'animations-playful', 'animations-off');
-    
+
     // Get animation personality (default to 'default' if not set for migration)
     const animationPersonality = this.plugin.settings.animationPersonality || 'default';
-    
+
     // Apply personality class
     if (animationPersonality === 'off') {
       document.body.classList.add('animations-off');
@@ -224,8 +224,15 @@ export class StyleManagerImpl {
       // Apply speed (only if not "off")
       document.body.style.setProperty('--anim-speed-modifier', this.plugin.settings.animationSpeed.toString());
     }
-    
+
     this.customPresetCSS.updateCSS();
+
+    // Re-apply user's custom accent as inline styles after all style updates.
+    // This ensures the user's accent overrides both:
+    // - Built-in scheme CSS class selectors (e.g., .oxygen-flexoki-dark { --accent-h: 175; })
+    // - Custom preset <style> element rules
+    // Inline styles have the highest CSS specificity, so the user's choice always wins.
+    this.customPresetCSS.applyUserAccentInline();
   }
 
   /**
@@ -236,11 +243,11 @@ export class StyleManagerImpl {
     if (!this.plugin.isOxygenThemeActive()) {
       return;
     }
-    
+
     this.removeStyle();
     document.body.removeClass('theme-dark');
     document.body.addClass('theme-light', this.plugin.settings.lightStyle);
-    
+
     const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== 'system') {
       setTheme(this.plugin.app, 'moonstone');
@@ -257,11 +264,11 @@ export class StyleManagerImpl {
     if (!this.plugin.isOxygenThemeActive()) {
       return;
     }
-    
+
     this.removeStyle();
     document.body.removeClass('theme-light');
     document.body.addClass('theme-dark', this.plugin.settings.darkStyle);
-    
+
     const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== 'system') {
       setTheme(this.plugin.app, 'obsidian');
@@ -278,15 +285,15 @@ export class StyleManagerImpl {
     if (!this.plugin.isOxygenThemeActive()) {
       return;
     }
-    
+
     this.removeLightScheme();
     this.removeDarkScheme();
-    
+
     if (!document.body.classList.contains('theme-light')) {
       document.body.removeClass('theme-dark');
       document.body.addClass('theme-light');
     }
-    
+
     // Only add class if scheme is not empty
     if (this.plugin.settings.lightScheme && this.plugin.settings.lightScheme.trim()) {
       document.body.addClass(this.plugin.settings.lightScheme);
@@ -301,15 +308,15 @@ export class StyleManagerImpl {
     if (!this.plugin.isOxygenThemeActive()) {
       return;
     }
-    
+
     this.removeDarkScheme();
     this.removeLightScheme();
-    
+
     if (!document.body.classList.contains('theme-dark')) {
       document.body.removeClass('theme-light');
       document.body.addClass('theme-dark');
     }
-    
+
     // Only add class if scheme is not empty
     if (this.plugin.settings.darkScheme && this.plugin.settings.darkScheme.trim()) {
       document.body.addClass(this.plugin.settings.darkScheme);
@@ -345,7 +352,7 @@ export class StyleManagerImpl {
    */
   removeLightScheme(): void {
     document.body.removeClass(...LIGHT_SCHEMES);
-    
+
     // Remove custom preset classes
     this.plugin.settings.customPresets.forEach(preset => {
       document.body.removeClass(`oxygen-custom-${preset.id}`);
@@ -357,7 +364,7 @@ export class StyleManagerImpl {
    */
   removeDarkScheme(): void {
     document.body.removeClass(...DARK_SCHEMES);
-    
+
     // Remove custom preset classes
     this.plugin.settings.customPresets.forEach(preset => {
       document.body.removeClass(`oxygen-custom-${preset.id}`);
@@ -423,7 +430,7 @@ export class StyleManagerImpl {
     }
 
     document.body.classList.add(CSS_CLASSES.PLUGIN_THEME);
-    
+
     // Update styles once - matches original plugin behavior
     this.updateStyle();
   }
@@ -442,7 +449,7 @@ export class StyleManagerImpl {
     document.body.style.removeProperty('--nav-indentation-guide-width');
     document.body.style.removeProperty('--nav-indentation-guide-color');
     document.body.style.removeProperty('--anim-speed-modifier');
-    
+
     document.body.classList.remove(CSS_CLASSES.PLUGIN_THEME);
   }
 

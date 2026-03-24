@@ -15,7 +15,7 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
       .setName('Image grids')
       // False positive: "Documentation" is a proper noun (section name)
       // eslint-disable-next-line obsidianmd/ui/sentence-case
-      .setDesc('Turn consecutive images into columns — to make a new row, add an extra line break between images. These options can also be defined on a per-file basis, see Documentation for details.')
+      .setDesc('Turn consecutive images into columns. To make a new row, add an extra line break between images. These options can also be defined on a per-file basis, see Documentation for details.')
       .addToggle(toggle => {
         toggle.setValue(plugin.settings.imgGrid).onChange(value => {
           plugin.settings.imgGrid = value;

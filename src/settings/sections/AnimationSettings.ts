@@ -3,7 +3,7 @@
  * Controls animation personality and speed
  */
 
-import { Setting , SettingGroup} from 'obsidian';
+import { Setting, SettingGroup, SliderComponent } from 'obsidian';
 import MinimalTheme from '../../main';
 
 
@@ -17,9 +17,7 @@ export function buildAnimationSettings(containerEl: HTMLElement, plugin: Minimal
   animationGroup.addSetting(setting => {
     setting
       .setName('Animation personality')
-      // False positive: Text is already in sentence case; "Default", "Playful", and "Off" are option labels
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
-      .setDesc('Choose the animation style: Default (smooth), Playful (bouncy), or Off (disabled).')
+      .setDesc('Choose the animation style: Default (smooth), Playful (bouncy), or off (disabled).')
       .addDropdown(dropdown => {
         dropdown
           .addOption('default', 'Default')
@@ -49,7 +47,7 @@ export function buildAnimationSettings(containerEl: HTMLElement, plugin: Minimal
     setting
       .setName('Animation speed')
       .setDesc('Control the speed of animations. Range: 0 (disabled) to 2 (half speed / slower). Default: 1 (normal speed). Lower values = faster animations, higher values = slower animations.')
-      .addSlider((slider: any) => {
+      .addSlider((slider: SliderComponent) => {
         slider
           .setLimits(0, 2, 0.1)
           .setValue(plugin.settings.animationSpeed)

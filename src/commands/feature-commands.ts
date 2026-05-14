@@ -108,20 +108,20 @@ function updateTheme(plugin: PluginContext): void {
   const theme = getVaultConfig(plugin.app, 'theme');
   
   if (theme === 'system') {
-    if (document.body.classList.contains('theme-light')) {
-      document.body.removeClass('theme-light');
-      document.body.addClass('theme-dark');
+    if (activeDocument.body.classList.contains('theme-light')) {
+      activeDocument.body.removeClass('theme-light');
+      activeDocument.body.addClass('theme-dark');
     } else {
-      document.body.removeClass('theme-dark');
-      document.body.addClass('theme-light');
+      activeDocument.body.removeClass('theme-dark');
+      activeDocument.body.addClass('theme-light');
     }
   } else {
-    if (document.body.classList.contains('theme-light')) {
-      document.body.removeClass('theme-light');
-      document.body.addClass('theme-dark');
+    if (activeDocument.body.classList.contains('theme-light')) {
+      activeDocument.body.removeClass('theme-light');
+      activeDocument.body.addClass('theme-dark');
     } else {
-      document.body.removeClass('theme-dark');
-      document.body.addClass('theme-light');
+      activeDocument.body.removeClass('theme-dark');
+      activeDocument.body.addClass('theme-light');
     }
 
     const currentTheme = getVaultConfig(plugin.app, 'theme');

@@ -21,21 +21,21 @@ export class ThemeManagerImpl {
     const currentTheme = getVaultConfig(this.plugin.app, 'theme');
     if (currentTheme === OBSIDIAN_THEMES.SYSTEM) {
       // System theme mode - just toggle class
-      if (document.body.classList.contains('theme-light')) {
-        document.body.removeClass('theme-light');
-        document.body.addClass('theme-dark');
+      if (activeDocument.body.classList.contains('theme-light')) {
+        activeDocument.body.removeClass('theme-light');
+        activeDocument.body.addClass('theme-dark');
       } else {
-        document.body.removeClass('theme-dark');
-        document.body.addClass('theme-light');
+        activeDocument.body.removeClass('theme-dark');
+        activeDocument.body.addClass('theme-light');
       }
     } else {
       // Manual theme mode - toggle both class and Obsidian theme
-      if (document.body.classList.contains('theme-light')) {
-        document.body.removeClass('theme-light');
-        document.body.addClass('theme-dark');
+      if (activeDocument.body.classList.contains('theme-light')) {
+        activeDocument.body.removeClass('theme-light');
+        activeDocument.body.addClass('theme-dark');
       } else {
-        document.body.removeClass('theme-dark');
-        document.body.addClass('theme-light');
+        activeDocument.body.removeClass('theme-dark');
+        activeDocument.body.addClass('theme-light');
       }
 
       const theme = getVaultConfig(this.plugin.app, 'theme');
@@ -54,8 +54,8 @@ export class ThemeManagerImpl {
    * Switch to light theme
    */
   switchToLight(): void {
-    document.body.removeClass('theme-dark');
-    document.body.addClass('theme-light');
+    activeDocument.body.removeClass('theme-dark');
+    activeDocument.body.addClass('theme-light');
     
     const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== OBSIDIAN_THEMES.SYSTEM) {
@@ -70,8 +70,8 @@ export class ThemeManagerImpl {
    * Switch to dark theme
    */
   switchToDark(): void {
-    document.body.removeClass('theme-light');
-    document.body.addClass('theme-dark');
+    activeDocument.body.removeClass('theme-light');
+    activeDocument.body.addClass('theme-dark');
     
     const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== OBSIDIAN_THEMES.SYSTEM) {
@@ -86,7 +86,7 @@ export class ThemeManagerImpl {
    * Get current theme mode
    */
   getCurrentMode(): ThemeMode {
-    return document.body.classList.contains('theme-light') ? 'light' : 'dark';
+    return activeDocument.body.classList.contains('theme-light') ? 'light' : 'dark';
   }
 
   /**
@@ -98,13 +98,13 @@ export class ThemeManagerImpl {
       return;
     }
     
-    const sidebarEl = document.getElementsByClassName('mod-left-split')[0];
-    const ribbonEl = document.getElementsByClassName('side-dock-ribbon')[0];
+    const sidebarEl = activeDocument.getElementsByClassName('mod-left-split')[0];
+    const ribbonEl = activeDocument.getElementsByClassName('side-dock-ribbon')[0];
     
     if (
       sidebarEl && 
       ribbonEl && 
-      document.body.classList.contains('theme-light') && 
+      activeDocument.body.classList.contains('theme-light') && 
       this.plugin.settings.lightStyle === 'oxygen-light-contrast'
     ) {
       sidebarEl.addClass('theme-dark');
@@ -119,12 +119,12 @@ export class ThemeManagerImpl {
    * Cleanup sidebar theme on unload
    */
   cleanupSidebarTheme(): void {
-    const sidebarEl = document.getElementsByClassName('mod-left-split')[0];
+    const sidebarEl = activeDocument.getElementsByClassName('mod-left-split')[0];
     if (sidebarEl) {
       sidebarEl.removeClass('theme-dark');
     }
     
-    const ribbonEl = document.getElementsByClassName('side-dock-ribbon')[0];
+    const ribbonEl = activeDocument.getElementsByClassName('side-dock-ribbon')[0];
     if (ribbonEl) {
       ribbonEl.removeClass('theme-dark');
     }

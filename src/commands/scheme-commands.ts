@@ -45,24 +45,24 @@ export function updateLightScheme(plugin: PluginContext): void {
   removeLightScheme(plugin);
   removeDarkScheme(plugin);
   
-  if (!document.body.classList.contains('theme-light')) {
-    document.body.removeClass('theme-dark');
-    document.body.addClass('theme-light');
+  if (!activeDocument.body.classList.contains('theme-light')) {
+    activeDocument.body.removeClass('theme-dark');
+    activeDocument.body.addClass('theme-light');
   }
   
-  document.body.addClass(plugin.settings.lightScheme);
+  activeDocument.body.addClass(plugin.settings.lightScheme);
 }
 
 export function updateDarkScheme(plugin: PluginContext): void {
   removeDarkScheme(plugin);
   removeLightScheme(plugin);
   
-  if (!document.body.classList.contains('theme-dark')) {
-    document.body.removeClass('theme-light');
-    document.body.addClass('theme-dark');
+  if (!activeDocument.body.classList.contains('theme-dark')) {
+    activeDocument.body.removeClass('theme-light');
+    activeDocument.body.addClass('theme-dark');
   }
   
-  document.body.addClass(plugin.settings.darkScheme);
+  activeDocument.body.addClass(plugin.settings.darkScheme);
 }
 
 function updateLightStyle(plugin: PluginContext): void {
@@ -71,14 +71,14 @@ function updateLightStyle(plugin: PluginContext): void {
     return;
   }
   
-  document.body.removeClass(
+  activeDocument.body.removeClass(
     'theme-dark',
     'oxygen-light',
     'oxygen-light-tonal',
     'oxygen-light-contrast',
     'oxygen-light-white'
   );
-  document.body.addClass('theme-light', plugin.settings.lightStyle);
+  activeDocument.body.addClass('theme-light', plugin.settings.lightStyle);
   
   const theme = getVaultConfig(plugin.app, 'theme');
   if (theme !== 'system') {
@@ -94,13 +94,13 @@ function updateDarkStyle(plugin: PluginContext): void {
     return;
   }
   
-  document.body.removeClass(
+  activeDocument.body.removeClass(
     'theme-light',
     'oxygen-dark',
     'oxygen-dark-tonal',
     'oxygen-dark-black'
   );
-  document.body.addClass('theme-dark', plugin.settings.darkStyle);
+  activeDocument.body.addClass('theme-dark', plugin.settings.darkStyle);
   
   const theme = getVaultConfig(plugin.app, 'theme');
   if (theme !== 'system') {
@@ -111,20 +111,20 @@ function updateDarkStyle(plugin: PluginContext): void {
 }
 
 function removeLightScheme(plugin: PluginContext): void {
-  document.body.removeClass(...LIGHT_SCHEMES);
+  activeDocument.body.removeClass(...LIGHT_SCHEMES);
   
   // Remove custom preset classes
   plugin.settings.customPresets.forEach(preset => {
-    document.body.removeClass(`minimal-custom-${preset.id}`);
+    activeDocument.body.removeClass(`minimal-custom-${preset.id}`);
   });
 }
 
 function removeDarkScheme(plugin: PluginContext): void {
-  document.body.removeClass(...DARK_SCHEMES);
+  activeDocument.body.removeClass(...DARK_SCHEMES);
   
   // Remove custom preset classes
   plugin.settings.customPresets.forEach(preset => {
-    document.body.removeClass(`minimal-custom-${preset.id}`);
+    activeDocument.body.removeClass(`minimal-custom-${preset.id}`);
   });
 }
 

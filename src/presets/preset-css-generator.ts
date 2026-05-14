@@ -123,7 +123,6 @@ export class PresetCSSGenerator {
     };
 
     // Extended color palette
-    const extendedS = accentS;
     const extendedL = isLightBase ? 55 : 65;
 
     props['--color-red'] = `hsl(0, var(--accent-s), ${extendedL}%)`;
@@ -329,7 +328,6 @@ export class PresetCSSGenerator {
     // === EXTENDED COLOR PALETTE ===
     // Generate extended palette based on accent color for colorful headings/frames
     // Uses fixed hues with the preset's saturation and adjusted lightness
-    const extendedS = accentS;
     const extendedL = isLightBase ? 55 : 65; // Slightly different for light vs dark
 
     css += `  --color-red: hsl(0, var(--accent-s), ${extendedL}%);\n`;

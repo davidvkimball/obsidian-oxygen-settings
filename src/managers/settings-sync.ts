@@ -54,7 +54,7 @@ export class SettingsSyncManager {
     this.plugin.settings.readableLineLength = !!getVaultConfig(this.plugin.app, VAULT_CONFIG.READABLE_LINE_LENGTH);
 
     // Update body classes
-    const bodyClassList = document.body.classList;
+    const bodyClassList = activeDocument.body.classList;
     bodyClassList.toggle('oxygen-folding', this.plugin.settings.folding);
     bodyClassList.toggle('oxygen-line-nums', this.plugin.settings.lineNumbers);
     bodyClassList.toggle('oxygen-readable', this.plugin.settings.readableLineLength);
@@ -78,13 +78,13 @@ export class SettingsSyncManager {
    * Update sidebar theme for high contrast mode
    */
   private updateSidebarTheme(): void {
-    const sidebarEl = document.getElementsByClassName('mod-left-split')[0];
-    const ribbonEl = document.getElementsByClassName('side-dock-ribbon')[0];
+    const sidebarEl = activeDocument.getElementsByClassName('mod-left-split')[0];
+    const ribbonEl = activeDocument.getElementsByClassName('side-dock-ribbon')[0];
     
     if (
       sidebarEl && 
       ribbonEl && 
-      document.body.classList.contains('theme-light') && 
+      activeDocument.body.classList.contains('theme-light') && 
       this.plugin.settings.lightStyle === 'oxygen-light-contrast'
     ) {
       sidebarEl.addClass('theme-dark');

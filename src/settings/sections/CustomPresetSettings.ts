@@ -181,7 +181,7 @@ function openPresetEditor(
 
     if (isActiveLight || isActiveDark) {
       // Sync accent color if active
-      const isLightMode = document.body.classList.contains('theme-light');
+      const isLightMode = activeDocument.body.classList.contains('theme-light');
       if (isLightMode && isActiveLight) {
         updateObsidianAccentColor(plugin.app, updatedPreset.light.accent);
       } else if (!isLightMode && isActiveDark) {
@@ -215,12 +215,12 @@ function exportPreset(preset: CustomColorPreset): void {
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
 
-  const a = document.createElement('a');
+  const a = activeDocument.createElement('a');
   a.href = url;
   a.download = `${preset.id}.json`;
-  document.body.appendChild(a);
+  activeDocument.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
+  activeDocument.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
 

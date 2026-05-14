@@ -98,7 +98,7 @@ export function validateHSL(hsl: HSLColor): boolean {
  * Generate a color swatch element for preview
  */
 export function generateColorSwatch(preset: CustomColorPreset): HTMLElement {
-  const swatch = document.createElement('div');
+  const swatch = activeDocument.createElement('div');
   swatch.className = 'custom-preset-swatch';
   const lightBaseHex = hslToHex(preset.light.base);
   const lightAccentHex = hslToHex(preset.light.accent);

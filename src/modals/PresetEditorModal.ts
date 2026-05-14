@@ -283,7 +283,7 @@ export class PresetEditorModal extends Modal {
 
       if (isActiveLight || isActiveDark) {
         // Sync accent color if active
-        const isLightMode = document.body.classList.contains('theme-light');
+        const isLightMode = activeDocument.body.classList.contains('theme-light');
         if (isLightMode && isActiveLight) {
           updateObsidianAccentColor(this.plugin.app, this.preset.light.accent);
         } else if (!isLightMode && isActiveDark) {

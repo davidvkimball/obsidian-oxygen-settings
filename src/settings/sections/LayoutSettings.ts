@@ -14,7 +14,6 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
     setting
       .setName('Image grids')
       // False positive: "Documentation" is a proper noun (section name)
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Turn consecutive images into columns. To make a new row, add an extra line break between images. These options can also be defined on a per-file basis, see Documentation for details.')
       .addToggle(toggle => {
         toggle.setValue(plugin.settings.imgGrid).onChange(value => {
@@ -105,7 +104,6 @@ export function buildLayoutSettings(containerEl: HTMLElement, plugin: MinimalThe
     setting
       .setName('Table width')
       // False positive: "Dataview" is a proper noun (plugin name)
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Default width for table and Dataview blocks.')
       .addDropdown(dropdown => {
         dropdown

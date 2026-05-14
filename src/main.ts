@@ -42,7 +42,7 @@ export default class MinimalTheme extends Plugin {
     this._isOxygenActive = isOxygenThemeActive(this.app);
 
     // Initialize last theme mode for change detection
-    const initialThemeMode = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+    const initialThemeMode = activeDocument.body.classList.contains('theme-light') ? 'light' : 'dark';
 
     // Only initialize styles if Oxygen theme is active
     // Note: initialize() calls updateStyle() which also updates custom preset CSS
@@ -77,7 +77,7 @@ export default class MinimalTheme extends Plugin {
         window.clearTimeout(debounceTimer);
         debounceTimer = window.setTimeout(() => {
           const newThemeState = isOxygenThemeActive(this.app);
-          const currentThemeMode = document.body.classList.contains('theme-light') ? 'light' : 'dark';
+          const currentThemeMode = activeDocument.body.classList.contains('theme-light') ? 'light' : 'dark';
           const themeModeChanged = lastThemeMode !== null && lastThemeMode !== currentThemeMode;
           lastThemeMode = currentThemeMode;
 

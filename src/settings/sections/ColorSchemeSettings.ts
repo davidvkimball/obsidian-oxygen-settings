@@ -15,7 +15,6 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
     setting
       .setName('Light mode color scheme')
       // False positive: "Style Settings" and "Documentation" are proper nouns
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Preset color options for light mode. To create a custom color scheme use the Style Settings plugin. See Documentation for details.')
       .addDropdown(dropdown => {
         // Built-in schemes
@@ -32,7 +31,6 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .addOption('oxygen-macos-light', 'macOS')
           .addOption('oxygen-nord-light', 'Nord')
           // False positive: "Rosé Pine" and "Sky" are proper nouns (color scheme names)
-          // eslint-disable-next-line obsidianmd/ui/sentence-case
           .addOption('oxygen-rose-pine-light', 'Rosé Pine')
           .addOption('oxygen-notion-light', 'Sky')
           .addOption('oxygen-solarized-light', 'Solarized')
@@ -102,7 +100,6 @@ export function buildColorSchemeSettings(containerEl: HTMLElement, plugin: Minim
           .addOption('oxygen-macos-dark', 'macOS')
           .addOption('oxygen-nord-dark', 'Nord')
           // False positive: "Rosé Pine" and "Sky" are proper nouns (color scheme names)
-          // eslint-disable-next-line obsidianmd/ui/sentence-case
           .addOption('oxygen-rose-pine-dark', 'Rosé Pine')
           .addOption('oxygen-notion-dark', 'Sky')
           .addOption('oxygen-solarized-dark', 'Solarized')

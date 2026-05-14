@@ -117,14 +117,14 @@ function updateLightStyle(plugin: PluginContext): void {
     return;
   }
   
-  document.body.removeClass(
+  activeDocument.body.removeClass(
     'theme-dark',
     'oxygen-light',
     'oxygen-light-tonal',
     'oxygen-light-contrast',
     'oxygen-light-white'
   );
-  document.body.addClass('theme-light', plugin.settings.lightStyle);
+  activeDocument.body.addClass('theme-light', plugin.settings.lightStyle);
   
   const theme = getVaultConfig(plugin.app, 'theme');
   if (theme !== 'system') {
@@ -140,13 +140,13 @@ function updateDarkStyle(plugin: PluginContext): void {
     return;
   }
   
-  document.body.removeClass(
+  activeDocument.body.removeClass(
     'theme-light',
     'oxygen-dark',
     'oxygen-dark-tonal',
     'oxygen-dark-black'
   );
-  document.body.addClass('theme-dark', plugin.settings.darkStyle);
+  activeDocument.body.addClass('theme-dark', plugin.settings.darkStyle);
   
   const theme = getVaultConfig(plugin.app, 'theme');
   if (theme !== 'system') {

@@ -15,7 +15,6 @@ export function buildFeatureSettings(containerEl: HTMLElement, plugin: MinimalTh
     setting
       .setName('Text labels for primary navigation')
       // False positive: "Documentation" is a proper noun (section name)
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
       .setDesc('Navigation items in the left sidebar uses text labels. See Documentation for details.')
       .addToggle(toggle => {
         toggle.setValue(plugin.settings.labeledNav).onChange(value => {

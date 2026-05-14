@@ -58,7 +58,7 @@ export class CustomPresetCSS {
     if (userHSL) {
       // Calculate text-on-accent contrast
       const textOnAccent = this.calculateTextOnAccent(userHSL.h, userHSL.s, userHSL.l);
-      setCssProps(document.body, {
+      setCssProps(activeDocument.body, {
         '--accent-h': `${userHSL.h}`,
         '--accent-s': `${userHSL.s}%`,
         '--accent-l': `${userHSL.l}%`,
@@ -132,10 +132,10 @@ export class CustomPresetCSS {
     const hasUserAccent = this.getUserAccentHSL() !== null;
 
     // Remove all custom preset classes from body
-    const allPresetClasses = Array.from(document.body.classList).filter(cls =>
+    const allPresetClasses = Array.from(activeDocument.body.classList).filter(cls =>
       cls.startsWith('oxygen-custom-')
     );
-    allPresetClasses.forEach(cls => document.body.classList.remove(cls));
+    allPresetClasses.forEach(cls => activeDocument.body.classList.remove(cls));
 
     // Remove all custom preset inline CSS properties
     const presetProperties = [
@@ -152,7 +152,7 @@ export class CustomPresetCSS {
     ];
 
     presetProperties.forEach(prop => {
-      document.body.style.removeProperty(prop);
+      activeDocument.body.style.removeProperty(prop);
     });
 
     // Remove accent style element
@@ -167,13 +167,13 @@ export class CustomPresetCSS {
     );
 
     // Determine current theme mode
-    const isLightMode = document.body.classList.contains('theme-light');
+    const isLightMode = activeDocument.body.classList.contains('theme-light');
     const activePreset = isLightMode ? activeLightPreset : activeDarkPreset;
 
     // Apply properties for the active preset
     if (activePreset) {
       const presetClass = `oxygen-custom-${activePreset.id}`;
-      document.body.classList.add(presetClass);
+      activeDocument.body.classList.add(presetClass);
 
       const mode = isLightMode ? 'light' : 'dark';
       const properties = PresetCSSGenerator.generateProperties(activePreset, mode);
@@ -194,7 +194,7 @@ export class CustomPresetCSS {
       }
 
       // Apply non-accent properties as inline body styles
-      setCssProps(document.body, inlineProps);
+      setCssProps(activeDocument.body, inlineProps);
 
       // Apply accent properties via <style> element scoped to preset class.
       // Uses .theme-light/.theme-dark + preset class, matching built-in scheme specificity.
@@ -221,7 +221,7 @@ export class CustomPresetCSS {
     }
 
     // Clear the updating flag after a short delay to allow CSS to settle
-    setTimeout(() => {
+    window.setTimeout(() => {
       this.isUpdating = false;
     }, 50);
   }
@@ -231,10 +231,10 @@ export class CustomPresetCSS {
    */
   private createAccentStyleElement(cssText: string): void {
     this.removeAccentStyleElement();
-    this.styleEl = document.createElement('style');
+    this.styleEl = activeDocument.createElement('style');
     this.styleEl.id = STYLE_ELEMENT_ID;
     this.styleEl.textContent = cssText;
-    document.head.appendChild(this.styleEl);
+    activeDocument.head.appendChild(this.styleEl);
   }
 
   /**
@@ -246,7 +246,7 @@ export class CustomPresetCSS {
       this.styleEl = null;
     }
     // Also remove by ID in case of orphaned elements
-    const existing = document.getElementById(STYLE_ELEMENT_ID);
+    const existing = activeDocument.getElementById(STYLE_ELEMENT_ID);
     if (existing) {
       existing.remove();
     }
@@ -257,10 +257,10 @@ export class CustomPresetCSS {
    */
   cleanup(): void {
     // Remove all custom preset classes
-    const allPresetClasses = Array.from(document.body.classList).filter(cls =>
+    const allPresetClasses = Array.from(activeDocument.body.classList).filter(cls =>
       cls.startsWith('oxygen-custom-')
     );
-    allPresetClasses.forEach(cls => document.body.classList.remove(cls));
+    allPresetClasses.forEach(cls => activeDocument.body.classList.remove(cls));
 
     // Remove all custom preset CSS properties
     const presetProperties = [
@@ -277,7 +277,7 @@ export class CustomPresetCSS {
     ];
 
     presetProperties.forEach(prop => {
-      document.body.style.removeProperty(prop);
+      activeDocument.body.style.removeProperty(prop);
     });
 
     // Remove accent style element

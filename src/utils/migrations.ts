@@ -10,6 +10,7 @@ export class MigrationRunner {
         this.settings = settings;
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await -- migrations are currently synchronous but the async contract is preserved for callers that may add async migrations later
     public async run(): Promise<boolean> {
         let migrated = false;
 
@@ -66,7 +67,7 @@ export class MigrationRunner {
         // Let's adjust the runner to accept loadedData or handle it.
 
         // 4. Migration for animation personality: convert 'refined' to 'default'
-        if ((this.settings.animationPersonality as any) === 'refined') {
+        if ((this.settings.animationPersonality as unknown) === 'refined') {
             this.settings.animationPersonality = 'default';
             migrated = true;
         }
@@ -77,7 +78,7 @@ export class MigrationRunner {
     /**
      * Specifically handles the workspace borders migration which requires checking if a value was previously set.
      */
-    public migrateWorkspaceBorders(loadedData: any): boolean {
+    public migrateWorkspaceBorders(loadedData: unknown): boolean {
         if (loadedData && typeof loadedData === 'object') {
             const legacyData = loadedData as { bordersToggle?: boolean; workspaceBordersEnhanced?: boolean; workspaceBorders?: string };
             if (legacyData.bordersToggle !== undefined || legacyData.workspaceBordersEnhanced !== undefined) {

@@ -8,13 +8,10 @@ Part of the [Vault CMS](https://github.com/davidvkimball/vault-cms) project.
 
 ## Installation
 
-Oxygen Theme Settings is not yet available in the Community plugins section. Install using [BRAT](https://github.com/TfTHacker/obsidian42-brat) or manually:
+### Community Plugins Search
 
-### BRAT
-
-1. Download the [Beta Reviewers Auto-update Tester (BRAT)](https://github.com/TfTHacker/obsidian42-brat) plugin from the [Obsidian community plugins directory](https://obsidian.md/plugins?id=obsidian42-brat) and enable it.
-2. In the BRAT plugin settings, select `Add beta plugin`.
-3. Paste the following: `https://github.com/davidvkimball/obsidian-oxygen-settings` and select `Add plugin`.
+1. In Obsidian, go to Settings > Community plugins (enable it if you haven't already).
+2. Search for [Oxygen Theme Settings](https://obsidian.md/plugins?id=oxygen-settings) and click Install and then Enable.
 
 ### Manual
 

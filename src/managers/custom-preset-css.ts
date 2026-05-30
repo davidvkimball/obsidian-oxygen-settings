@@ -24,6 +24,15 @@ export class CustomPresetCSS {
     this.plugin = plugin;
   }
 
+  // The main app window's document. Obsidian 1.13.0+ opens Settings in a
+  // separate window, so `activeDocument` points at the Settings window while a
+  // setting is being changed — injecting the accent <style> into its <head> or
+  // toggling preset classes there would affect the wrong window. The workspace
+  // container always lives in the main window.
+  private get doc(): Document {
+    return this.plugin.app.workspace.containerEl.ownerDocument;
+  }
+
   /**
    * Initialize custom preset CSS
    */
@@ -58,7 +67,7 @@ export class CustomPresetCSS {
     if (userHSL) {
       // Calculate text-on-accent contrast
       const textOnAccent = this.calculateTextOnAccent(userHSL.h, userHSL.s, userHSL.l);
-      setCssProps(activeDocument.body, {
+      setCssProps(this.doc.body, {
         '--accent-h': `${userHSL.h}`,
         '--accent-s': `${userHSL.s}%`,
         '--accent-l': `${userHSL.l}%`,
@@ -132,10 +141,10 @@ export class CustomPresetCSS {
     const hasUserAccent = this.getUserAccentHSL() !== null;
 
     // Remove all custom preset classes from body
-    const allPresetClasses = Array.from(activeDocument.body.classList).filter(cls =>
+    const allPresetClasses = Array.from(this.doc.body.classList).filter(cls =>
       cls.startsWith('oxygen-custom-')
     );
-    allPresetClasses.forEach(cls => activeDocument.body.classList.remove(cls));
+    allPresetClasses.forEach(cls => this.doc.body.classList.remove(cls));
 
     // Remove all custom preset inline CSS properties
     const presetProperties = [
@@ -152,7 +161,7 @@ export class CustomPresetCSS {
     ];
 
     presetProperties.forEach(prop => {
-      activeDocument.body.style.removeProperty(prop);
+      this.doc.body.style.removeProperty(prop);
     });
 
     // Remove accent style element
@@ -167,13 +176,13 @@ export class CustomPresetCSS {
     );
 
     // Determine current theme mode
-    const isLightMode = activeDocument.body.classList.contains('theme-light');
+    const isLightMode = this.doc.body.classList.contains('theme-light');
     const activePreset = isLightMode ? activeLightPreset : activeDarkPreset;
 
     // Apply properties for the active preset
     if (activePreset) {
       const presetClass = `oxygen-custom-${activePreset.id}`;
-      activeDocument.body.classList.add(presetClass);
+      this.doc.body.classList.add(presetClass);
 
       const mode = isLightMode ? 'light' : 'dark';
       const properties = PresetCSSGenerator.generateProperties(activePreset, mode);
@@ -194,7 +203,7 @@ export class CustomPresetCSS {
       }
 
       // Apply non-accent properties as inline body styles
-      setCssProps(activeDocument.body, inlineProps);
+      setCssProps(this.doc.body, inlineProps);
 
       // Apply accent properties via <style> element scoped to preset class.
       // Uses .theme-light/.theme-dark + preset class, matching built-in scheme specificity.
@@ -231,10 +240,10 @@ export class CustomPresetCSS {
    */
   private createAccentStyleElement(cssText: string): void {
     this.removeAccentStyleElement();
-    this.styleEl = activeDocument.createElement('style');
+    this.styleEl = this.doc.createElement('style');
     this.styleEl.id = STYLE_ELEMENT_ID;
     this.styleEl.textContent = cssText;
-    activeDocument.head.appendChild(this.styleEl);
+    this.doc.head.appendChild(this.styleEl);
   }
 
   /**
@@ -246,7 +255,7 @@ export class CustomPresetCSS {
       this.styleEl = null;
     }
     // Also remove by ID in case of orphaned elements
-    const existing = activeDocument.getElementById(STYLE_ELEMENT_ID);
+    const existing = this.doc.getElementById(STYLE_ELEMENT_ID);
     if (existing) {
       existing.remove();
     }
@@ -257,10 +266,10 @@ export class CustomPresetCSS {
    */
   cleanup(): void {
     // Remove all custom preset classes
-    const allPresetClasses = Array.from(activeDocument.body.classList).filter(cls =>
+    const allPresetClasses = Array.from(this.doc.body.classList).filter(cls =>
       cls.startsWith('oxygen-custom-')
     );
-    allPresetClasses.forEach(cls => activeDocument.body.classList.remove(cls));
+    allPresetClasses.forEach(cls => this.doc.body.classList.remove(cls));
 
     // Remove all custom preset CSS properties
     const presetProperties = [
@@ -277,7 +286,7 @@ export class CustomPresetCSS {
     ];
 
     presetProperties.forEach(prop => {
-      activeDocument.body.style.removeProperty(prop);
+      this.doc.body.style.removeProperty(prop);
     });
 
     // Remove accent style element

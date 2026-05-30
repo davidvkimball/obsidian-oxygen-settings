@@ -14,6 +14,14 @@ export class ThemeManagerImpl {
     this.plugin = plugin;
   }
 
+  // The main app window's document. Obsidian 1.13.0+ opens Settings in a
+  // separate window, so `activeDocument` points at the Settings window while a
+  // setting is being changed — toggling theme classes there would affect the
+  // wrong window. The workspace container always lives in the main window.
+  private get doc(): Document {
+    return this.plugin.app.workspace.containerEl.ownerDocument;
+  }
+
   /**
    * Toggle between light and dark themes
    */
@@ -21,21 +29,21 @@ export class ThemeManagerImpl {
     const currentTheme = getVaultConfig(this.plugin.app, 'theme');
     if (currentTheme === OBSIDIAN_THEMES.SYSTEM) {
       // System theme mode - just toggle class
-      if (activeDocument.body.classList.contains('theme-light')) {
-        activeDocument.body.removeClass('theme-light');
-        activeDocument.body.addClass('theme-dark');
+      if (this.doc.body.classList.contains('theme-light')) {
+        this.doc.body.removeClass('theme-light');
+        this.doc.body.addClass('theme-dark');
       } else {
-        activeDocument.body.removeClass('theme-dark');
-        activeDocument.body.addClass('theme-light');
+        this.doc.body.removeClass('theme-dark');
+        this.doc.body.addClass('theme-light');
       }
     } else {
       // Manual theme mode - toggle both class and Obsidian theme
-      if (activeDocument.body.classList.contains('theme-light')) {
-        activeDocument.body.removeClass('theme-light');
-        activeDocument.body.addClass('theme-dark');
+      if (this.doc.body.classList.contains('theme-light')) {
+        this.doc.body.removeClass('theme-light');
+        this.doc.body.addClass('theme-dark');
       } else {
-        activeDocument.body.removeClass('theme-dark');
-        activeDocument.body.addClass('theme-light');
+        this.doc.body.removeClass('theme-dark');
+        this.doc.body.addClass('theme-light');
       }
 
       const theme = getVaultConfig(this.plugin.app, 'theme');
@@ -54,8 +62,8 @@ export class ThemeManagerImpl {
    * Switch to light theme
    */
   switchToLight(): void {
-    activeDocument.body.removeClass('theme-dark');
-    activeDocument.body.addClass('theme-light');
+    this.doc.body.removeClass('theme-dark');
+    this.doc.body.addClass('theme-light');
     
     const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== OBSIDIAN_THEMES.SYSTEM) {
@@ -70,8 +78,8 @@ export class ThemeManagerImpl {
    * Switch to dark theme
    */
   switchToDark(): void {
-    activeDocument.body.removeClass('theme-light');
-    activeDocument.body.addClass('theme-dark');
+    this.doc.body.removeClass('theme-light');
+    this.doc.body.addClass('theme-dark');
     
     const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== OBSIDIAN_THEMES.SYSTEM) {
@@ -86,7 +94,7 @@ export class ThemeManagerImpl {
    * Get current theme mode
    */
   getCurrentMode(): ThemeMode {
-    return activeDocument.body.classList.contains('theme-light') ? 'light' : 'dark';
+    return this.doc.body.classList.contains('theme-light') ? 'light' : 'dark';
   }
 
   /**
@@ -98,13 +106,13 @@ export class ThemeManagerImpl {
       return;
     }
     
-    const sidebarEl = activeDocument.getElementsByClassName('mod-left-split')[0];
-    const ribbonEl = activeDocument.getElementsByClassName('side-dock-ribbon')[0];
+    const sidebarEl = this.doc.getElementsByClassName('mod-left-split')[0];
+    const ribbonEl = this.doc.getElementsByClassName('side-dock-ribbon')[0];
     
     if (
       sidebarEl && 
       ribbonEl && 
-      activeDocument.body.classList.contains('theme-light') && 
+      this.doc.body.classList.contains('theme-light') && 
       this.plugin.settings.lightStyle === 'oxygen-light-contrast'
     ) {
       sidebarEl.addClass('theme-dark');
@@ -119,12 +127,12 @@ export class ThemeManagerImpl {
    * Cleanup sidebar theme on unload
    */
   cleanupSidebarTheme(): void {
-    const sidebarEl = activeDocument.getElementsByClassName('mod-left-split')[0];
+    const sidebarEl = this.doc.getElementsByClassName('mod-left-split')[0];
     if (sidebarEl) {
       sidebarEl.removeClass('theme-dark');
     }
     
-    const ribbonEl = activeDocument.getElementsByClassName('side-dock-ribbon')[0];
+    const ribbonEl = this.doc.getElementsByClassName('side-dock-ribbon')[0];
     if (ribbonEl) {
       ribbonEl.removeClass('theme-dark');
     }

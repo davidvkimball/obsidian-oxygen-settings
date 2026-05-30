@@ -14,6 +14,14 @@ export class SettingsSyncManager {
     this.plugin = plugin;
   }
 
+  // The main app window's document. Obsidian 1.13.0+ opens Settings in a
+  // separate window, so `activeDocument` points at the Settings window while a
+  // setting is being changed — reading body classes from the wrong window can
+  // desync state. The workspace container always lives in the main window.
+  private get doc(): Document {
+    return this.plugin.app.workspace.containerEl.ownerDocument;
+  }
+
   /**
    * Setup event watchers for vault config changes
    */
@@ -54,7 +62,7 @@ export class SettingsSyncManager {
     this.plugin.settings.readableLineLength = !!getVaultConfig(this.plugin.app, VAULT_CONFIG.READABLE_LINE_LENGTH);
 
     // Update body classes
-    const bodyClassList = activeDocument.body.classList;
+    const bodyClassList = this.doc.body.classList;
     bodyClassList.toggle('oxygen-folding', this.plugin.settings.folding);
     bodyClassList.toggle('oxygen-line-nums', this.plugin.settings.lineNumbers);
     bodyClassList.toggle('oxygen-readable', this.plugin.settings.readableLineLength);
@@ -78,13 +86,13 @@ export class SettingsSyncManager {
    * Update sidebar theme for high contrast mode
    */
   private updateSidebarTheme(): void {
-    const sidebarEl = activeDocument.getElementsByClassName('mod-left-split')[0];
-    const ribbonEl = activeDocument.getElementsByClassName('side-dock-ribbon')[0];
+    const sidebarEl = this.doc.getElementsByClassName('mod-left-split')[0];
+    const ribbonEl = this.doc.getElementsByClassName('side-dock-ribbon')[0];
     
     if (
       sidebarEl && 
       ribbonEl && 
-      activeDocument.body.classList.contains('theme-light') && 
+      this.doc.body.classList.contains('theme-light') && 
       this.plugin.settings.lightStyle === 'oxygen-light-contrast'
     ) {
       sidebarEl.addClass('theme-dark');

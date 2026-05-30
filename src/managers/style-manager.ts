@@ -24,6 +24,15 @@ export class StyleManagerImpl {
     this.customPresetCSS = new CustomPresetCSS(plugin);
   }
 
+  // The main app window's document. Obsidian 1.13.0+ opens Settings in a
+  // separate window, so `activeDocument` (the focused window) points at the
+  // Settings window while a setting is being changed — applying theme classes
+  // and CSS variables there would style the wrong window. The workspace
+  // container always lives in the main window.
+  private get doc(): Document {
+    return this.plugin.app.workspace.containerEl.ownerDocument;
+  }
+
   /**
    * Detect OS for OS-specific styling
    */
@@ -105,21 +114,21 @@ export class StyleManagerImpl {
 
     // Add style classes (only if not empty)
     if (this.plugin.settings.lightStyle && this.plugin.settings.lightStyle.trim()) {
-      activeDocument.body.addClass(this.plugin.settings.lightStyle);
+      this.doc.body.addClass(this.plugin.settings.lightStyle);
     }
     if (this.plugin.settings.darkStyle && this.plugin.settings.darkStyle.trim()) {
-      activeDocument.body.addClass(this.plugin.settings.darkStyle);
+      this.doc.body.addClass(this.plugin.settings.darkStyle);
     }
 
     // Update schemes based on current theme mode
     try {
-      if (activeDocument.body.classList.contains('theme-light')) {
+      if (this.doc.body.classList.contains('theme-light')) {
         this.updateLightScheme();
-      } else if (activeDocument.body.classList.contains('theme-dark')) {
+      } else if (this.doc.body.classList.contains('theme-dark')) {
         this.updateDarkScheme();
       } else {
         // Default to light theme
-        activeDocument.body.addClass('theme-light');
+        this.doc.body.addClass('theme-light');
         this.updateLightScheme();
       }
     } catch (error) {
@@ -134,34 +143,34 @@ export class StyleManagerImpl {
     const bordersValue = this.plugin.settings.workspaceBorders;
     if (bordersValue === 'enhanced') {
       // Enhanced is default - remove any border classes to let theme handle it
-      activeDocument.body.classList.remove('borders-none', 'borders-on');
+      this.doc.body.classList.remove('borders-none', 'borders-on');
     } else if (bordersValue === 'default') {
       // Default - restore Obsidian's original borders
-      activeDocument.body.classList.remove('borders-none');
-      activeDocument.body.classList.add('borders-on');
+      this.doc.body.classList.remove('borders-none');
+      this.doc.body.classList.add('borders-on');
     } else if (bordersValue === 'none') {
       // None - remove all borders
-      activeDocument.body.classList.remove('borders-on');
-      activeDocument.body.classList.add('borders-none');
+      this.doc.body.classList.remove('borders-on');
+      this.doc.body.classList.add('borders-none');
     }
 
-    activeDocument.body.classList.toggle('colorful-headings', this.plugin.settings.colorfulHeadings);
-    activeDocument.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
-    activeDocument.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
-    activeDocument.body.classList.toggle('enable-blur', this.plugin.settings.enableBlur);
-    activeDocument.body.classList.toggle('links-int-on', this.plugin.settings.underlineInternal);
-    activeDocument.body.classList.toggle('links-ext-on', this.plugin.settings.underlineExternal);
-    activeDocument.body.classList.toggle('full-width-media', this.plugin.settings.fullWidthMedia);
-    activeDocument.body.classList.toggle('img-grid', this.plugin.settings.imgGrid);
-    activeDocument.body.classList.toggle('oxygen-dev-block-width', this.plugin.settings.devBlockWidth);
-    activeDocument.body.classList.toggle('oxygen-status-off', !this.plugin.settings.minimalStatus);
-    activeDocument.body.classList.toggle('full-file-names', !this.plugin.settings.trimNames);
-    activeDocument.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
-    activeDocument.body.classList.toggle('oxygen-folding', this.plugin.settings.folding);
-    activeDocument.body.classList.toggle('use-default-folder-icon', this.plugin.settings.useDefaultFolderIcon);
+    this.doc.body.classList.toggle('colorful-headings', this.plugin.settings.colorfulHeadings);
+    this.doc.body.classList.toggle('colorful-frame', this.plugin.settings.colorfulFrame);
+    this.doc.body.classList.toggle('colorful-active', this.plugin.settings.colorfulActiveStates);
+    this.doc.body.classList.toggle('enable-blur', this.plugin.settings.enableBlur);
+    this.doc.body.classList.toggle('links-int-on', this.plugin.settings.underlineInternal);
+    this.doc.body.classList.toggle('links-ext-on', this.plugin.settings.underlineExternal);
+    this.doc.body.classList.toggle('full-width-media', this.plugin.settings.fullWidthMedia);
+    this.doc.body.classList.toggle('img-grid', this.plugin.settings.imgGrid);
+    this.doc.body.classList.toggle('oxygen-dev-block-width', this.plugin.settings.devBlockWidth);
+    this.doc.body.classList.toggle('oxygen-status-off', !this.plugin.settings.minimalStatus);
+    this.doc.body.classList.toggle('full-file-names', !this.plugin.settings.trimNames);
+    this.doc.body.classList.toggle('labeled-nav', this.plugin.settings.labeledNav);
+    this.doc.body.classList.toggle('oxygen-folding', this.plugin.settings.folding);
+    this.doc.body.classList.toggle('use-default-folder-icon', this.plugin.settings.useDefaultFolderIcon);
 
     // Add width classes
-    activeDocument.body.addClass(
+    this.doc.body.addClass(
       this.plugin.settings.chartWidth,
       this.plugin.settings.tableWidth,
       this.plugin.settings.imgWidth,
@@ -189,40 +198,40 @@ export class StyleManagerImpl {
       cssProps['--nav-indentation-guide-width'] = this.plugin.settings.navIndentationGuideWidth;
     } else {
       // Remove width variable to let theme use default
-      activeDocument.body.style.removeProperty('--nav-indentation-guide-width');
+      this.doc.body.style.removeProperty('--nav-indentation-guide-width');
     }
 
     if (!isDefaultColor) {
       cssProps['--nav-indentation-guide-color'] = this.plugin.settings.navIndentationGuideColor;
     } else {
       // Remove color variable to let theme use its default color
-      activeDocument.body.style.removeProperty('--nav-indentation-guide-color');
+      this.doc.body.style.removeProperty('--nav-indentation-guide-color');
     }
 
-    setCssProps(activeDocument.body, cssProps);
+    setCssProps(this.doc.body, cssProps);
 
 
     // Apply animation settings
     // Remove all animation classes first (including old 'animations-refined' for migration)
-    activeDocument.body.classList.remove('animations-refined', 'animations-default', 'animations-playful', 'animations-off');
+    this.doc.body.classList.remove('animations-refined', 'animations-default', 'animations-playful', 'animations-off');
 
     // Get animation personality (default to 'default' if not set for migration)
     const animationPersonality = this.plugin.settings.animationPersonality || 'default';
 
     // Apply personality class
     if (animationPersonality === 'off') {
-      activeDocument.body.classList.add('animations-off');
+      this.doc.body.classList.add('animations-off');
       // Speed is automatically 0 when off, but clear the variable to be explicit
-      activeDocument.body.style.removeProperty('--anim-speed-modifier');
+      this.doc.body.style.removeProperty('--anim-speed-modifier');
     } else if (animationPersonality === 'playful') {
-      activeDocument.body.classList.add('animations-playful');
+      this.doc.body.classList.add('animations-playful');
       // Apply speed (only if not "off")
-      activeDocument.body.style.setProperty('--anim-speed-modifier', this.plugin.settings.animationSpeed.toString());
+      this.doc.body.style.setProperty('--anim-speed-modifier', this.plugin.settings.animationSpeed.toString());
     } else {
       // default (maps to animations-default class)
-      activeDocument.body.classList.add('animations-default');
+      this.doc.body.classList.add('animations-default');
       // Apply speed (only if not "off")
-      activeDocument.body.style.setProperty('--anim-speed-modifier', this.plugin.settings.animationSpeed.toString());
+      this.doc.body.style.setProperty('--anim-speed-modifier', this.plugin.settings.animationSpeed.toString());
     }
 
     this.customPresetCSS.updateCSS();
@@ -245,8 +254,8 @@ export class StyleManagerImpl {
     }
 
     this.removeStyle();
-    activeDocument.body.removeClass('theme-dark');
-    activeDocument.body.addClass('theme-light', this.plugin.settings.lightStyle);
+    this.doc.body.removeClass('theme-dark');
+    this.doc.body.addClass('theme-light', this.plugin.settings.lightStyle);
 
     const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== 'system') {
@@ -266,8 +275,8 @@ export class StyleManagerImpl {
     }
 
     this.removeStyle();
-    activeDocument.body.removeClass('theme-light');
-    activeDocument.body.addClass('theme-dark', this.plugin.settings.darkStyle);
+    this.doc.body.removeClass('theme-light');
+    this.doc.body.addClass('theme-dark', this.plugin.settings.darkStyle);
 
     const theme = getVaultConfig(this.plugin.app, 'theme');
     if (theme !== 'system') {
@@ -289,14 +298,14 @@ export class StyleManagerImpl {
     this.removeLightScheme();
     this.removeDarkScheme();
 
-    if (!activeDocument.body.classList.contains('theme-light')) {
-      activeDocument.body.removeClass('theme-dark');
-      activeDocument.body.addClass('theme-light');
+    if (!this.doc.body.classList.contains('theme-light')) {
+      this.doc.body.removeClass('theme-dark');
+      this.doc.body.addClass('theme-light');
     }
 
     // Only add class if scheme is not empty
     if (this.plugin.settings.lightScheme && this.plugin.settings.lightScheme.trim()) {
-      activeDocument.body.addClass(this.plugin.settings.lightScheme);
+      this.doc.body.addClass(this.plugin.settings.lightScheme);
     }
   }
 
@@ -312,14 +321,14 @@ export class StyleManagerImpl {
     this.removeDarkScheme();
     this.removeLightScheme();
 
-    if (!activeDocument.body.classList.contains('theme-dark')) {
-      activeDocument.body.removeClass('theme-light');
-      activeDocument.body.addClass('theme-dark');
+    if (!this.doc.body.classList.contains('theme-dark')) {
+      this.doc.body.removeClass('theme-light');
+      this.doc.body.addClass('theme-dark');
     }
 
     // Only add class if scheme is not empty
     if (this.plugin.settings.darkScheme && this.plugin.settings.darkScheme.trim()) {
-      activeDocument.body.addClass(this.plugin.settings.darkScheme);
+      this.doc.body.addClass(this.plugin.settings.darkScheme);
     }
   }
 
@@ -328,7 +337,7 @@ export class StyleManagerImpl {
    * Remove style classes
    */
   removeStyle(): void {
-    activeDocument.body.removeClass(
+    this.doc.body.removeClass(
       'oxygen-light',
       'oxygen-light-tonal',
       'oxygen-light-contrast',
@@ -351,11 +360,11 @@ export class StyleManagerImpl {
    * Remove light scheme classes
    */
   removeLightScheme(): void {
-    activeDocument.body.removeClass(...LIGHT_SCHEMES);
+    this.doc.body.removeClass(...LIGHT_SCHEMES);
 
     // Remove custom preset classes
     this.plugin.settings.customPresets.forEach(preset => {
-      activeDocument.body.removeClass(`oxygen-custom-${preset.id}`);
+      this.doc.body.removeClass(`oxygen-custom-${preset.id}`);
     });
   }
 
@@ -363,11 +372,11 @@ export class StyleManagerImpl {
    * Remove dark scheme classes
    */
   removeDarkScheme(): void {
-    activeDocument.body.removeClass(...DARK_SCHEMES);
+    this.doc.body.removeClass(...DARK_SCHEMES);
 
     // Remove custom preset classes
     this.plugin.settings.customPresets.forEach(preset => {
-      activeDocument.body.removeClass(`oxygen-custom-${preset.id}`);
+      this.doc.body.removeClass(`oxygen-custom-${preset.id}`);
     });
   }
 
@@ -375,7 +384,7 @@ export class StyleManagerImpl {
    * Remove settings classes
    */
   removeSettings(): void {
-    activeDocument.body.removeClass(
+    this.doc.body.removeClass(
       'borders-none',
       'borders-on',
       'colorful-headings',
@@ -429,7 +438,7 @@ export class StyleManagerImpl {
       return;
     }
 
-    activeDocument.body.classList.add(CSS_CLASSES.PLUGIN_THEME);
+    this.doc.body.classList.add(CSS_CLASSES.PLUGIN_THEME);
 
     // Update styles once - matches original plugin behavior
     this.updateStyle();
@@ -440,17 +449,17 @@ export class StyleManagerImpl {
    */
   private unloadRules(): void {
     // Remove CSS custom properties
-    activeDocument.body.style.removeProperty('--font-ui-small');
-    activeDocument.body.style.removeProperty('--line-height');
-    activeDocument.body.style.removeProperty('--line-width');
-    activeDocument.body.style.removeProperty('--line-width-wide');
-    activeDocument.body.style.removeProperty('--max-width');
-    activeDocument.body.style.removeProperty('--font-editor-override');
-    activeDocument.body.style.removeProperty('--nav-indentation-guide-width');
-    activeDocument.body.style.removeProperty('--nav-indentation-guide-color');
-    activeDocument.body.style.removeProperty('--anim-speed-modifier');
+    this.doc.body.style.removeProperty('--font-ui-small');
+    this.doc.body.style.removeProperty('--line-height');
+    this.doc.body.style.removeProperty('--line-width');
+    this.doc.body.style.removeProperty('--line-width-wide');
+    this.doc.body.style.removeProperty('--max-width');
+    this.doc.body.style.removeProperty('--font-editor-override');
+    this.doc.body.style.removeProperty('--nav-indentation-guide-width');
+    this.doc.body.style.removeProperty('--nav-indentation-guide-color');
+    this.doc.body.style.removeProperty('--anim-speed-modifier');
 
-    activeDocument.body.classList.remove(CSS_CLASSES.PLUGIN_THEME);
+    this.doc.body.classList.remove(CSS_CLASSES.PLUGIN_THEME);
   }
 
   /**
